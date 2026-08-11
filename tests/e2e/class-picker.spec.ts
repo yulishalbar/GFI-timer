@@ -124,3 +124,28 @@ test("opens a compiled class schedule and returns to the picker", async ({ page 
   await page.getByRole("button", { name: "All classes" }).click();
   await expect(page.getByRole("heading", { name: "Choose today's class" })).toBeVisible();
 });
+
+test("opens and starts the July 31 class with completed pose guidance", async ({ page }) => {
+  await page.goto("./");
+
+  const classCard = page.getByRole("article").filter({ hasText: "Mat Pilates — July 31" });
+  await expect(classCard).toContainText("56.2 min");
+  await expect(classCard).toContainText("8 phases");
+  await expect(classCard).toContainText("80 steps");
+  await classCard.getByRole("button", { name: "View class" }).click();
+
+  await expect(page.getByRole("heading", { name: "Mat Pilates — July 31" })).toBeVisible();
+  await expect(page.getByLabel("56.2 min total")).toContainText("56:10");
+  await expect(page.getByRole("heading", { name: "Circuit 5 — Upper Body and Back" })).toBeVisible();
+
+  await page.getByRole("button", { name: "Expand all pose details" }).click();
+  const kneePull = page.locator(".step-row").filter({ hasText: "Alternating standing knee pulls" });
+  await expect(kneePull).toContainText("Draw one knee toward the chest");
+  await expect(kneePull.getByAltText("Illustration for Alternating standing knee pulls")).toBeVisible();
+
+  await page.getByRole("button", { name: "Start class" }).click();
+  await expect(page.getByRole("heading", { name: "Class introduction" })).toBeVisible();
+  await page.getByRole("button", { name: "Next" }).click();
+  await expect(page.getByRole("heading", { name: "Alternating standing knee pulls" })).toBeVisible();
+  await expect(page.locator(".exercise-details img")).toBeVisible();
+});

@@ -213,6 +213,12 @@ When AI generates a class, treat the output as proposed source data. Review the
 exercise order, durations, repetitions, total duration, and safety-related
 instructions before committing it.
 
+When converting a PDF or table whose section heading conflicts with its timed
+rows, preserve the explicit row durations and explicit breaks. Do not add hidden
+minutes merely to match an approximate heading. Complete missing descriptions
+conservatively, keep transitions as rest entries, and record the compiled total
+in a test so later edits cannot change it accidentally.
+
 ## Versioning
 
 `schemaVersion` describes the file format. `version` describes a particular

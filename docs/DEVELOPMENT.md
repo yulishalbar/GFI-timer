@@ -75,6 +75,7 @@ The timer test matrix should cover:
 Cover the instructor-critical path:
 
 1. Select and start a class.
+   Repeat the selection/start smoke flow for every registered class.
 2. Pause and resume it.
 3. Drag current-step progress.
 4. Navigate previous and next.
@@ -87,6 +88,8 @@ Cover the instructor-critical path:
    fixed controls without requiring expansion.
 10. Open the class overview at scroll position zero, keep Start in the initial
     iPhone 15 Pro Max viewport, and expand pre-class pose details and art.
+11. Load each class's referenced illustrations after switching the browser to
+    offline mode.
 
 Offline and installation behavior should also be tested manually on physical
 iOS/iPadOS hardware before declaring the MVP ready.

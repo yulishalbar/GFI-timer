@@ -21,6 +21,11 @@ iPhone and iPad installation/offline verification remains. The live session
 layout is optimized for an iPhone 15 Pro Max in portrait while retaining
 compact-phone coverage.
 
+The picker currently includes Mat Pilates classes for July 24 (53:20) and July
+31 (56:10). Each opens in the same validated overview and timer; the July 31
+class adds completed instructor cues and reduced-motion-safe animated SVG guides
+for its less obvious movement patterns.
+
 ## Requirements
 
 - [Node.js](https://nodejs.org/) 22 or newer

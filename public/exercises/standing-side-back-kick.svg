@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" role="img" aria-labelledby="title desc">
+  <title id="title">Animated standing side-to-back kick</title>
+  <desc id="desc">A standing figure changes from a side leg lift to a forward hinge with the leg reaching back.</desc>
+  <style>
+    .side { animation: side-pose 2.6s ease-in-out infinite; }
+    .back { animation: back-pose 2.6s ease-in-out infinite; }
+    @keyframes side-pose { 0%, 42%, 100% { opacity:1 } 52%, 90% { opacity:0 } }
+    @keyframes back-pose { 0%, 42%, 100% { opacity:0 } 52%, 90% { opacity:1 } }
+    @media (prefers-reduced-motion: reduce) { .side,.back { animation:none } .side { opacity:1 } .back { opacity:0 } }
+  </style>
+  <rect width="320" height="180" rx="24" fill="#18211b"/>
+  <path d="M35 151H285" stroke="#4d6355" stroke-width="8" stroke-linecap="round"/>
+  <g class="side">
+    <circle cx="139" cy="39" r="17" fill="#d7ff62" stroke="#f6f7ef" stroke-width="4"/>
+    <path d="M139 57L139 100M139 69L120 94M139 69L158 94M139 100L134 148M140 101L199 111" fill="none" stroke="#f6f7ef" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="139" cy="101" r="7" fill="#d7ff62" stroke="#f6f7ef" stroke-width="2"/>
+    <circle cx="199" cy="111" r="6" fill="#8fd8ff"/>
+    <ellipse cx="130" cy="150" rx="13" ry="5" fill="#d7ff62" stroke="#f6f7ef" stroke-width="2"/>
+    <ellipse cx="214" cy="112" rx="15" ry="5" fill="#d7ff62" stroke="#f6f7ef" stroke-width="2"/>
+  </g>
+  <g class="back" opacity="0">
+    <circle cx="119" cy="69" r="17" fill="#d7ff62" stroke="#f6f7ef" stroke-width="4"/>
+    <path d="M135 74L174 99M150 84L139 109M158 89L151 114M174 99L166 148M174 101L240 92" fill="none" stroke="#f6f7ef" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="174" cy="100" r="7" fill="#d7ff62" stroke="#f6f7ef" stroke-width="2"/>
+    <circle cx="240" cy="92" r="6" fill="#8fd8ff"/>
+    <ellipse cx="162" cy="150" rx="13" ry="5" fill="#d7ff62" stroke="#f6f7ef" stroke-width="2"/>
+    <ellipse cx="255" cy="91" rx="15" ry="5" fill="#d7ff62" stroke="#f6f7ef" stroke-width="2"/>
+  </g>
+  <path d="M224 61C245 72 250 98 235 116" fill="none" stroke="#8fd8ff" stroke-width="4" stroke-linecap="round" stroke-dasharray="6 7"/>
+</svg>

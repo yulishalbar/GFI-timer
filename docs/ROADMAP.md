@@ -68,7 +68,8 @@ Candidate features, prioritized after real class use:
 - Configurable final countdown.
 - Pre-class countdown.
 - Landscape dashboard improvements.
-- Expand the exercise-art library as more classes are added.
+- Expand the exercise-art library as more classes are added. — July 31 motion
+  guides added; continue with future classes
 - Class favorites and most-recent selection.
 - Optional phase progress in addition to class progress.
 - Session duration summary without long-term tracking.

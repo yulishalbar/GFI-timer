@@ -64,9 +64,10 @@ test("reloads the cached app and exercise art while offline", async ({ context, 
     await page.reload({ waitUntil: "domcontentloaded" });
     await expect(page.getByRole("heading", { name: "Choose today's class" })).toBeVisible();
 
-    await page.getByRole("button", { name: "View class" }).click();
+    const july31Card = page.getByRole("article").filter({ hasText: "Mat Pilates — July 31" });
+    await july31Card.getByRole("button", { name: "View class" }).click();
     await page.getByRole("button", { name: "Expand all pose details" }).click();
-    const illustration = page.getByAltText("Illustration for Child's pose and side-body stretch");
+    const illustration = page.getByAltText("Illustration for Alternating standing knee pulls");
     await expect(illustration).toBeVisible();
     await expect
       .poll(() =>
