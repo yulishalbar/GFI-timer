@@ -54,6 +54,8 @@ The compiler test matrix should cover:
 The timer test matrix should cover:
 
 - Start, pause, resume, and completion.
+- Real session elapsed time continues while paused and never decreases after
+  seeking, navigation, or a backward wall-clock correction.
 - Automatic transition at an exact boundary.
 - Delayed update that crosses one or several steps.
 - Seek while running and paused.
@@ -62,6 +64,8 @@ The timer test matrix should cover:
 - Restore a running session before or after its target time.
 - System wall-clock changes, with behavior documented.
 - No duplicate transition event or audio request.
+- Defensive rejection of malformed, unknown-version, or class-version-mismatched
+  recovery data.
 
 ### Browser tests
 
@@ -76,6 +80,8 @@ Cover the instructor-critical path:
 7. Use primary controls with a keyboard.
 8. Render phone portrait, phone landscape, and iPad viewports without hiding
    essential controls.
+9. At 430 × 932, keep the complete current-step description visible above the
+   fixed controls without requiring expansion.
 
 Offline and installation behavior should also be tested manually on physical
 iOS/iPadOS hardware before declaring the MVP ready.

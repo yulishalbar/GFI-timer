@@ -8,6 +8,14 @@ export type TimerState =
   | { status: "paused"; stepIndex: number; remainingMs: number }
   | { status: "complete"; stepIndex: number };
 
+export function getSessionElapsedMs(
+  startedAtEpochMs: number,
+  nowEpochMs: number,
+  previousElapsedMs: number
+): number {
+  return Math.max(0, previousElapsedMs, nowEpochMs - startedAtEpochMs);
+}
+
 function requireSteps(steps: readonly RuntimeStep[]): void {
   if (steps.length === 0) {
     throw new Error("A timer requires at least one compiled step.");
@@ -171,7 +179,7 @@ export function seekTimer(
   return { ...reconciled, remainingMs };
 }
 
-export function getOverallElapsedMs(
+export function getScheduledElapsedMs(
   state: TimerState,
   steps: readonly RuntimeStep[],
   totalDurationMs: number,

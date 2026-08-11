@@ -1,7 +1,7 @@
 # Roadmap
 
-Current status: Milestones 1 and 2 are complete. Milestone 3, device
-reliability, is next.
+Current status: Milestones 1 and 2 are complete. Milestone 3 implementation is
+complete; physical iPhone and iPad reliability verification is pending.
 
 ## Milestone 1: Foundation — complete
 
@@ -32,7 +32,7 @@ compiled timeline and correct total duration.
 Exit condition: the class can be run from beginning to end accurately in
 a desktop/mobile browser, including delayed-clock test cases.
 
-## Milestone 3: Device reliability
+## Milestone 3: Device reliability — device verification pending
 
 - Add versioned session recovery and settings.
 - Add local transition/countdown sounds and mute control.

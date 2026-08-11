@@ -31,6 +31,7 @@ export const matPilates0724 = {
           id: "childs-pose",
           name: "Child's pose and side-body stretch",
           durationSeconds: 60,
+          illustration: "exercises/childs-pose.svg",
           shortDescription: "Finish in tabletop with wrists under shoulders and knees under hips.",
           longDescription:
             "Bring the big toes together, take the knees wide, and reach forward as the hips lower toward the ankles. Walk both hands right and stack the left hand for a side stretch; return to center and repeat left."
@@ -143,7 +144,7 @@ export const matPilates0724 = {
       name: "Circuit 2 — Glutes",
       items: [
         { type: "rest", id: "glutes-setup", name: "Rest and circuit preview", durationSeconds: 60, shortDescription: "Explain that the circuit has no breaks." },
-        { type: "exercise", id: "bridge-one", name: "Full-range glute bridge", durationSeconds: 40, shortDescription: "Feet planted hip-width.", longDescription: "Drive through the heels to lift the hips and squeeze the glutes; lower with control." },
+        { type: "exercise", id: "bridge-one", name: "Full-range glute bridge", durationSeconds: 40, shortDescription: "Feet planted hip-width.", longDescription: "Drive through the heels to lift the hips and squeeze the glutes; lower with control.", illustration: "exercises/glute-bridge.svg" },
         { type: "exercise", id: "bridge-knee-drive-right", name: "Bridge with knee drive — right", durationSeconds: 40, shortDescription: "Keep the hips lifted.", longDescription: "Lift the bent right knee while squeezing the left glute, lower, and repeat. Regression: regular bridges." },
         { type: "exercise", id: "bridge-pulse-right", name: "Bridge knee-drive pulses — right", durationSeconds: 40, shortDescription: "Keep the right leg lifted.", longDescription: "Pulse the lifted leg without letting the hips lower." },
         { type: "exercise", id: "bridge-two", name: "Full-range glute bridge", durationSeconds: 40, shortDescription: "Return both feet to the mat.", longDescription: "Drive through the heels to lift the hips and squeeze the glutes; lower with control." },
@@ -170,7 +171,7 @@ export const matPilates0724 = {
         { type: "rest", id: "rest-after-knee-push-ups", name: "Transition", durationSeconds: 10, shortDescription: "Lift the knees into high plank." },
         { type: "exercise", id: "plank-crunch", name: "High-plank alternating crunch", durationSeconds: 40, shortDescription: "Hands under shoulders and core braced.", longDescription: "Drive one knee toward the chest or elbow and alternate. Regression: slow march or hold plank." },
         { type: "rest", id: "rest-after-plank-crunch", name: "Transition", durationSeconds: 10 },
-        { type: "exercise", id: "high-plank-hold", name: "High-plank hold", durationSeconds: 40, shortDescription: "Finish on the knees, take water, then stand.", longDescription: "Hold a neutral spine with steady breathing. Regression: bear hold or lower the knees." }
+        { type: "exercise", id: "high-plank-hold", name: "High-plank hold", durationSeconds: 40, shortDescription: "Finish on the knees, take water, then stand.", longDescription: "Hold a neutral spine with steady breathing. Regression: bear hold or lower the knees.", illustration: "exercises/high-plank.svg" }
       ]
     },
     {

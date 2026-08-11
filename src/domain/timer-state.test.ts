@@ -2,8 +2,9 @@ import { describe, expect, it } from "vitest";
 import { compileClass } from "./compile-class";
 import {
   createTimerState,
-  getOverallElapsedMs,
   getRemainingMs,
+  getScheduledElapsedMs,
+  getSessionElapsedMs,
   nextTimer,
   pauseTimer,
   previousTimer,
@@ -112,12 +113,12 @@ describe("timer state", () => {
 
   it("derives overall progress from the compiled offset and current timestamp", () => {
     const running = startTimer(createTimerState(timeline.steps), 1_000);
-    expect(getOverallElapsedMs(running, timeline.steps, timeline.totalDurationMs, 4_500)).toBe(
+    expect(getScheduledElapsedMs(running, timeline.steps, timeline.totalDurationMs, 4_500)).toBe(
       3_500
     );
 
     const transition = reconcileTimer(running, timeline.steps, 12_000);
-    expect(getOverallElapsedMs(transition, timeline.steps, timeline.totalDurationMs, 12_000)).toBe(
+    expect(getScheduledElapsedMs(transition, timeline.steps, timeline.totalDurationMs, 12_000)).toBe(
       11_000
     );
   });
@@ -139,5 +140,11 @@ describe("timer state", () => {
     expect(getRemainingMs(running, timeline.steps, 12_000)).toBe(8_000);
     expect(getRemainingMs(running, timeline.steps, 9_000)).toBe(11_000);
     expect(reconcileTimer(running, timeline.steps, 9_000)).toBe(running);
+  });
+
+  it("keeps real session elapsed time advancing during pauses and never decreases", () => {
+    expect(getSessionElapsedMs(10_000, 14_000, 0)).toBe(4_000);
+    expect(getSessionElapsedMs(10_000, 18_000, 4_000)).toBe(8_000);
+    expect(getSessionElapsedMs(10_000, 12_000, 8_000)).toBe(8_000);
   });
 });

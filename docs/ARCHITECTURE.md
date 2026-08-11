@@ -175,9 +175,11 @@ reload. Keep clock access injectable so tests use a fake clock.
 - **Reload recovery:** restore paused state exactly or reconcile a running
   timestamp with the compiled timeline.
 
-Manual navigation changes scheduled elapsed progress. It does not pretend that
-skipped exercises were completed in real time; overall progress is the current
-timeline offset, not a wall-clock session history metric.
+Manual navigation changes scheduled progress and the scheduled remaining
+estimate. A separate real-session clock is derived from the original Start
+timestamp, continues while the exercise timer is paused, and is clamped to its
+previous value so seeking, navigation, or a backward wall-clock correction can
+never reduce it.
 
 ## Rendering and responsiveness
 
@@ -186,9 +188,12 @@ insets, and touch targets. The active step and timer dominate the visual
 hierarchy.
 
 - Phone portrait: single-column, fixed primary controls near the safe bottom.
+  The primary target is iPhone 15 Pro Max at 430 × 932 CSS pixels, where the
+  complete current-step description remains visible without disclosure UI.
 - Phone landscape: compact two-column information/control arrangement.
 - iPad: active timer on the left; next step and details on the right.
-- Descriptions and art may collapse before essential controls do.
+- On shorter phones and landscape layouts, descriptions and art may move into
+  the scrollable content region before essential controls are affected.
 
 Avoid relying on hover. Prevent accidental double taps from selecting text or
 triggering adjacent controls, while preserving browser accessibility and zoom.
@@ -198,12 +203,14 @@ as exercises themselves.
 
 ## Audio
 
-Load small local audio assets so cues work offline. The Start action initializes
-or resumes the audio context. Audio preferences are persisted locally.
+Generate short cue tones through the local Web Audio context so cues work
+offline without additional requests. The Start action initializes or resumes
+the audio context. Audio preferences are persisted locally.
 
-Audio events should be emitted from domain transitions rather than inferred
-from rendered seconds, preventing duplicate cues during re-renders. Do not
-replay every missed cue after foreground recovery.
+Step cues are keyed to observed step-index transitions and final countdown cues
+are keyed to the step and whole second, preventing duplicate cues during
+re-renders. A delayed foreground reconciliation emits at most the current
+transition cue; it does not replay every missed cue.
 
 ## Wake lock and visibility
 
@@ -230,6 +237,8 @@ interface StoredSessionV1 {
   version: 1;
   classId: string;
   classVersion: number;
+  startedAtEpochMs: number;
+  elapsedMsFloor: number;
   status: "running" | "paused";
   stepIndex: number;
   targetEndEpochMs?: number;
@@ -237,6 +246,9 @@ interface StoredSessionV1 {
   savedAtEpochMs: number;
 }
 ```
+
+`expandedDescriptions` is retained in version 1 for compatibility with saved
+settings, but descriptions are now always rendered expanded.
 
 Reject or migrate unknown versions. If the referenced class/version no longer
 matches, explain that the session cannot safely resume and offer to discard it.

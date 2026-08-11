@@ -13,7 +13,8 @@ leaving the session screen.
 ## Primary user and environment
 
 - One instructor using their own device.
-- Primarily an iPhone; iPad is also supported.
+- Primarily an iPhone 15 Pro Max in portrait (430 × 932 CSS pixels); smaller
+  iPhones and iPad are also supported.
 - Used in portrait or landscape orientation during a live class.
 - Often running beside Spotify or another music source.
 - Connectivity may be poor, so the core session must not need a network.
@@ -27,7 +28,9 @@ leaving the session screen.
 - **Step:** A timed exercise or rest in the compiled class timeline.
 - **Session:** A running instance of a class.
 - **Current-step progress:** Elapsed time within the active step.
-- **Overall progress:** Elapsed scheduled time across the entire class.
+- **Real elapsed time:** Wall-clock time since Start, including pauses. It never
+  decreases after seeking or manual navigation.
+- **Scheduled progress:** Current position in the authored class timeline.
 
 ## MVP experience
 
@@ -53,10 +56,10 @@ The session screen shows:
 - Exercise or rest name.
 - A large current-step countdown.
 - Draggable current-step progress.
-- Overall elapsed time, remaining time, and progress.
+- Real elapsed time, scheduled remaining time, and scheduled progress.
 - The next exercise or rest.
 - A short exercise description, when supplied.
-- An expandable longer description, when supplied.
+- The full longer description, shown directly when supplied.
 - Optional exercise illustration.
 
 Primary controls are Previous, Pause/Resume, and Next. They must remain visible
@@ -73,7 +76,10 @@ without scrolling. Secondary actions may include Restart step, add or subtract
 - Next goes to the beginning of the next step.
 - Dragging the step progress pauses advancement while dragging. Releasing it
   keeps the prior running/paused state and uses the selected position.
-- Pause freezes both current-step and overall progress.
+- Pause freezes the current step and scheduled progress. Real elapsed time
+  continues so the instructor can see the true time spent in the session.
+- Seeking, Previous, and Next may change scheduled progress but never reduce
+  real elapsed time.
 
 ### Recovery
 
@@ -101,7 +107,7 @@ the app was suspended.
 - Accurate start, pause, resume, seek, previous, and next behavior.
 - Current and overall progress.
 - Audio cues.
-- Short and expandable descriptions.
+- Short and fully visible longer descriptions.
 - Optional static exercise illustrations.
 - Session recovery.
 - Installable, offline-capable iPhone/iPad PWA.
@@ -124,8 +130,9 @@ The MVP is complete when:
 
 1. A class containing phases, nested repeats, exercises, and rests compiles and
    runs in the documented order.
-2. Scheduled totals, step progress, and overall progress remain accurate after
-   pause, resume, seeking, delayed renders, and foreground restoration.
+2. Scheduled totals and step progress remain accurate after pause, resume,
+   seeking, delayed renders, and foreground restoration; real elapsed time
+   continues through pauses and never decreases.
 3. Previous, Next, and progress seeking have the documented semantics.
 4. A reload can recover an active session or discard it safely.
 5. The installed PWA starts and completes a previously cached class without a

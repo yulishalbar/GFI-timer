@@ -12,7 +12,10 @@ No backend or App Store installation is required.
 Milestones 1 and 2 are complete. The repository contains a working class
 picker, validated static class format, schedule compiler, responsive timeline,
 timestamp-based live timer, touch and keyboard session controls, offline PWA
-build, automated tests, and GitHub Pages workflow.
+build, recoverable sessions, local audio cues, wake-lock handling, automated
+tests, and GitHub Pages workflow. Milestone 3 implementation is ready for
+physical iPhone and iPad verification. The live session layout is optimized for
+an iPhone 15 Pro Max in portrait while retaining compact-phone coverage.
 
 ## Requirements
 

@@ -1,16 +1,22 @@
 import { useRef } from "react";
 import type { CompiledClass } from "../domain/timeline";
-import { getOverallElapsedMs, getRemainingMs } from "../domain/timer-state";
+import { getRemainingMs, getScheduledElapsedMs } from "../domain/timer-state";
 import { useSessionTimer } from "../hooks/useSessionTimer";
+import type { SessionInitialization } from "../hooks/useSessionTimer";
 import { formatDuration } from "../lib/format-duration";
 import { ExerciseDetails } from "./ExerciseDetails";
 import { OverallProgress } from "./OverallProgress";
 import { SessionControls } from "./SessionControls";
 import { StepProgress } from "./StepProgress";
+import { useAudioCues } from "../hooks/useAudioCues";
+import { useWakeLock } from "../hooks/useWakeLock";
+import { initializeAudioCues } from "../lib/audio-cues";
 
 interface SessionScreenProps {
   fitnessClass: CompiledClass;
-  startedAtEpochMs: number;
+  initialization: SessionInitialization;
+  soundEnabled: boolean;
+  onSoundToggle: () => void;
   onExit: () => void;
 }
 
@@ -24,17 +30,35 @@ function formatCountdown(durationMs: number): string {
   return formatDuration(Math.ceil(durationMs / 1_000) * 1_000, { padMinutes: true });
 }
 
-export function SessionScreen({ fitnessClass, startedAtEpochMs, onExit }: SessionScreenProps) {
-  const timer = useSessionTimer(fitnessClass, startedAtEpochMs);
+export function SessionScreen({
+  fitnessClass,
+  initialization,
+  soundEnabled,
+  onSoundToggle,
+  onExit
+}: SessionScreenProps) {
+  const timer = useSessionTimer(fitnessClass, initialization);
   const { state, nowEpochMs } = timer;
   const wasRunningBeforeSeek = useRef(false);
+  const audioStep = fitnessClass.steps[state.stepIndex];
+  const audioRemainingMs = getRemainingMs(state, fitnessClass.steps, nowEpochMs);
+  useAudioCues({
+    enabled: soundEnabled,
+    status: state.status,
+    stepIndex: state.stepIndex,
+    ...(audioStep === undefined ? {} : { stepKind: audioStep.kind }),
+    remainingMs: audioRemainingMs
+  });
+  const wakeLockStatus = useWakeLock(state.status !== "complete");
 
   if (state.status === "complete") {
     return (
       <main className="session-shell session-shell--complete" id="main-content">
         <p className="eyebrow">Class complete</p>
         <h1>Excellent work.</h1>
-        <p>{fitnessClass.definition.title} is complete.</p>
+        <p>
+          {fitnessClass.definition.title} is complete in {formatDuration(timer.sessionElapsedMs)}.
+        </p>
         <button className="primary-button" type="button" onClick={onExit}>
           Return to class overview
           <span aria-hidden="true">→</span>
@@ -50,7 +74,7 @@ export function SessionScreen({ fitnessClass, startedAtEpochMs, onExit }: Sessio
   const nextStep = fitnessClass.steps[state.stepIndex + 1];
   const remainingMs = getRemainingMs(state, fitnessClass.steps, nowEpochMs);
   const elapsedStepMs = currentStep.durationMs - remainingMs;
-  const overallElapsedMs = getOverallElapsedMs(
+  const scheduledElapsedMs = getScheduledElapsedMs(
     state,
     fitnessClass.steps,
     fitnessClass.totalDurationMs,
@@ -78,9 +102,23 @@ export function SessionScreen({ fitnessClass, startedAtEpochMs, onExit }: Sessio
           Exit
         </button>
         <span className="session-topbar__title">{fitnessClass.definition.title}</span>
-        <time dateTime={new Date(nowEpochMs).toISOString()}>
-          {wallClockFormatter.format(nowEpochMs)}
-        </time>
+        <div className="session-topbar__utilities">
+          {wakeLockStatus === "unavailable" || wakeLockStatus === "error" ? (
+            <span className="wake-warning">Screen lock unavailable</span>
+          ) : null}
+          <button
+            type="button"
+            className="sound-toggle"
+            aria-pressed={!soundEnabled}
+            onClick={onSoundToggle}
+          >
+            <span aria-hidden="true">{soundEnabled ? "♪" : "×"}</span>
+            {soundEnabled ? "Sound on" : "Muted"}
+          </button>
+          <time dateTime={new Date(nowEpochMs).toISOString()}>
+            {wallClockFormatter.format(nowEpochMs)}
+          </time>
+        </div>
       </header>
 
       <div className="session-dashboard">
@@ -119,7 +157,8 @@ export function SessionScreen({ fitnessClass, startedAtEpochMs, onExit }: Sessio
             {nextStep ? <time>{formatDuration(nextStep.durationMs)}</time> : null}
           </section>
           <OverallProgress
-            elapsedMs={overallElapsedMs}
+            sessionElapsedMs={timer.sessionElapsedMs}
+            scheduledElapsedMs={scheduledElapsedMs}
             totalDurationMs={fitnessClass.totalDurationMs}
           />
         </aside>
@@ -129,7 +168,12 @@ export function SessionScreen({ fitnessClass, startedAtEpochMs, onExit }: Sessio
         status={state.status}
         onPrevious={timer.previous}
         onPause={timer.pause}
-        onResume={timer.resume}
+        onResume={() => {
+          if (soundEnabled) {
+            initializeAudioCues();
+          }
+          timer.resume();
+        }}
         onNext={timer.next}
       />
     </main>

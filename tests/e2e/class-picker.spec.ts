@@ -1,6 +1,11 @@
 import { expect, test } from "@playwright/test";
 
-test("opens a compiled class schedule and returns to the picker", async ({ page }) => {
+function durationToSeconds(value: string | null): number {
+  const parts = (value ?? "0:00").split(":").map(Number);
+  return parts.reduce((total, part) => total * 60 + part, 0);
+}
+
+test("opens a compiled class schedule and returns to the picker", async ({ page }, testInfo) => {
   await page.goto("./");
 
   await expect(page.getByRole("heading", { name: "Choose today's class" })).toBeVisible();
@@ -33,9 +38,42 @@ test("opens a compiled class schedule and returns to the picker", async ({ page 
   await page.getByRole("button", { name: "Pause" }).click();
   await expect(page.getByText("paused", { exact: true })).toBeVisible();
   await expect(page.getByRole("button", { name: "Resume" })).toBeVisible();
+  const countdown = page.locator(".session-countdown");
+  const pausedCountdown = await countdown.textContent();
+  const realElapsed = page
+    .locator(".overall-progress__labels span")
+    .filter({ hasText: "Real elapsed" })
+    .locator("strong");
+  const elapsedAtPause = durationToSeconds(await realElapsed.textContent());
+  await expect.poll(async () => durationToSeconds(await realElapsed.textContent())).toBeGreaterThan(
+    elapsedAtPause
+  );
+  await expect(countdown).toHaveText(pausedCountdown ?? "");
+
+  await page.getByRole("button", { name: "Sound on" }).click();
+  await expect(page.getByRole("button", { name: "Muted" })).toBeVisible();
+  await page.reload();
+  await expect(page.getByRole("heading", { name: "Resume Mat Pilates — July 24?" })).toBeVisible();
+  await page.getByRole("button", { name: "Resume session" }).click();
+  await expect(page.getByText("paused", { exact: true })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Class introduction" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Muted" })).toBeVisible();
 
   await page.getByRole("button", { name: "Next" }).click();
   await expect(page.getByRole("heading", { name: "Child's pose and side-body stretch" })).toBeVisible();
+  await expect(page.locator(".exercise-details img")).toBeVisible();
+  const fullDescription = page.locator(".exercise-details__long");
+  await expect(fullDescription).toContainText("Bring the big toes together");
+  await expect(fullDescription).toBeVisible();
+  if (testInfo.project.name === "iphone-15-pro-max-chromium") {
+    const descriptionBox = await fullDescription.boundingBox();
+    const controlsBox = await page.locator(".session-controls").boundingBox();
+    expect(descriptionBox).not.toBeNull();
+    expect(controlsBox).not.toBeNull();
+    expect((descriptionBox?.y ?? 0) + (descriptionBox?.height ?? 0)).toBeLessThan(
+      controlsBox?.y ?? 0
+    );
+  }
   await page.getByRole("slider", { name: "Seek within current step" }).fill("30000");
   await expect(page.getByRole("slider", { name: "Seek within current step" })).toHaveValue("30000");
 

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" role="img" aria-labelledby="title desc">
+  <title id="title">Child's pose</title>
+  <desc id="desc">A simple side-view guide to child's pose on a mat.</desc>
+  <rect width="320" height="180" rx="24" fill="#18211b"/>
+  <path d="M38 144h244" stroke="#4d6355" stroke-width="8" stroke-linecap="round"/>
+  <circle cx="112" cy="103" r="18" fill="none" stroke="#d7ff62" stroke-width="9"/>
+  <path d="M130 104c35-2 50 19 75 22m-74-18-37 29m109-11 43 11m-42-10-39 11-38-18" fill="none" stroke="#f6f7ef" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M93 137h-31" stroke="#8fd8ff" stroke-width="8" stroke-linecap="round"/>
+</svg>
