@@ -283,8 +283,9 @@ prefer this over GIF so the asset stays sharp, compact, and able to honor
 `prefers-reduced-motion`. Static holds do not animate merely for decoration.
 
 Use a conservative update flow: download a new build in the background and ask
-the user to refresh only when no class is running. Never force an update during
-an active session.
+the user to refresh only when no class is running. The update remains pending
+but its prompt is hidden throughout the live-session screen, then becomes
+available after exit. Never force an update during an active session.
 
 ## Spotify boundary
 

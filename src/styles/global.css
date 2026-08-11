@@ -135,6 +135,49 @@ summary:focus-visible {
   box-shadow: 0 0 0 0.25rem rgba(215, 255, 98, 0.1);
 }
 
+.update-prompt {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  width: min(100% - 2rem, var(--page-max));
+  padding: 1rem;
+  margin: 1rem auto 0;
+  border: 1px solid rgba(215, 255, 98, 0.35);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-raised);
+  box-shadow: var(--shadow-card);
+}
+
+.update-prompt > div:first-child {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.update-prompt span {
+  color: var(--color-muted);
+  font-size: 0.9rem;
+}
+
+.update-prompt__actions {
+  display: flex;
+  gap: 0.65rem;
+}
+
+.update-prompt__actions .primary-button,
+.update-prompt__actions .secondary-button {
+  width: auto;
+  min-height: 2.9rem;
+  padding-inline: 1rem;
+  margin: 0;
+  white-space: nowrap;
+}
+
+.update-prompt__actions .primary-button:disabled {
+  cursor: wait;
+  opacity: 0.7;
+}
+
 .page-shell {
   flex: 1;
   padding-block: clamp(3rem, 8vw, 7rem);
@@ -1015,6 +1058,16 @@ h1 {
 
   .offline-badge > span {
     width: 0.55rem;
+  }
+
+  .update-prompt {
+    align-items: stretch;
+    flex-direction: column;
+    width: min(100% - 1.25rem, var(--page-max));
+  }
+
+  .update-prompt__actions > button {
+    flex: 1;
   }
 
   .page-shell {

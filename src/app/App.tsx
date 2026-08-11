@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { availableClasses } from "../classes";
 import { ClassPicker } from "../components/ClassPicker";
 import { ClassSummary } from "../components/ClassSummary";
+import { PwaUpdatePrompt } from "../components/PwaUpdatePrompt";
 import { SessionScreen } from "../components/SessionScreen";
 import { RecoveryPrompt } from "../components/RecoveryPrompt";
 import type { SessionInitialization } from "../hooks/useSessionTimer";
@@ -13,6 +14,7 @@ import {
 } from "../persistence/session-store";
 import { loadStoredSettings, saveStoredSettings } from "../persistence/settings-store";
 import { initializeAudioCues } from "../lib/audio-cues";
+import { usePwaLifecycle } from "../hooks/usePwaLifecycle";
 
 type RecoveryState =
   | { status: "none" }
@@ -72,6 +74,7 @@ export function App() {
     useState<SessionInitialization | null>(null);
   const [recovery, setRecovery] = useState<RecoveryState>(loadRecoveryState);
   const [settings, setSettings] = useState(loadStoredSettings);
+  const pwa = usePwaLifecycle();
   const selectedClass = useMemo(
     () => availableClasses.find((fitnessClass) => fitnessClass.definition.id === selectedClassId),
     [selectedClassId]
@@ -110,6 +113,13 @@ export function App() {
             setSessionInitialization(null);
           }}
         />
+        <PwaUpdatePrompt
+          isApplying={pwa.isApplyingUpdate}
+          isDeferred
+          isVisible={pwa.isUpdateAvailable}
+          onDismiss={pwa.dismissUpdate}
+          onUpdate={() => void pwa.applyUpdate()}
+        />
       </div>
     );
   }
@@ -131,11 +141,19 @@ export function App() {
           </span>
           <span>GFI Timer</span>
         </button>
-        <span className="offline-badge">
+        <span className="offline-badge" aria-live="polite">
           <span aria-hidden="true" />
-          Offline ready
+          {pwa.isOfflineReady ? "Offline ready" : "Preparing offline"}
         </span>
       </header>
+
+      <PwaUpdatePrompt
+        isApplying={pwa.isApplyingUpdate}
+        isDeferred={false}
+        isVisible={pwa.isUpdateAvailable}
+        onDismiss={pwa.dismissUpdate}
+        onUpdate={() => void pwa.applyUpdate()}
+      />
 
       {recovery.status === "available" ? (
         <RecoveryPrompt

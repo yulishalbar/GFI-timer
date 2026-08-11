@@ -123,6 +123,9 @@ The workflow needs `contents: read`, `pages: write`, and `id-token: write`.
 Do not commit `dist/` or maintain a deployment branch. GitHub Actions owns the
 generated artifact.
 
+See [Release and rollback](RELEASE.md) for the production checklist, safe PWA
+update behavior, and the non-destructive rollback procedure.
+
 References:
 
 - [Vite static deployment guide](https://vite.dev/guide/static-deploy.html)
@@ -134,8 +137,11 @@ References:
   display are correct under `/GFI-timer/`.
 - Include appropriate maskable and Apple touch icons.
 - Cache the app shell and all critical local assets.
+- Verify the built app and referenced exercise art reload under Playwright's
+  offline browser context.
 - Offline startup succeeds after one successful online visit.
-- A new build does not forcibly reload an active session.
+- A new build is offered only outside the live-session screen and does not
+  forcibly reload an active session.
 - Wake lock is requested only from an appropriate user-driven flow.
 - Audio is initialized by the Start interaction.
 - Storage and service-worker upgrades are tested from the prior deployed build.

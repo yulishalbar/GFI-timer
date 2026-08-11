@@ -13,9 +13,11 @@ Milestones 1 and 2 are complete. The repository contains a working class
 picker, validated static class format, schedule compiler, responsive timeline,
 timestamp-based live timer, touch and keyboard session controls, offline PWA
 build, recoverable sessions, local audio cues, wake-lock handling, automated
-tests, and GitHub Pages workflow. Milestone 3 implementation is ready for
-physical iPhone and iPad verification. The live session layout is optimized for
-an iPhone 15 Pro Max in portrait while retaining compact-phone coverage.
+tests, complete install icons, safe update prompting, offline browser coverage,
+and a GitHub Pages workflow. Milestones 3 and 4 are implemented locally and
+ready for GitHub Pages enablement plus physical iPhone and iPad verification.
+The live session layout is optimized for an iPhone 15 Pro Max in portrait while
+retaining compact-phone coverage.
 
 ## Requirements
 
@@ -132,6 +134,10 @@ The same workflow can also be started manually: open **Actions**, select **Test
 and deploy to GitHub Pages**, and choose **Run workflow**. Do not commit `dist/`;
 GitHub Actions builds and uploads it.
 
+See the [release and rollback guide](docs/RELEASE.md) before the first
+production deployment. New builds are offered only outside the live-session
+screen, preventing an update from interrupting a running class.
+
 ## Open and install on iPhone or iPad
 
 After a successful deployment:
@@ -166,6 +172,7 @@ offline behavior.
 - [Architecture](docs/ARCHITECTURE.md)
 - [Class format](docs/CLASS_FORMAT.md)
 - [Development guide](docs/DEVELOPMENT.md)
+- [Release and rollback](docs/RELEASE.md)
 - [Roadmap](docs/ROADMAP.md)
 - [Contributor and agent instructions](AGENTS.md)
 
