@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { availableClasses } from "../classes";
 import { ClassPicker } from "../components/ClassPicker";
 import { ClassSummary } from "../components/ClassSummary";
@@ -76,6 +76,16 @@ export function App() {
     () => availableClasses.find((fitnessClass) => fitnessClass.definition.id === selectedClassId),
     [selectedClassId]
   );
+
+  useEffect(() => {
+    const previousScrollRestoration = window.history.scrollRestoration;
+    window.history.scrollRestoration = "manual";
+    const frameId = window.requestAnimationFrame(() => window.scrollTo({ top: 0, left: 0 }));
+    return () => {
+      window.cancelAnimationFrame(frameId);
+      window.history.scrollRestoration = previousScrollRestoration;
+    };
+  }, [recovery.status, selectedClassId]);
 
   if (selectedClass && sessionInitialization !== null) {
     return (

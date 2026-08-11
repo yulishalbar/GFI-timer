@@ -39,7 +39,8 @@ a desktop/mobile browser, including delayed-clock test cases.
 - Add Screen Wake Lock with visibility reacquisition.
 - Reconcile background/suspended time without replaying missed cues.
 - Add short and expandable descriptions.
-- Add initial static SVG exercise illustrations.
+- Add clear SVG exercise illustrations with selective reduced-motion-safe
+  animation where movement needs explanation.
 - Complete phone and iPad layouts.
 
 Exit condition: an instructor can run and recover a session on physical iPhone
@@ -66,7 +67,7 @@ Candidate features, prioritized after real class use:
 - Configurable final countdown.
 - Pre-class countdown.
 - Landscape dashboard improvements.
-- Larger exercise art or lightweight SVG/CSS motion.
+- Expand the exercise-art library as more classes are added.
 - Class favorites and most-recent selection.
 - Optional phase progress in addition to class progress.
 - Session duration summary without long-term tracking.

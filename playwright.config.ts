@@ -1,4 +1,6 @@
 import { defineConfig } from "@playwright/test";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 
 export default defineConfig({
   testDir: "./tests/e2e",
@@ -9,7 +11,13 @@ export default defineConfig({
   reporter: process.env.CI ? "github" : "list",
   use: {
     baseURL: "http://127.0.0.1:4173/GFI-timer/",
-    trace: "on-first-retry"
+    trace: "on-first-retry",
+    launchOptions: {
+      args: ["--disable-logging"],
+      env: {
+        CHROME_LOG_FILE: join(tmpdir(), "gfi-timer-chromium.log")
+      }
+    }
   },
   projects: [
     {

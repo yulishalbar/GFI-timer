@@ -1,3 +1,4 @@
+import { useMemo, useState } from "react";
 import type { CompiledClass } from "../domain/timeline";
 import { formatDuration, formatMinutes } from "../lib/format-duration";
 
@@ -8,6 +9,32 @@ interface ClassSummaryProps {
 }
 
 export function ClassSummary({ fitnessClass, onBack, onStart }: ClassSummaryProps) {
+  const detailStepIds = useMemo(
+    () =>
+      fitnessClass.steps
+        .filter((step) => step.longDescription !== undefined || step.illustration !== undefined)
+        .map((step) => step.runtimeId),
+    [fitnessClass.steps]
+  );
+  const [expandedStepIds, setExpandedStepIds] = useState<ReadonlySet<string>>(
+    () => new Set()
+  );
+  const allDetailsExpanded = detailStepIds.every((runtimeId) =>
+    expandedStepIds.has(runtimeId)
+  );
+
+  const toggleStepDetails = (runtimeId: string) => {
+    setExpandedStepIds((current) => {
+      const next = new Set(current);
+      if (next.has(runtimeId)) {
+        next.delete(runtimeId);
+      } else {
+        next.add(runtimeId);
+      }
+      return next;
+    });
+  };
+
   return (
     <main className="page-shell page-shell--summary" id="main-content">
       <button className="back-button" type="button" onClick={onBack}>
@@ -45,7 +72,18 @@ export function ClassSummary({ fitnessClass, onBack, onStart }: ClassSummaryProp
             <p className="eyebrow">Full sequence</p>
             <h2 id="schedule-title">Class schedule</h2>
           </div>
-          <span>{fitnessClass.steps.length} timed steps</span>
+          <div className="section-heading__actions">
+            <span>{fitnessClass.steps.length} timed steps</span>
+            <button
+              type="button"
+              aria-expanded={allDetailsExpanded}
+              onClick={() =>
+                setExpandedStepIds(allDetailsExpanded ? new Set() : new Set(detailStepIds))
+              }
+            >
+              {allDetailsExpanded ? "Collapse all pose details" : "Expand all pose details"}
+            </button>
+          </div>
         </div>
 
         {fitnessClass.phases.map((phase) => {
@@ -81,6 +119,33 @@ export function ClassSummary({ fitnessClass, onBack, onStart }: ClassSummaryProp
                         ) : null}
                       </div>
                       {step.shortDescription ? <p>{step.shortDescription}</p> : null}
+                      {step.longDescription || step.illustration ? (
+                        <button
+                          className="pose-details-toggle"
+                          type="button"
+                          aria-expanded={expandedStepIds.has(step.runtimeId)}
+                          aria-controls={`details-${step.runtimeId.replace(/[^a-zA-Z0-9_-]/g, "-")}`}
+                          onClick={() => toggleStepDetails(step.runtimeId)}
+                        >
+                          {expandedStepIds.has(step.runtimeId)
+                            ? "Hide pose details"
+                            : "Show pose details"}
+                        </button>
+                      ) : null}
+                      {expandedStepIds.has(step.runtimeId) ? (
+                        <div
+                          className="pose-details"
+                          id={`details-${step.runtimeId.replace(/[^a-zA-Z0-9_-]/g, "-")}`}
+                        >
+                          {step.illustration ? (
+                            <img
+                              src={`${import.meta.env.BASE_URL}${step.illustration}`}
+                              alt={`Illustration for ${step.name}`}
+                            />
+                          ) : null}
+                          {step.longDescription ? <p>{step.longDescription}</p> : null}
+                        </div>
+                      ) : null}
                     </div>
                     <time dateTime={`PT${step.durationMs / 1_000}S`}>
                       {formatDuration(step.durationMs, { padMinutes: true })}

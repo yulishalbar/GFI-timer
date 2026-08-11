@@ -14,12 +14,18 @@ test("opens a compiled class schedule and returns to the picker", async ({ page 
   await expect(classCard).toContainText("8 phases");
   await expect(classCard).toContainText("77 steps");
 
+  await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
   await classCard.getByRole("button", { name: "View class" }).click();
 
   await expect(page.getByRole("heading", { name: "Mat Pilates — July 24" })).toBeVisible();
+  await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(0);
   await expect(page.getByLabel("53.3 min total")).toContainText("53:20");
   await expect(page.getByText("77 timed steps")).toBeVisible();
   await expect(page.getByRole("heading", { name: "Circuit 4 — Lower Body" })).toBeVisible();
+  const startButton = page.getByRole("button", { name: "Start class" });
+  if (testInfo.project.name === "iphone-15-pro-max-chromium") {
+    await expect(startButton).toBeInViewport();
+  }
 
   const coreSection = page
     .locator(".phase-section")
@@ -30,7 +36,16 @@ test("opens a compiled class schedule and returns to the picker", async ({ page 
   expect(transitionBox).not.toBeNull();
   expect(transitionBox?.x ?? 0).toBeGreaterThan(exerciseBox?.x ?? 0);
 
-  await page.getByRole("button", { name: "Start class" }).click();
+  await page.getByRole("button", { name: "Expand all pose details" }).click();
+  const childPosePreview = page
+    .locator(".step-row")
+    .filter({ hasText: "Child's pose and side-body stretch" });
+  await expect(childPosePreview.locator(".pose-details")).toBeVisible();
+  await expect(childPosePreview).toContainText("Bring the big toes together");
+  await expect(childPosePreview.getByAltText("Illustration for Child's pose and side-body stretch"))
+    .toBeVisible();
+
+  await startButton.click();
   await expect(page.getByRole("heading", { name: "Class introduction" })).toBeVisible();
   await expect(page.getByText("running", { exact: true })).toBeVisible();
   await expect(page.getByRole("button", { name: "Pause" })).toBeVisible();

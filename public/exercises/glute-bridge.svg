@@ -1,9 +1,52 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" role="img" aria-labelledby="title desc">
-  <title id="title">Glute bridge</title>
-  <desc id="desc">A simple side-view guide to a glute bridge on a mat.</desc>
+  <title id="title">Animated glute bridge</title>
+  <desc id="desc">A detailed side view alternates between the lowered and lifted bridge positions while the hands and feet remain planted.</desc>
+  <style>
+    .pose-up { animation: show-up 2.4s ease-in-out infinite; }
+    .pose-down { animation: show-down 2.4s ease-in-out infinite; }
+    @keyframes show-up { 0%, 42%, 100% { opacity: 1; } 52%, 90% { opacity: 0; } }
+    @keyframes show-down { 0%, 42%, 100% { opacity: 0; } 52%, 90% { opacity: 1; } }
+    @media (prefers-reduced-motion: reduce) {
+      .pose-up, .pose-down { animation: none; }
+      .pose-up { opacity: 1; }
+      .pose-down { opacity: 0; }
+    }
+  </style>
+  <defs>
+    <marker id="arrow" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto">
+      <path d="M0 0L7 3.5L0 7Z" fill="#8fd8ff"/>
+    </marker>
+  </defs>
   <rect width="320" height="180" rx="24" fill="#18211b"/>
-  <path d="M38 144h244" stroke="#4d6355" stroke-width="8" stroke-linecap="round"/>
-  <circle cx="72" cy="126" r="18" fill="none" stroke="#d7ff62" stroke-width="9"/>
-  <path d="M90 124 137 98l56 18m-1 0 35-39 35 65m-35-65 43 2M137 98l-36 39" fill="none" stroke="#f6f7ef" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M131 84c17-12 39-11 57 0" fill="none" stroke="#8fd8ff" stroke-width="7" stroke-linecap="round"/>
+  <path d="M28 149H292" stroke="#4d6355" stroke-width="8" stroke-linecap="round"/>
+
+  <!-- fixed head, grounded arm, hand, lower leg, and foot -->
+  <circle cx="58" cy="124" r="19" fill="#d7ff62" stroke="#f6f7ef" stroke-width="4"/>
+  <circle cx="67" cy="120" r="2.5" fill="#18211b"/>
+  <path d="M73 126L82 130" stroke="#f6f7ef" stroke-width="8" stroke-linecap="round"/>
+  <path d="M82 130L115 141" stroke="#f6f7ef" stroke-width="10" stroke-linecap="round"/>
+  <circle cx="114" cy="141" r="6" fill="#8fd8ff" stroke="#f6f7ef" stroke-width="2"/>
+  <ellipse cx="128" cy="144" rx="15" ry="6" fill="#8fd8ff" stroke="#f6f7ef" stroke-width="2"/>
+  <path d="M222 111L250 141" stroke="#f6f7ef" stroke-width="15" stroke-linecap="round"/>
+  <path d="M247 142C258 137 271 139 280 145C270 149 257 150 246 148Z" fill="#d7ff62" stroke="#f6f7ef" stroke-width="3"/>
+  <circle cx="222" cy="111" r="7" fill="#d7ff62" stroke="#f6f7ef" stroke-width="2"/>
+
+  <!-- lifted position -->
+  <g class="pose-up">
+    <path d="M81 126C110 122 126 99 163 88" fill="none" stroke="#f6f7ef" stroke-width="21" stroke-linecap="round"/>
+    <path d="M91 121C113 114 130 98 158 91" fill="none" stroke="#8fd8ff" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="164" cy="88" r="11" fill="#d7ff62" stroke="#f6f7ef" stroke-width="3"/>
+    <path d="M164 88L222 111" stroke="#f6f7ef" stroke-width="17" stroke-linecap="round"/>
+  </g>
+
+  <!-- lowered position -->
+  <g class="pose-down" opacity="0">
+    <path d="M81 126C109 130 139 137 169 139" fill="none" stroke="#f6f7ef" stroke-width="21" stroke-linecap="round"/>
+    <circle cx="170" cy="138" r="11" fill="#d7ff62" stroke="#f6f7ef" stroke-width="3"/>
+    <path d="M170 138L222 111" stroke="#f6f7ef" stroke-width="17" stroke-linecap="round"/>
+  </g>
+
+  <!-- movement and planted-contact cues -->
+  <path d="M181 132C190 118 192 103 183 91" fill="none" stroke="#8fd8ff" stroke-width="4" stroke-linecap="round" marker-end="url(#arrow)"/>
+  <path d="M108 153H143M244 153H284" stroke="#8fd8ff" stroke-width="3" stroke-linecap="round" opacity=".8"/>
 </svg>

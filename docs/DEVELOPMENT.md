@@ -82,6 +82,8 @@ Cover the instructor-critical path:
    essential controls.
 9. At 430 × 932, keep the complete current-step description visible above the
    fixed controls without requiring expansion.
+10. Open the class overview at scroll position zero, keep Start in the initial
+    iPhone 15 Pro Max viewport, and expand pre-class pose details and art.
 
 Offline and installation behavior should also be tested manually on physical
 iOS/iPadOS hardware before declaring the MVP ready.

@@ -199,7 +199,9 @@ Avoid relying on hover. Prevent accidental double taps from selecting text or
 triggering adjacent controls, while preserving browser accessibility and zoom.
 In schedule previews, explicit rest and transition rows are indented and use a
 secondary treatment so they read as connectors between exercises rather than
-as exercises themselves.
+as exercises themselves. Opening the picker or a class overview resets document
+scroll to the beginning. The overview keeps short instructor comments visible
+and provides per-pose plus expand-all controls for longer instructions and art.
 
 ## Audio
 
@@ -274,6 +276,11 @@ the repository subpath. Do not assume the app is hosted at `/`.
 Precache the application shell, registered class definitions, essential audio,
 icons, and referenced exercise illustrations. A class shown as available must
 not fail halfway through because its static media was not cached.
+
+Exercise art uses SVG so limbs, joints, hands, and feet stay legible at phone
+sizes. Motion may be embedded in an SVG when it explains a change of position;
+prefer this over GIF so the asset stays sharp, compact, and able to honor
+`prefers-reduced-motion`. Static holds do not animate merely for decoration.
 
 Use a conservative update flow: download a new build in the background and ask
 the user to refresh only when no class is running. Never force an update during

@@ -38,7 +38,10 @@ leaving the session screen.
 
 The app opens to a class picker. Each card shows the class name, approximate
 duration, and number of phases. Selecting a class shows a summary and a large
-Start button.
+Start button. The overview always opens at the beginning, keeps Start visible
+on the primary iPhone viewport, shows instructor comments, and allows pose
+instructions and artwork to be expanded individually or all at once for
+pre-class practice.
 
 Starting a class is the user gesture that also enables audio cues and requests
 a screen wake lock. If the wake lock is unavailable, the session still works
@@ -108,7 +111,9 @@ the app was suspended.
 - Current and overall progress.
 - Audio cues.
 - Short and fully visible longer descriptions.
-- Optional static exercise illustrations.
+- Optional exercise illustrations. Use lightweight animated SVG only when the
+  movement between positions is important; holds remain static, and every
+  animation provides a reduced-motion fallback.
 - Session recovery.
 - Installable, offline-capable iPhone/iPad PWA.
 - Automated deployment to GitHub Pages.
