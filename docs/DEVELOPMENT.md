@@ -2,20 +2,17 @@
 
 ## Prerequisites
 
-The implementation will require a current Node.js LTS release and npm. Exact
-minimum versions will be recorded in `package.json` and the lockfile when the
-project is bootstrapped.
+Use Node.js 22 or newer and npm. CI currently builds with Node.js 24. Dependency
+versions are pinned by `package-lock.json`.
 
-## Planned setup
-
-After the first implementation milestone:
+## Setup
 
 ```sh
-npm install
+npm ci
 npm run dev
 ```
 
-Expected scripts:
+Available scripts:
 
 ```sh
 npm run dev          # local Vite server
@@ -25,9 +22,6 @@ npm run test:e2e     # Playwright browser tests
 npm run build        # type-check and production build
 npm run preview      # serve the production build locally
 ```
-
-These commands do not exist yet; creating them is part of Milestone 1 in the
-[roadmap](ROADMAP.md).
 
 ## Development sequence
 

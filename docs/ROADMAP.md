@@ -1,6 +1,8 @@
 # Roadmap
 
-## Milestone 1: Foundation
+Current status: Milestone 1 is complete. Milestone 2, the live timer, is next.
+
+## Milestone 1: Foundation — complete
 
 Deliver a runnable but visually simple application.
 
