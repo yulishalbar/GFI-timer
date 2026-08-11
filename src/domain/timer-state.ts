@@ -2,10 +2,12 @@ import type { RuntimeStep } from "./timeline";
 
 export type TimerStatus = "ready" | "running" | "paused" | "complete";
 
+export const MAX_STEP_EXTENSION_MS = 10 * 60 * 1_000;
+
 export type TimerState =
-  | { status: "ready"; stepIndex: number; remainingMs: number }
-  | { status: "running"; stepIndex: number; targetEndEpochMs: number }
-  | { status: "paused"; stepIndex: number; remainingMs: number }
+  | { status: "ready"; stepIndex: number; remainingMs: number; stepDurationMs: number }
+  | { status: "running"; stepIndex: number; targetEndEpochMs: number; stepDurationMs: number }
+  | { status: "paused"; stepIndex: number; remainingMs: number; stepDurationMs: number }
   | { status: "complete"; stepIndex: number };
 
 export function getSessionElapsedMs(
@@ -24,7 +26,14 @@ function requireSteps(steps: readonly RuntimeStep[]): void {
 
 export function createTimerState(steps: readonly RuntimeStep[]): TimerState {
   requireSteps(steps);
-  return { status: "ready", stepIndex: 0, remainingMs: steps[0]?.durationMs ?? 0 };
+  const stepDurationMs = steps[0]?.durationMs ?? 0;
+  return { status: "ready", stepIndex: 0, remainingMs: stepDurationMs, stepDurationMs };
+}
+
+export function getStepDurationMs(state: TimerState, steps: readonly RuntimeStep[]): number {
+  return state.status === "complete"
+    ? (steps[state.stepIndex]?.durationMs ?? 0)
+    : state.stepDurationMs;
 }
 
 export function getRemainingMs(
@@ -38,7 +47,7 @@ export function getRemainingMs(
   if (state.status === "running") {
     return Math.max(0, state.targetEndEpochMs - nowEpochMs);
   }
-  return Math.min(state.remainingMs, steps[state.stepIndex]?.durationMs ?? 0);
+  return Math.min(state.remainingMs, state.stepDurationMs);
 }
 
 export function reconcileTimer(
@@ -63,7 +72,12 @@ export function reconcileTimer(
     targetEndEpochMs += nextStep.durationMs;
   }
 
-  return { status: "running", stepIndex, targetEndEpochMs };
+  return {
+    status: "running",
+    stepIndex,
+    targetEndEpochMs,
+    stepDurationMs: steps[stepIndex]?.durationMs ?? 0
+  };
 }
 
 export function startTimer(state: TimerState, nowEpochMs: number): TimerState {
@@ -73,7 +87,8 @@ export function startTimer(state: TimerState, nowEpochMs: number): TimerState {
   return {
     status: "running",
     stepIndex: state.stepIndex,
-    targetEndEpochMs: nowEpochMs + state.remainingMs
+    targetEndEpochMs: nowEpochMs + state.remainingMs,
+    stepDurationMs: state.stepDurationMs
   };
 }
 
@@ -89,7 +104,8 @@ export function pauseTimer(
   return {
     status: "paused",
     stepIndex: reconciled.stepIndex,
-    remainingMs: getRemainingMs(reconciled, steps, nowEpochMs)
+    remainingMs: getRemainingMs(reconciled, steps, nowEpochMs),
+    stepDurationMs: reconciled.stepDurationMs
   };
 }
 
@@ -105,7 +121,8 @@ export function resumeTimer(
     {
       status: "running",
       stepIndex: state.stepIndex,
-      targetEndEpochMs: nowEpochMs + state.remainingMs
+      targetEndEpochMs: nowEpochMs + state.remainingMs,
+      stepDurationMs: state.stepDurationMs
     },
     steps,
     nowEpochMs
@@ -123,12 +140,17 @@ function enterStep(
     return { status: "complete", stepIndex: steps.length - 1 };
   }
   if (state.status === "running") {
-    return { status: "running", stepIndex, targetEndEpochMs: nowEpochMs + durationMs };
+    return {
+      status: "running",
+      stepIndex,
+      targetEndEpochMs: nowEpochMs + durationMs,
+      stepDurationMs: durationMs
+    };
   }
   if (state.status === "ready" && stepIndex === 0) {
-    return { status: "ready", stepIndex, remainingMs: durationMs };
+    return { status: "ready", stepIndex, remainingMs: durationMs, stepDurationMs: durationMs };
   }
-  return { status: "paused", stepIndex, remainingMs: durationMs };
+  return { status: "paused", stepIndex, remainingMs: durationMs, stepDurationMs: durationMs };
 }
 
 export function nextTimer(
@@ -160,7 +182,7 @@ export function seekTimer(
     return reconciled;
   }
 
-  const durationMs = steps[reconciled.stepIndex]?.durationMs ?? 0;
+  const durationMs = reconciled.stepDurationMs;
   const clampedElapsedMs = Math.min(durationMs, Math.max(0, elapsedMs));
   const remainingMs = durationMs - clampedElapsedMs;
 
@@ -169,7 +191,8 @@ export function seekTimer(
       {
         status: "running",
         stepIndex: reconciled.stepIndex,
-        targetEndEpochMs: nowEpochMs + remainingMs
+        targetEndEpochMs: nowEpochMs + remainingMs,
+        stepDurationMs: reconciled.stepDurationMs
       },
       steps,
       nowEpochMs
@@ -177,6 +200,46 @@ export function seekTimer(
   }
 
   return { ...reconciled, remainingMs };
+}
+
+export function adjustTimer(
+  state: TimerState,
+  steps: readonly RuntimeStep[],
+  adjustmentMs: number,
+  nowEpochMs: number
+): TimerState {
+  const reconciled = reconcileTimer(state, steps, nowEpochMs);
+  if (reconciled.status === "complete" || !Number.isFinite(adjustmentMs) || adjustmentMs === 0) {
+    return reconciled;
+  }
+
+  const authoredDurationMs = steps[reconciled.stepIndex]?.durationMs ?? 0;
+  const adjustedDurationMs = Math.min(
+    authoredDurationMs + MAX_STEP_EXTENSION_MS,
+    Math.max(0, reconciled.stepDurationMs + adjustmentMs)
+  );
+  const appliedAdjustmentMs = adjustedDurationMs - reconciled.stepDurationMs;
+  const adjustedRemainingMs =
+    getRemainingMs(reconciled, steps, nowEpochMs) + appliedAdjustmentMs;
+
+  if (adjustedRemainingMs <= 0) {
+    return enterStep(reconciled, steps, reconciled.stepIndex + 1, nowEpochMs);
+  }
+
+  if (reconciled.status === "running") {
+    return {
+      status: "running",
+      stepIndex: reconciled.stepIndex,
+      targetEndEpochMs: nowEpochMs + adjustedRemainingMs,
+      stepDurationMs: adjustedDurationMs
+    };
+  }
+
+  return {
+    ...reconciled,
+    remainingMs: adjustedRemainingMs,
+    stepDurationMs: adjustedDurationMs
+  };
 }
 
 export function getScheduledElapsedMs(

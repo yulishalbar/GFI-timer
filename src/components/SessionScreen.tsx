@@ -1,6 +1,10 @@
 import { useRef } from "react";
 import type { CompiledClass } from "../domain/timeline";
-import { getRemainingMs, getScheduledElapsedMs } from "../domain/timer-state";
+import {
+  getRemainingMs,
+  getScheduledElapsedMs,
+  getStepDurationMs
+} from "../domain/timer-state";
 import { useSessionTimer } from "../hooks/useSessionTimer";
 import type { SessionInitialization } from "../hooks/useSessionTimer";
 import { formatDuration } from "../lib/format-duration";
@@ -73,7 +77,8 @@ export function SessionScreen({
   }
   const nextStep = fitnessClass.steps[state.stepIndex + 1];
   const remainingMs = getRemainingMs(state, fitnessClass.steps, nowEpochMs);
-  const elapsedStepMs = currentStep.durationMs - remainingMs;
+  const stepDurationMs = getStepDurationMs(state, fitnessClass.steps);
+  const elapsedStepMs = stepDurationMs - remainingMs;
   const scheduledElapsedMs = getScheduledElapsedMs(
     state,
     fitnessClass.steps,
@@ -141,7 +146,7 @@ export function SessionScreen({
             {formatCountdown(remainingMs)}
           </time>
           <StepProgress
-            durationMs={currentStep.durationMs}
+            durationMs={stepDurationMs}
             elapsedMs={elapsedStepMs}
             onSeekStart={handleSeekStart}
             onSeek={timer.seek}
@@ -175,6 +180,7 @@ export function SessionScreen({
           timer.resume();
         }}
         onNext={timer.next}
+        onAdjust={timer.adjust}
       />
     </main>
   );

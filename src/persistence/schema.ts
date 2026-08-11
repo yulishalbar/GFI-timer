@@ -24,6 +24,29 @@ export type StoredSessionV1 =
       remainingMs: number;
     });
 
+interface StoredSessionBaseV2 {
+  version: 2;
+  classId: string;
+  classVersion: number;
+  startedAtEpochMs: number;
+  elapsedMsFloor: number;
+  stepIndex: number;
+  stepDurationMs: number;
+  savedAtEpochMs: number;
+}
+
+export type StoredSessionV2 =
+  | (StoredSessionBaseV2 & {
+      status: "running";
+      targetEndEpochMs: number;
+    })
+  | (StoredSessionBaseV2 & {
+      status: "paused";
+      remainingMs: number;
+    });
+
+export type StoredSession = StoredSessionV1 | StoredSessionV2;
+
 type RecordValue = Record<string, unknown>;
 
 function isRecord(value: unknown): value is RecordValue {
@@ -55,8 +78,8 @@ export function parseStoredSettings(value: unknown): StoredSettingsV1 | null {
   return value as unknown as StoredSettingsV1;
 }
 
-export function parseStoredSession(value: unknown): StoredSessionV1 | null {
-  if (!isRecord(value) || value.version !== 1) {
+export function parseStoredSession(value: unknown): StoredSession | null {
+  if (!isRecord(value) || (value.version !== 1 && value.version !== 2)) {
     return null;
   }
 
@@ -71,9 +94,10 @@ export function parseStoredSession(value: unknown): StoredSessionV1 | null {
     "savedAtEpochMs"
   ];
   const statusKey = value.status === "running" ? "targetEndEpochMs" : "remainingMs";
+  const versionKeys = value.version === 2 ? ["stepDurationMs"] : [];
   if (
     (value.status !== "running" && value.status !== "paused") ||
-    !hasExactKeys(value, [...commonKeys, statusKey]) ||
+    !hasExactKeys(value, [...commonKeys, ...versionKeys, statusKey]) ||
     typeof value.classId !== "string" ||
     value.classId.length === 0 ||
     !Number.isInteger(value.classVersion) ||
@@ -84,11 +108,13 @@ export function parseStoredSession(value: unknown): StoredSessionV1 | null {
     !Number.isInteger(value.stepIndex) ||
     typeof value.stepIndex !== "number" ||
     value.stepIndex < 0 ||
+    (value.version === 2 &&
+      (!isNonNegativeFiniteNumber(value.stepDurationMs) || value.stepDurationMs === 0)) ||
     !isNonNegativeFiniteNumber(value.savedAtEpochMs) ||
     !isNonNegativeFiniteNumber(value[statusKey])
   ) {
     return null;
   }
 
-  return value as unknown as StoredSessionV1;
+  return value as unknown as StoredSession;
 }

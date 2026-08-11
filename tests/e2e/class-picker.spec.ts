@@ -5,6 +5,12 @@ function durationToSeconds(value: string | null): number {
   return parts.reduce((total, part) => total * 60 + part, 0);
 }
 
+function secondsToDuration(value: number): string {
+  const minutes = Math.floor(value / 60).toString().padStart(2, "0");
+  const seconds = Math.floor(value % 60).toString().padStart(2, "0");
+  return `${minutes}:${seconds}`;
+}
+
 test("opens a compiled class schedule and returns to the picker", async ({ page }, testInfo) => {
   await page.goto("./");
 
@@ -65,6 +71,18 @@ test("opens a compiled class schedule and returns to the picker", async ({ page 
   );
   await expect(countdown).toHaveText(pausedCountdown ?? "");
 
+  await page.getByRole("button", { name: "Add 10 seconds to current step" }).click();
+  const extendedCountdown = durationToSeconds(await countdown.textContent());
+  expect(extendedCountdown).toBe(durationToSeconds(pausedCountdown) + 10);
+  await expect
+    .poll(() =>
+      page.evaluate(() => {
+        const value = window.localStorage.getItem("gfi-timer:session:v2");
+        return value === null ? null : (JSON.parse(value) as { stepDurationMs?: number }).stepDurationMs;
+      })
+    )
+    .toBe(130_000);
+
   await page.getByRole("button", { name: "Sound on" }).click();
   await expect(page.getByRole("button", { name: "Muted" })).toBeVisible();
   await page.reload();
@@ -73,6 +91,9 @@ test("opens a compiled class schedule and returns to the picker", async ({ page 
   await expect(page.getByText("paused", { exact: true })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Class introduction" })).toBeVisible();
   await expect(page.getByRole("button", { name: "Muted" })).toBeVisible();
+  await expect(countdown).toHaveText(secondsToDuration(extendedCountdown));
+  await page.getByRole("button", { name: "Remove 10 seconds from current step" }).click();
+  await expect(countdown).toHaveText(pausedCountdown ?? "");
 
   await page.getByRole("button", { name: "Next" }).click();
   await expect(page.getByRole("heading", { name: "Child's pose and side-body stretch" })).toBeVisible();

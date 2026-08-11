@@ -172,6 +172,10 @@ reload. Keep clock access injectable so tests use a fake clock.
   the session.
 - **Previous:** enter the previous step at zero elapsed; at the first step,
   restart it.
+- **Adjust ±10 seconds:** change the current effective step duration and
+  remaining duration by the same amount, preserving completed step time. A
+  negative adjustment that consumes the remainder enters the next step once.
+  Extensions are capped at ten minutes beyond the authored duration.
 - **Reload recovery:** restore paused state exactly or reconcile a running
   timestamp with the compiled timeline.
 
@@ -235,14 +239,15 @@ interface StoredSettingsV1 {
   expandedDescriptions: boolean;
 }
 
-interface StoredSessionV1 {
-  version: 1;
+interface StoredSessionV2 {
+  version: 2;
   classId: string;
   classVersion: number;
   startedAtEpochMs: number;
   elapsedMsFloor: number;
   status: "running" | "paused";
   stepIndex: number;
+  stepDurationMs: number;
   targetEndEpochMs?: number;
   remainingMs?: number;
   savedAtEpochMs: number;
@@ -250,7 +255,10 @@ interface StoredSessionV1 {
 ```
 
 `expandedDescriptions` is retained in version 1 for compatibility with saved
-settings, but descriptions are now always rendered expanded.
+settings, but descriptions are now always rendered expanded. Session version 2
+stores the effective step duration so manual time adjustments recover exactly.
+The loader still accepts version 1 session records and clears both storage keys
+when a session is discarded or completed.
 
 Reject or migrate unknown versions. If the referenced class/version no longer
 matches, explain that the session cannot safely resume and offer to discard it.

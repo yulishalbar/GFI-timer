@@ -1,10 +1,12 @@
 import { describe, expect, it } from "vitest";
 import { compileClass } from "./compile-class";
 import {
+  adjustTimer,
   createTimerState,
   getRemainingMs,
   getScheduledElapsedMs,
   getSessionElapsedMs,
+  getStepDurationMs,
   nextTimer,
   pauseTimer,
   previousTimer,
@@ -36,16 +38,27 @@ describe("timer state", () => {
   it("starts from an absolute end timestamp, pauses exactly, and resumes", () => {
     const ready = createTimerState(timeline.steps);
     const running = startTimer(ready, 1_000);
-    expect(running).toEqual({ status: "running", stepIndex: 0, targetEndEpochMs: 11_000 });
+    expect(running).toEqual({
+      status: "running",
+      stepIndex: 0,
+      targetEndEpochMs: 11_000,
+      stepDurationMs: 10_000
+    });
 
     const paused = pauseTimer(running, timeline.steps, 4_250);
-    expect(paused).toEqual({ status: "paused", stepIndex: 0, remainingMs: 6_750 });
+    expect(paused).toEqual({
+      status: "paused",
+      stepIndex: 0,
+      remainingMs: 6_750,
+      stepDurationMs: 10_000
+    });
     expect(getRemainingMs(paused, timeline.steps, 50_000)).toBe(6_750);
 
     expect(resumeTimer(paused, timeline.steps, 8_000)).toEqual({
       status: "running",
       stepIndex: 0,
-      targetEndEpochMs: 14_750
+      targetEndEpochMs: 14_750,
+      stepDurationMs: 10_000
     });
   });
 
@@ -54,12 +67,14 @@ describe("timer state", () => {
     expect(reconcileTimer(running, timeline.steps, 11_000)).toEqual({
       status: "running",
       stepIndex: 1,
-      targetEndEpochMs: 14_000
+      targetEndEpochMs: 14_000,
+      stepDurationMs: 3_000
     });
     expect(reconcileTimer(running, timeline.steps, 15_500)).toEqual({
       status: "running",
       stepIndex: 2,
-      targetEndEpochMs: 21_000
+      targetEndEpochMs: 21_000,
+      stepDurationMs: 7_000
     });
     expect(reconcileTimer(running, timeline.steps, 21_000)).toEqual({
       status: "complete",
@@ -72,19 +87,22 @@ describe("timer state", () => {
     expect(seekTimer(running, timeline.steps, 4_000, 1_000)).toEqual({
       status: "running",
       stepIndex: 0,
-      targetEndEpochMs: 7_000
+      targetEndEpochMs: 7_000,
+      stepDurationMs: 10_000
     });
 
     const paused = pauseTimer(running, timeline.steps, 1_000);
     expect(seekTimer(paused, timeline.steps, -100, 9_000)).toEqual({
       status: "paused",
       stepIndex: 0,
-      remainingMs: 10_000
+      remainingMs: 10_000,
+      stepDurationMs: 10_000
     });
     expect(seekTimer(paused, timeline.steps, 50_000, 9_000)).toEqual({
       status: "paused",
       stepIndex: 0,
-      remainingMs: 0
+      remainingMs: 0,
+      stepDurationMs: 10_000
     });
   });
 
@@ -93,15 +111,22 @@ describe("timer state", () => {
     expect(previousTimer(running, timeline.steps, 2_000)).toEqual({
       status: "running",
       stepIndex: 0,
-      targetEndEpochMs: 12_000
+      targetEndEpochMs: 12_000,
+      stepDurationMs: 10_000
     });
 
     const middle = nextTimer(running, timeline.steps, 2_000);
-    expect(middle).toEqual({ status: "running", stepIndex: 1, targetEndEpochMs: 5_000 });
+    expect(middle).toEqual({
+      status: "running",
+      stepIndex: 1,
+      targetEndEpochMs: 5_000,
+      stepDurationMs: 3_000
+    });
     expect(previousTimer(middle, timeline.steps, 3_000)).toEqual({
       status: "running",
       stepIndex: 0,
-      targetEndEpochMs: 13_000
+      targetEndEpochMs: 13_000,
+      stepDurationMs: 10_000
     });
 
     const last = nextTimer(middle, timeline.steps, 3_000);
@@ -124,14 +149,25 @@ describe("timer state", () => {
   });
 
   it("uses the same absolute timestamp behavior after a simulated restore", () => {
-    const restoredRunning = { status: "running", stepIndex: 0, targetEndEpochMs: 5_000 } as const;
+    const restoredRunning = {
+      status: "running",
+      stepIndex: 0,
+      targetEndEpochMs: 5_000,
+      stepDurationMs: 10_000
+    } as const;
     expect(reconcileTimer(restoredRunning, timeline.steps, 14_000)).toEqual({
       status: "running",
       stepIndex: 2,
-      targetEndEpochMs: 15_000
+      targetEndEpochMs: 15_000,
+      stepDurationMs: 7_000
     });
 
-    const restoredPaused = { status: "paused", stepIndex: 1, remainingMs: 1_500 } as const;
+    const restoredPaused = {
+      status: "paused",
+      stepIndex: 1,
+      remainingMs: 1_500,
+      stepDurationMs: 3_000
+    } as const;
     expect(reconcileTimer(restoredPaused, timeline.steps, 99_000)).toBe(restoredPaused);
   });
 
@@ -146,5 +182,39 @@ describe("timer state", () => {
     expect(getSessionElapsedMs(10_000, 14_000, 0)).toBe(4_000);
     expect(getSessionElapsedMs(10_000, 18_000, 4_000)).toBe(8_000);
     expect(getSessionElapsedMs(10_000, 12_000, 8_000)).toBe(8_000);
+  });
+
+  it("adds or removes ten seconds without changing elapsed step progress", () => {
+    const running = startTimer(createTimerState(timeline.steps), 0);
+    const extended = adjustTimer(running, timeline.steps, 10_000, 4_000);
+    expect(extended).toEqual({
+      status: "running",
+      stepIndex: 0,
+      targetEndEpochMs: 20_000,
+      stepDurationMs: 20_000
+    });
+    expect(getRemainingMs(extended, timeline.steps, 4_000)).toBe(16_000);
+    expect(getStepDurationMs(extended, timeline.steps)).toBe(20_000);
+
+    expect(adjustTimer(extended, timeline.steps, -10_000, 4_000)).toEqual({
+      status: "running",
+      stepIndex: 0,
+      targetEndEpochMs: 10_000,
+      stepDurationMs: 10_000
+    });
+
+    const paused = pauseTimer(running, timeline.steps, 4_000);
+    expect(adjustTimer(paused, timeline.steps, 10_000, 20_000)).toEqual({
+      status: "paused",
+      stepIndex: 0,
+      remainingMs: 16_000,
+      stepDurationMs: 20_000
+    });
+    expect(adjustTimer(paused, timeline.steps, -10_000, 20_000)).toEqual({
+      status: "paused",
+      stepIndex: 1,
+      remainingMs: 3_000,
+      stepDurationMs: 3_000
+    });
   });
 });

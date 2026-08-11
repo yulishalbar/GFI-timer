@@ -65,9 +65,10 @@ The session screen shows:
 - The full longer description, shown directly when supplied.
 - Optional exercise illustration.
 
-Primary controls are Previous, Pause/Resume, and Next. They must remain visible
-without scrolling. Secondary actions may include Restart step, add or subtract
-10 seconds, and End class, but they must not crowd the MVP interface.
+Primary controls are Previous, Pause/Resume, and Next. Current-step `−10s` and
+`+10s` adjustments share the fixed control row without hiding the primary
+actions or requiring scrolling. Secondary actions may later include Restart
+step and End class, but they must not crowd the interface.
 
 ### Transition behavior
 
@@ -83,6 +84,10 @@ without scrolling. Secondary actions may include Restart step, add or subtract
   continues so the instructor can see the true time spent in the session.
 - Seeking, Previous, and Next may change scheduled progress but never reduce
   real elapsed time.
+- Adding or removing 10 seconds changes the current step's duration and
+  remaining time without changing the time already completed. Removing the
+  final remaining seconds advances once to the next step. Adjustments work
+  while running or paused and survive session recovery.
 
 ### Recovery
 

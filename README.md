@@ -15,9 +15,11 @@ timestamp-based live timer, touch and keyboard session controls, offline PWA
 build, recoverable sessions, local audio cues, wake-lock handling, automated
 tests, complete install icons, safe update prompting, offline browser coverage,
 and a GitHub Pages workflow. Milestones 3 and 4 are implemented locally and
-ready for GitHub Pages enablement plus physical iPhone and iPad verification.
-The live session layout is optimized for an iPhone 15 Pro Max in portrait while
-retaining compact-phone coverage.
+deployed through GitHub Pages. Milestone 5 instructor refinements are underway,
+including recoverable `−10s` and `+10s` current-step adjustments. Physical
+iPhone and iPad installation/offline verification remains. The live session
+layout is optimized for an iPhone 15 Pro Max in portrait while retaining
+compact-phone coverage.
 
 ## Requirements
 

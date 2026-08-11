@@ -1,20 +1,26 @@
-import type { StoredSessionV1 } from "./schema";
+import type { StoredSession, StoredSessionV2 } from "./schema";
 import { parseStoredSession } from "./schema";
 import type { RuntimeStep } from "../domain/timeline";
-import { reconcileTimer, type TimerState } from "../domain/timer-state";
+import {
+  MAX_STEP_EXTENSION_MS,
+  reconcileTimer,
+  type TimerState
+} from "../domain/timer-state";
 
-export const SESSION_STORAGE_KEY = "gfi-timer:session:v1";
+export const SESSION_STORAGE_KEY = "gfi-timer:session:v2";
+export const LEGACY_SESSION_STORAGE_KEY = "gfi-timer:session:v1";
 
 export type StoredSessionReadResult =
   | { status: "empty" }
   | { status: "invalid" }
-  | { status: "valid"; session: StoredSessionV1 };
+  | { status: "valid"; session: StoredSession };
 
 type StorageAccess = Pick<Storage, "getItem" | "setItem" | "removeItem">;
 
 export function loadStoredSession(storage: StorageAccess = window.localStorage): StoredSessionReadResult {
   try {
-    const serialized = storage.getItem(SESSION_STORAGE_KEY);
+    const serialized =
+      storage.getItem(SESSION_STORAGE_KEY) ?? storage.getItem(LEGACY_SESSION_STORAGE_KEY);
     if (serialized === null) {
       return { status: "empty" };
     }
@@ -26,7 +32,7 @@ export function loadStoredSession(storage: StorageAccess = window.localStorage):
 }
 
 export function saveStoredSession(
-  session: StoredSessionV1,
+  session: StoredSessionV2,
   storage: StorageAccess = window.localStorage
 ): boolean {
   try {
@@ -40,35 +46,50 @@ export function saveStoredSession(
 export function clearStoredSession(storage: StorageAccess = window.localStorage): void {
   try {
     storage.removeItem(SESSION_STORAGE_KEY);
+    storage.removeItem(LEGACY_SESSION_STORAGE_KEY);
   } catch {
     // Storage denial must not prevent an active timer from running.
   }
 }
 
 export function restoreTimerState(
-  session: StoredSessionV1,
+  session: StoredSession,
   steps: readonly RuntimeStep[],
   nowEpochMs: number
 ): TimerState | null {
   if (steps[session.stepIndex] === undefined) {
     return null;
   }
+  const authoredDurationMs = steps[session.stepIndex]?.durationMs ?? 0;
+  const legacyRemainingMs =
+    session.status === "paused"
+      ? session.remainingMs
+      : Math.max(0, session.targetEndEpochMs - nowEpochMs);
+  const stepDurationMs =
+    session.version === 2
+      ? session.stepDurationMs
+      : Math.max(authoredDurationMs, legacyRemainingMs);
+  if (
+    stepDurationMs <= 0 ||
+    stepDurationMs > authoredDurationMs + MAX_STEP_EXTENSION_MS ||
+    legacyRemainingMs > stepDurationMs
+  ) {
+    return null;
+  }
   if (session.status === "paused") {
-    const durationMs = steps[session.stepIndex]?.durationMs ?? 0;
-    if (session.remainingMs > durationMs) {
-      return null;
-    }
     return {
       status: "paused",
       stepIndex: session.stepIndex,
-      remainingMs: session.remainingMs
+      remainingMs: session.remainingMs,
+      stepDurationMs
     };
   }
   return reconcileTimer(
     {
       status: "running",
       stepIndex: session.stepIndex,
-      targetEndEpochMs: session.targetEndEpochMs
+      targetEndEpochMs: session.targetEndEpochMs,
+      stepDurationMs
     },
     steps,
     nowEpochMs

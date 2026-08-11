@@ -59,9 +59,12 @@ The timer test matrix should cover:
 - Automatic transition at an exact boundary.
 - Delayed update that crosses one or several steps.
 - Seek while running and paused.
+- Add and remove 10 seconds while running and paused, including adjustment at a
+  step boundary.
 - Previous and next at first, middle, and final steps.
 - Restore a paused session.
 - Restore a running session before or after its target time.
+- Restore adjusted version 2 sessions and accept legacy version 1 sessions.
 - System wall-clock changes, with behavior documented.
 - No duplicate transition event or audio request.
 - Defensive rejection of malformed, unknown-version, or class-version-mismatched

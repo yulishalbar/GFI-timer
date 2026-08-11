@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import type { CompiledClass } from "../domain/timeline";
 import {
+  adjustTimer,
   createTimerState,
   getSessionElapsedMs,
   nextTimer,
@@ -108,13 +109,18 @@ export function useSessionTimer(
       updateAtCurrentTime((current, now) => seekTimer(current, steps, elapsedMs, now)),
     [steps, updateAtCurrentTime]
   );
+  const adjust = useCallback(
+    (adjustmentMs: number) =>
+      updateAtCurrentTime((current, now) => adjustTimer(current, steps, adjustmentMs, now)),
+    [steps, updateAtCurrentTime]
+  );
 
   const persistedSecond = Math.floor(sessionElapsedMs / 1_000);
   const persistenceStateKey =
     state.status === "running"
-      ? `${state.status}:${state.stepIndex}:${state.targetEndEpochMs}`
+      ? `${state.status}:${state.stepIndex}:${state.targetEndEpochMs}:${state.stepDurationMs}`
       : state.status === "paused"
-        ? `${state.status}:${state.stepIndex}:${state.remainingMs}`
+        ? `${state.status}:${state.stepIndex}:${state.remainingMs}:${state.stepDurationMs}`
         : state.status;
   useEffect(() => {
     if (state.status === "complete") {
@@ -126,12 +132,13 @@ export function useSessionTimer(
     }
 
     const common = {
-      version: 1 as const,
+      version: 2 as const,
       classId: fitnessClass.definition.id,
       classVersion: fitnessClass.definition.version,
       startedAtEpochMs,
       elapsedMsFloor: persistedSecond * 1_000,
       stepIndex: state.stepIndex,
+      stepDurationMs: state.stepDurationMs,
       savedAtEpochMs: startedAtEpochMs + persistedSecond * 1_000
     };
     saveStoredSession(
@@ -141,5 +148,5 @@ export function useSessionTimer(
     );
   }, [fitnessClass.definition.id, fitnessClass.definition.version, persistedSecond, persistenceStateKey, startedAtEpochMs, state]);
 
-  return { state, nowEpochMs, sessionElapsedMs, pause, resume, previous, next, seek };
+  return { state, nowEpochMs, sessionElapsedMs, pause, resume, previous, next, seek, adjust };
 }

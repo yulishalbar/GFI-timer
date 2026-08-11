@@ -1,8 +1,8 @@
 # Roadmap
 
 Current status: Milestones 1 and 2 are complete. Milestones 3 and 4 are
-implemented locally; GitHub Pages enablement and physical iPhone/iPad online,
-offline, and reliability verification are pending.
+implemented and GitHub Pages is enabled. Physical iPhone/iPad installation,
+offline, and reliability verification are pending. Milestone 5 is in progress.
 
 ## Milestone 1: Foundation — complete
 
@@ -47,12 +47,12 @@ a desktop/mobile browser, including delayed-clock test cases.
 Exit condition: an instructor can run and recover a session on physical iPhone
 and iPad hardware with documented suspension limitations.
 
-## Milestone 4: Install and deploy — external verification pending
+## Milestone 4: Install and deploy — physical verification pending
 
 - Add the web app manifest and complete icon set. — complete
 - Add offline precaching and safe update behavior. — complete
 - Add the GitHub Actions test/build/deploy workflow. — complete
-- Enable GitHub Pages deployment from Actions. — repository-owner action pending
+- Enable GitHub Pages deployment from Actions. — complete
 - Test installation and offline launch on physical devices. — pending
 - Document the release and rollback procedure. — complete
 
@@ -60,11 +60,11 @@ Exit condition: `main` deploys a tested PWA to
 `https://yulishalbar.github.io/GFI-timer/`, and a cached class runs in airplane
 mode.
 
-## Milestone 5: Instructor refinements
+## Milestone 5: Instructor refinements — in progress
 
 Candidate features, prioritized after real class use:
 
-- `+10 sec` and `-10 sec` adjustments.
+- `+10 sec` and `-10 sec` adjustments. — complete
 - Configurable final countdown.
 - Pre-class countdown.
 - Landscape dashboard improvements.
