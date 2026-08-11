@@ -64,16 +64,16 @@ Repeats may be nested in the schema. The first implementation may cap nesting
 depth during validation to avoid content that is difficult to communicate in
 the UI.
 
-## Complete example
+## Complete schema example
 
 ```ts
 import type { FitnessClassDefinition } from "../domain/class-definition";
 
-export const coreBasics = {
+export const exampleClass = {
   schemaVersion: 1,
-  id: "core-basics",
+  id: "example-class",
   version: 1,
-  title: "Core Basics",
+  title: "Example Class",
   description: "Intro, mobility warmup, and two core blocks.",
   phases: [
     {
@@ -178,7 +178,7 @@ export const coreBasics = {
 Validation errors should identify the class and exact nested path, for example:
 
 ```text
-core-basics.phases[1].items[0].rounds: expected a positive integer
+example-class.phases[1].items[0].rounds: expected a positive integer
 ```
 
 ## Compilation

@@ -1,49 +1,59 @@
 import { describe, expect, it } from "vitest";
-import { coreBasics } from "../classes/core-basics";
+import { matPilates0724 } from "../classes/mat-pilates-07-24";
 import { compileClass } from "./compile-class";
 import { ClassValidationError } from "./validate-class";
 
 describe("compileClass", () => {
   it("expands phases and repeated rounds in authored order", () => {
-    const compiled = compileClass(coreBasics);
+    const compiled = compileClass(matPilates0724);
 
-    expect(compiled.steps).toHaveLength(12);
-    expect(compiled.totalDurationMs).toBe(500_000);
+    expect(compiled.steps).toHaveLength(77);
+    expect(compiled.totalDurationMs).toBe(3_200_000);
     expect(compiled.phases).toEqual([
-      { id: "intro", name: "Intro", index: 1, stepCount: 1, durationMs: 180_000 },
-      { id: "warmup", name: "Warmup", index: 2, stepCount: 6, durationMs: 180_000 },
-      { id: "core", name: "Core", index: 3, stepCount: 5, durationMs: 140_000 }
+      { id: "introduction", name: "Introduction", index: 1, stepCount: 1, durationMs: 120_000 },
+      { id: "warmup", name: "Warm-Up", index: 2, stepCount: 5, durationMs: 300_000 },
+      { id: "core-circuit", name: "Circuit 1 — Core", index: 3, stepCount: 11, durationMs: 290_000 },
+      { id: "glutes-circuit", name: "Circuit 2 — Glutes", index: 4, stepCount: 9, durationMs: 380_000 },
+      { id: "posterior-core-circuit", name: "Circuit 3 — Core, Glutes, and Back", index: 5, stepCount: 14, durationMs: 400_000 },
+      { id: "lower-body-circuit", name: "Circuit 4 — Lower Body", index: 6, stepCount: 14, durationMs: 440_000 },
+      { id: "side-body-circuit", name: "Circuit 5 — Side Body", index: 7, stepCount: 16, durationMs: 640_000 },
+      { id: "cooldown", name: "Cooldown", index: 8, stepCount: 7, durationMs: 630_000 }
     ]);
 
-    expect(compiled.steps.map((step) => step.name)).toEqual([
-      "Introduction",
-      "Stretch left leg",
-      "Stretch right leg",
-      "Stretch left leg",
-      "Stretch right leg",
-      "Stretch left leg",
-      "Stretch right leg",
-      "Crunches",
-      "Break",
-      "Crunch left",
-      "Crunch right",
-      "Break"
-    ]);
+    expect(compiled.steps[0]?.name).toBe("Class introduction");
+    expect(compiled.steps.at(-1)?.name).toBe("Shavasana");
   });
 
   it("assigns round and within-round step labels", () => {
-    const compiled = compileClass(coreBasics);
-    const warmup = compiled.steps.filter((step) => step.phase.id === "warmup");
+    const compiled = compileClass({
+      schemaVersion: 1,
+      id: "repeat-test",
+      version: 1,
+      title: "Repeat test",
+      phases: [{
+        id: "main",
+        name: "Main",
+        items: [{
+          type: "repeat",
+          id: "rounds",
+          rounds: 3,
+          items: [
+            { type: "exercise", id: "move", name: "Move", durationSeconds: 30 },
+            { type: "rest", id: "break", durationSeconds: 10 }
+          ]
+        }]
+      }]
+    });
 
-    expect(warmup.map((step) => step.round)).toEqual([
-      { repeatId: "leg-stretches", index: 1, count: 3 },
-      { repeatId: "leg-stretches", index: 1, count: 3 },
-      { repeatId: "leg-stretches", index: 2, count: 3 },
-      { repeatId: "leg-stretches", index: 2, count: 3 },
-      { repeatId: "leg-stretches", index: 3, count: 3 },
-      { repeatId: "leg-stretches", index: 3, count: 3 }
+    expect(compiled.steps.map((step) => step.round)).toEqual([
+      { repeatId: "rounds", index: 1, count: 3 },
+      { repeatId: "rounds", index: 1, count: 3 },
+      { repeatId: "rounds", index: 2, count: 3 },
+      { repeatId: "rounds", index: 2, count: 3 },
+      { repeatId: "rounds", index: 3, count: 3 },
+      { repeatId: "rounds", index: 3, count: 3 }
     ]);
-    expect(warmup.map((step) => step.step)).toEqual([
+    expect(compiled.steps.map((step) => step.step)).toEqual([
       { index: 1, count: 2 },
       { index: 2, count: 2 },
       { index: 1, count: 2 },
@@ -54,14 +64,14 @@ describe("compileClass", () => {
   });
 
   it("calculates stable offsets and unique occurrence IDs", () => {
-    const compiled = compileClass(coreBasics);
-    const secondRoundFirstStep = compiled.steps[3];
+    const compiled = compileClass(matPilates0724);
+    const catCow = compiled.steps[2];
 
-    expect(secondRoundFirstStep).toMatchObject({
-      runtimeId: "core-basics/warmup/leg-stretches[2]/stretch-left",
-      sourceId: "stretch-left",
-      startsAtMs: 240_000,
-      endsAtMs: 270_000
+    expect(catCow).toMatchObject({
+      runtimeId: "mat-pilates-07-24/warmup/cat-cow",
+      sourceId: "cat-cow",
+      startsAtMs: 180_000,
+      endsAtMs: 210_000
     });
     expect(new Set(compiled.steps.map((step) => step.runtimeId)).size).toBe(
       compiled.steps.length

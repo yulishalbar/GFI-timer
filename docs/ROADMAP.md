@@ -1,6 +1,7 @@
 # Roadmap
 
-Current status: Milestone 1 is complete. Milestone 2, the live timer, is next.
+Current status: Milestones 1 and 2 are complete. Milestone 3, device
+reliability, is next.
 
 ## Milestone 1: Foundation — complete
 
@@ -10,14 +11,14 @@ Deliver a runnable but visually simple application.
 - Configure strict type checking, linting, Vitest, and formatting.
 - Establish responsive global styles and design tokens.
 - Define the class schema and validation boundary.
-- Add the documented Core Basics example.
+- Add the July 24 Mat Pilates class as the first real class definition.
 - Implement and thoroughly test timeline compilation.
 - Configure the `/GFI-timer/` production base path.
 
-Exit condition: the app lists the sample class and can display its fully
+Exit condition: the app lists the real class and can display its fully
 compiled timeline and correct total duration.
 
-## Milestone 2: Timer MVP
+## Milestone 2: Timer MVP — complete
 
 - Implement pure timer state and transitions.
 - Build the instructor session screen.
@@ -28,7 +29,7 @@ compiled timeline and correct total duration.
 - Add ready and completed states.
 - Add unit and browser tests for all controls.
 
-Exit condition: the sample class can be run from beginning to end accurately in
+Exit condition: the class can be run from beginning to end accurately in
 a desktop/mobile browser, including delayed-clock test cases.
 
 ## Milestone 3: Device reliability

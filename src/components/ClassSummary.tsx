@@ -4,9 +4,10 @@ import { formatDuration, formatMinutes } from "../lib/format-duration";
 interface ClassSummaryProps {
   fitnessClass: CompiledClass;
   onBack: () => void;
+  onStart: () => void;
 }
 
-export function ClassSummary({ fitnessClass, onBack }: ClassSummaryProps) {
+export function ClassSummary({ fitnessClass, onBack, onStart }: ClassSummaryProps) {
   return (
     <main className="page-shell page-shell--summary" id="main-content">
       <button className="back-button" type="button" onClick={onBack}>
@@ -26,12 +27,16 @@ export function ClassSummary({ fitnessClass, onBack }: ClassSummaryProps) {
         </div>
       </section>
 
-      <div className="build-notice" role="status">
+      <div className="start-panel">
         <span className="build-notice__dot" aria-hidden="true" />
         <div>
           <strong>Schedule ready</strong>
-          <span>The live timer controls are the next build milestone.</span>
+          <span>The timer begins immediately when you start.</span>
         </div>
+        <button className="primary-button" type="button" onClick={onStart}>
+          Start class
+          <span aria-hidden="true">→</span>
+        </button>
       </div>
 
       <section className="timeline" aria-labelledby="schedule-title">
@@ -60,7 +65,12 @@ export function ClassSummary({ fitnessClass, onBack }: ClassSummaryProps) {
               <ol className="step-list">
                 {phaseSteps.map((step) => (
                   <li className={`step-row step-row--${step.kind}`} key={step.runtimeId}>
-                    <span className="step-row__index">{step.step.index}</span>
+                    <span
+                      className="step-row__index"
+                      aria-label={step.kind === "rest" ? "Transition" : `Step ${step.step.index}`}
+                    >
+                      {step.kind === "rest" ? "↳" : step.step.index}
+                    </span>
                     <div className="step-row__content">
                       <div className="step-row__title">
                         <strong>{step.name}</strong>

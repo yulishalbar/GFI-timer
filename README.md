@@ -9,11 +9,10 @@ No backend or App Store installation is required.
 
 ## Project status
 
-Milestone 1 is complete. The repository contains a working class picker,
-validated static class format, nested schedule compiler, responsive timeline
-preview, offline PWA build, automated tests, and GitHub Pages workflow.
-
-The live countdown and session controls are the next milestone.
+Milestones 1 and 2 are complete. The repository contains a working class
+picker, validated static class format, schedule compiler, responsive timeline,
+timestamp-based live timer, touch and keyboard session controls, offline PWA
+build, automated tests, and GitHub Pages workflow.
 
 ## Requirements
 
@@ -31,6 +30,26 @@ git clone https://github.com/yulishalbar/GFI-timer.git
 cd GFI-timer
 npm ci
 ```
+
+### Windows PowerShell execution-policy error
+
+If PowerShell reports that `npm.ps1` cannot be loaded because running scripts
+is disabled, use npm's Windows command wrapper:
+
+```powershell
+npm.cmd ci
+```
+
+You can use `npm.cmd` in place of `npm` for the other commands in this README.
+Alternatively, enable locally created and signed scripts for your Windows user:
+
+```powershell
+Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
+```
+
+Confirm the prompt, restart PowerShell, and then run `npm ci` again. On a
+managed computer where policy changes are blocked, continue using `npm.cmd`.
+Avoid changing the execution policy to `Unrestricted`.
 
 Start the development server:
 

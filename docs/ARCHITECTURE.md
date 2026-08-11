@@ -51,7 +51,7 @@ src/
     routes.ts
   classes/
     index.ts
-    core-basics.ts
+    mat-pilates-07-24.ts
   components/
     ClassPicker.tsx
     ClassSummary.tsx
@@ -67,6 +67,7 @@ src/
     timer-state.ts
     timer-reducer.ts
   hooks/
+    useSessionTimer.ts
     useAudioCues.ts
     useSessionClock.ts
     useWakeLock.ts
@@ -191,6 +192,9 @@ hierarchy.
 
 Avoid relying on hover. Prevent accidental double taps from selecting text or
 triggering adjacent controls, while preserving browser accessibility and zoom.
+In schedule previews, explicit rest and transition rows are indented and use a
+secondary treatment so they read as connectors between exercises rather than
+as exercises themselves.
 
 ## Audio
 

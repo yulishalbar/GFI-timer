@@ -29,7 +29,9 @@ button {
 }
 
 button:focus-visible,
-a:focus-visible {
+a:focus-visible,
+input:focus-visible,
+summary:focus-visible {
   outline: 3px solid var(--color-accent);
   outline-offset: 4px;
 }
@@ -344,7 +346,7 @@ h1 {
   letter-spacing: 0.12em;
 }
 
-.build-notice {
+.start-panel {
   display: flex;
   align-items: center;
   gap: 1rem;
@@ -364,14 +366,19 @@ h1 {
   box-shadow: 0 0 0 0.35rem rgba(215, 255, 98, 0.08);
 }
 
-.build-notice div {
+.start-panel > div {
   display: grid;
   gap: 0.2rem;
 }
 
-.build-notice span:last-child {
+.start-panel > div span:last-child {
   color: var(--color-muted);
   font-size: 0.9rem;
+}
+
+.start-panel .primary-button {
+  width: min(100%, 15rem);
+  margin: 0 0 0 auto;
 }
 
 .section-heading {
@@ -454,7 +461,16 @@ h1 {
 }
 
 .step-row--rest {
+  width: calc(100% - clamp(1.25rem, 4vw, 3rem));
+  min-height: 3.8rem;
+  margin-left: clamp(1.25rem, 4vw, 3rem);
   border-left: 0.22rem solid var(--color-rest);
+  background: rgba(143, 216, 255, 0.035);
+}
+
+.step-row--rest .step-row__index {
+  color: var(--color-rest);
+  background: transparent;
 }
 
 .step-row__index {
@@ -505,6 +521,360 @@ h1 {
   font-variant-numeric: tabular-nums;
 }
 
+.app-frame--session {
+  display: block;
+  overflow: hidden;
+}
+
+.session-shell {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  width: min(100%, 100rem);
+  height: 100vh;
+  height: 100dvh;
+  margin-inline: auto;
+  padding: max(0.65rem, env(safe-area-inset-top)) max(0.8rem, env(safe-area-inset-right))
+    max(0.75rem, env(safe-area-inset-bottom)) max(0.8rem, env(safe-area-inset-left));
+  background:
+    radial-gradient(circle at 75% 15%, rgba(215, 255, 98, 0.08), transparent 28rem),
+    var(--color-bg);
+}
+
+.session-shell--rest {
+  background:
+    radial-gradient(circle at 75% 15%, rgba(143, 216, 255, 0.1), transparent 28rem),
+    var(--color-bg);
+}
+
+.session-topbar {
+  display: grid;
+  grid-template-columns: 1fr minmax(0, auto) 1fr;
+  align-items: center;
+  min-height: 3rem;
+  border-bottom: 1px solid var(--color-border);
+  color: var(--color-muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.session-topbar button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  width: max-content;
+  min-height: 2.5rem;
+  padding: 0.35rem 0.5rem;
+  border: 0;
+  color: var(--color-muted);
+  background: transparent;
+  cursor: pointer;
+}
+
+.session-topbar button span {
+  font-size: 1.25rem;
+}
+
+.session-topbar__title {
+  overflow: hidden;
+  max-width: 40vw;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.session-topbar time {
+  justify-self: end;
+  color: var(--color-text);
+  font-variant-numeric: tabular-nums;
+}
+
+.session-dashboard {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(18rem, 0.6fr);
+  gap: clamp(1rem, 3vw, 3rem);
+  min-height: 0;
+  padding: clamp(1rem, 3vh, 2.5rem) clamp(0.25rem, 2vw, 2rem);
+  overflow: auto;
+}
+
+.session-primary {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+}
+
+.session-status-row {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  color: var(--color-muted);
+  font-size: 0.75rem;
+  font-weight: 750;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.status-pill {
+  padding: 0.35rem 0.6rem;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  color: var(--color-text);
+}
+
+.status-pill--running {
+  border-color: rgba(215, 255, 98, 0.45);
+  color: var(--color-accent);
+}
+
+.status-pill--paused {
+  border-color: rgba(143, 216, 255, 0.45);
+  color: var(--color-rest);
+}
+
+.session-phase {
+  margin: clamp(0.9rem, 2vh, 1.5rem) 0 0.4rem;
+  color: var(--color-muted);
+  font-size: clamp(0.85rem, 1.5vw, 1rem);
+  font-weight: 680;
+}
+
+.session-primary h1 {
+  max-width: 18ch;
+  margin: 0;
+  font-size: clamp(2rem, 6.5vw, 5.8rem);
+  line-height: 0.95;
+}
+
+.session-position {
+  margin: 0.7rem 0 0;
+  color: var(--color-muted);
+  font-size: 0.85rem;
+}
+
+.session-countdown {
+  display: block;
+  margin: clamp(0.75rem, 2vh, 1.5rem) 0;
+  color: var(--color-accent);
+  font-size: clamp(4.2rem, 14vw, 11rem);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  line-height: 0.8;
+  letter-spacing: -0.075em;
+}
+
+.session-shell--rest .session-countdown {
+  color: var(--color-rest);
+}
+
+.step-progress {
+  display: grid;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.step-progress > span {
+  display: flex;
+  justify-content: space-between;
+  color: var(--color-muted);
+  font-size: 0.72rem;
+  font-weight: 720;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.step-progress output {
+  color: var(--color-text);
+  font-variant-numeric: tabular-nums;
+}
+
+.step-progress input {
+  width: 100%;
+  height: 2.2rem;
+  margin: 0;
+  accent-color: var(--color-accent);
+  cursor: pointer;
+  touch-action: none;
+}
+
+.session-shell--rest .step-progress input {
+  accent-color: var(--color-rest);
+}
+
+.session-context {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: clamp(0.75rem, 2vh, 1.25rem);
+  min-width: 0;
+}
+
+.exercise-details,
+.next-step,
+.overall-progress {
+  padding: clamp(0.9rem, 2vw, 1.25rem);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.exercise-details p {
+  margin: 0;
+  color: #d7ded8;
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.exercise-details details {
+  margin-top: 0.7rem;
+  color: var(--color-muted);
+  font-size: 0.78rem;
+}
+
+.exercise-details summary {
+  min-height: 2rem;
+  cursor: pointer;
+}
+
+.exercise-details details p {
+  padding-top: 0.5rem;
+  color: var(--color-muted);
+  font-size: 0.82rem;
+}
+
+.next-step {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.3rem 0.75rem;
+}
+
+.next-step > span {
+  grid-column: 1 / -1;
+  color: var(--color-muted);
+  font-size: 0.68rem;
+  font-weight: 750;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.next-step strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.next-step time {
+  color: var(--color-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.overall-progress__labels {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.overall-progress__labels span {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.overall-progress__labels span:last-child {
+  text-align: right;
+}
+
+.overall-progress small {
+  color: var(--color-muted);
+  font-size: 0.65rem;
+  font-weight: 720;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.overall-progress strong {
+  font-size: 1rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.overall-progress progress {
+  display: block;
+  width: 100%;
+  height: 0.45rem;
+  margin-top: 0.8rem;
+  overflow: hidden;
+  border: 0;
+  border-radius: 999px;
+  color: var(--color-accent);
+  background: var(--color-surface-soft);
+}
+
+.overall-progress progress::-webkit-progress-bar {
+  background: var(--color-surface-soft);
+}
+
+.overall-progress progress::-webkit-progress-value {
+  background: var(--color-accent);
+}
+
+.overall-progress progress::-moz-progress-bar {
+  background: var(--color-accent);
+}
+
+.session-controls {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(0.5rem, 1.5vw, 1rem);
+  padding: 0.65rem 0 0;
+  border-top: 1px solid var(--color-border);
+}
+
+.session-controls button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 4rem;
+  padding: 0.7rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  color: var(--color-text);
+  background: var(--color-surface-raised);
+  font-weight: 760;
+  cursor: pointer;
+}
+
+.session-controls .session-controls__primary {
+  border-color: var(--color-accent);
+  color: var(--color-accent-ink);
+  background: var(--color-accent);
+}
+
+.session-controls button:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.session-shell--complete {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  text-align: center;
+}
+
+.session-shell--complete h1 {
+  margin-bottom: 1rem;
+}
+
+.session-shell--complete > p:not(.eyebrow) {
+  color: var(--color-muted);
+}
+
+.session-shell--complete .primary-button {
+  width: min(100%, 22rem);
+  margin-top: 1rem;
+}
+
 @media (max-width: 680px) {
   .app-header,
   .app-footer,
@@ -532,6 +902,16 @@ h1 {
     align-items: flex-start;
   }
 
+  .start-panel {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .start-panel .primary-button {
+    width: 100%;
+    margin-left: 0;
+  }
+
   .phase-section {
     grid-template-columns: 1fr;
   }
@@ -550,9 +930,109 @@ h1 {
     display: none;
   }
 
+  .step-row--rest {
+    width: calc(100% - 1rem);
+    margin-left: 1rem;
+  }
+
   .section-heading {
     align-items: flex-start;
     flex-direction: column;
+  }
+}
+
+@media (max-width: 760px) {
+  .session-dashboard {
+    grid-template-columns: 1fr;
+    align-content: start;
+    gap: 0.75rem;
+    padding: 0.75rem 0.2rem;
+  }
+
+  .session-primary {
+    justify-content: flex-start;
+  }
+
+  .session-primary h1 {
+    font-size: clamp(1.8rem, 9vw, 3.2rem);
+  }
+
+  .session-countdown {
+    margin-block: 0.65rem;
+    font-size: clamp(4rem, 22vw, 7rem);
+  }
+
+  .session-context {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 0.65rem;
+  }
+
+  .exercise-details {
+    grid-column: 1 / -1;
+    padding-block: 0.7rem;
+  }
+
+  .exercise-details > p {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+
+  .exercise-details details {
+    display: none;
+  }
+
+  .next-step,
+  .overall-progress {
+    padding: 0.75rem;
+  }
+
+  .session-controls button {
+    min-height: 3.75rem;
+    font-size: 0.82rem;
+  }
+}
+
+@media (max-height: 700px) and (max-width: 760px) {
+  .session-status-row,
+  .session-position,
+  .exercise-details {
+    display: none;
+  }
+
+  .session-countdown {
+    font-size: clamp(3.5rem, 18vh, 6rem);
+  }
+}
+
+@media (orientation: landscape) and (max-height: 600px) {
+  .session-dashboard {
+    grid-template-columns: minmax(0, 1.2fr) minmax(15rem, 0.8fr);
+    gap: 1rem;
+    padding-block: 0.5rem;
+  }
+
+  .session-primary h1 {
+    font-size: clamp(1.8rem, 6vh, 3rem);
+  }
+
+  .session-countdown {
+    margin-block: 0.5rem;
+    font-size: clamp(4rem, 23vh, 7rem);
+  }
+
+  .session-context {
+    display: flex;
+  }
+
+  .exercise-details {
+    display: none;
+  }
+
+  .session-controls button {
+    min-height: 3.25rem;
   }
 }
 

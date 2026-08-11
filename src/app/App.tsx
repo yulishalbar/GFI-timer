@@ -2,13 +2,35 @@ import { useMemo, useState } from "react";
 import { availableClasses } from "../classes";
 import { ClassPicker } from "../components/ClassPicker";
 import { ClassSummary } from "../components/ClassSummary";
+import { SessionScreen } from "../components/SessionScreen";
 
 export function App() {
   const [selectedClassId, setSelectedClassId] = useState<string | null>(null);
+  const [sessionStartedAt, setSessionStartedAt] = useState<number | null>(null);
   const selectedClass = useMemo(
     () => availableClasses.find((fitnessClass) => fitnessClass.definition.id === selectedClassId),
     [selectedClassId]
   );
+
+  if (selectedClass && sessionStartedAt !== null) {
+    return (
+      <div className="app-frame app-frame--session">
+        <a className="skip-link" href="#main-content">
+          Skip to content
+        </a>
+        <SessionScreen
+          fitnessClass={selectedClass}
+          startedAtEpochMs={sessionStartedAt}
+          onExit={() => setSessionStartedAt(null)}
+        />
+      </div>
+    );
+  }
+
+  const returnToPicker = () => {
+    setSessionStartedAt(null);
+    setSelectedClassId(null);
+  };
 
   return (
     <div className="app-frame">
@@ -16,7 +38,7 @@ export function App() {
         Skip to content
       </a>
       <header className="app-header">
-        <button className="brand" type="button" onClick={() => setSelectedClassId(null)}>
+        <button className="brand" type="button" onClick={returnToPicker}>
           <span className="brand__mark" aria-hidden="true">
             <span />
           </span>
@@ -29,7 +51,11 @@ export function App() {
       </header>
 
       {selectedClass ? (
-        <ClassSummary fitnessClass={selectedClass} onBack={() => setSelectedClassId(null)} />
+        <ClassSummary
+          fitnessClass={selectedClass}
+          onBack={returnToPicker}
+          onStart={() => setSessionStartedAt(Date.now())}
+        />
       ) : (
         <ClassPicker classes={availableClasses} onSelect={setSelectedClassId} />
       )}
