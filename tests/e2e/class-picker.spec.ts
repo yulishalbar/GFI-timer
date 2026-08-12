@@ -149,26 +149,26 @@ test("opens and starts the July 31 class with completed pose guidance", async ({
   await page.goto("./");
 
   const classCard = page.getByRole("article").filter({ hasText: "Mat Pilates — July 31" });
-  await expect(classCard).toContainText("56.2 min");
+  await expect(classCard).toContainText("58 min");
   await expect(classCard).toContainText("8 phases");
-  await expect(classCard).toContainText("80 steps");
+  await expect(classCard).toContainText("103 steps");
   await classCard.getByRole("button", { name: "View class" }).click();
 
   await expect(page.getByRole("heading", { name: "Mat Pilates — July 31" })).toBeVisible();
-  await expect(page.getByLabel("56.2 min total")).toContainText("56:10");
-  await expect(page.getByRole("heading", { name: "Circuit 5 — Upper Body and Back" })).toBeVisible();
+  await expect(page.getByLabel("58 min total")).toContainText("58:00");
+  await expect(page.getByRole("heading", { name: "Circuit #5: upper body and back" })).toBeVisible();
 
   await page.getByRole("button", { name: "Expand all pose details" }).click();
-  const kneePull = page.locator(".step-row").filter({ hasText: "Alternating standing knee pulls" });
-  await expect(kneePull).toContainText("Draw one knee toward the chest");
-  await expect(kneePull.getByAltText("Illustration for Alternating standing knee pulls")).toBeVisible();
+  const kneePull = page.locator(".step-row").filter({ hasText: "Knee pulls alternating legs" });
+  await expect(kneePull).toContainText("pull one leg towards the chest using hands under knee");
+  await expect(kneePull.getByAltText("Illustration for Knee pulls alternating legs")).toBeVisible();
   const shavasana = page.locator(".step-row").filter({ hasText: "Shavasana" });
   await expect(shavasana.getByAltText("Illustration for Shavasana")).toBeVisible();
 
   await page.getByRole("button", { name: "Start class" }).click();
-  await expect(page.getByRole("heading", { name: "Class introduction" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "INTRODUCTION" })).toBeVisible();
   await page.getByRole("button", { name: "Next" }).click();
-  await expect(page.getByRole("heading", { name: "Alternating standing knee pulls" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Knee pulls alternating legs" })).toBeVisible();
   await expect(page.locator(".exercise-details img")).toBeVisible();
 });
 
@@ -181,11 +181,11 @@ test("keeps real elapsed time running after scheduled completion until stopped",
       JSON.stringify({
         version: 2,
         classId: "mat-pilates-07-31",
-        classVersion: 1,
+        classVersion: 2,
         startedAtEpochMs: now - 5_000,
         elapsedMsFloor: 4_000,
         status: "running",
-        stepIndex: 79,
+        stepIndex: 102,
         stepDurationMs: 180_000,
         targetEndEpochMs: now - 1_000,
         savedAtEpochMs: now

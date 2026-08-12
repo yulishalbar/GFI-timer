@@ -67,22 +67,25 @@ describe("compileClass", () => {
   it("compiles the July 31 source rows with stable totals", () => {
     const compiled = compileClass(matPilates0731);
 
-    expect(compiled.steps).toHaveLength(80);
-    expect(compiled.totalDurationMs).toBe(3_370_000);
+    expect(compiled.steps).toHaveLength(103);
+    expect(compiled.totalDurationMs).toBe(3_480_000);
     expect(compiled.phases).toEqual([
       { id: "introduction", name: "Introduction", index: 1, stepCount: 1, durationMs: 120_000 },
-      { id: "standing-warmup", name: "Standing Warm-Up", index: 2, stepCount: 7, durationMs: 300_000 },
-      { id: "standing-lower-body", name: "Circuit 1 — Standing Lower Body", index: 3, stepCount: 12, durationMs: 430_000 },
-      { id: "quadruped-glutes-core", name: "Circuit 2 — Glutes and Core", index: 4, stepCount: 14, durationMs: 570_000 },
-      { id: "core-circuit", name: "Circuit 3 — Core", index: 5, stepCount: 15, durationMs: 660_000 },
-      { id: "side-body-circuit", name: "Circuit 4 — Side Body", index: 6, stepCount: 16, durationMs: 510_000 },
-      { id: "upper-body-back", name: "Circuit 5 — Upper Body and Back", index: 7, stepCount: 7, durationMs: 300_000 },
+      { id: "standing-warmup", name: "Warm-Up (Standing)", index: 2, stepCount: 7, durationMs: 300_000 },
+      { id: "standing-lower-body", name: "Circuit #1: Standing lower body", index: 3, stepCount: 14, durationMs: 440_000 },
+      { id: "quadruped-glutes-core", name: "Circuit #2: glutes and core", index: 4, stepCount: 24, durationMs: 670_000 },
+      { id: "core-circuit", name: "Circuit #3: core", index: 5, stepCount: 20, durationMs: 630_000 },
+      { id: "side-body-circuit", name: "Circuit #4: side body", index: 6, stepCount: 20, durationMs: 550_000 },
+      { id: "upper-body-back", name: "Circuit #5: upper body and back", index: 7, stepCount: 9, durationMs: 290_000 },
       { id: "cooldown", name: "Cooldown", index: 8, stepCount: 8, durationMs: 480_000 }
     ]);
     expect(compiled.steps[1]).toMatchObject({
       runtimeId: "mat-pilates-07-31/standing-warmup/alternating-knee-pulls",
-      name: "Alternating standing knee pulls"
+      name: "Knee pulls alternating legs"
     });
+    expect(compiled.steps.filter((step) => step.kind === "rest").every((step) => step.name === "REST"))
+      .toBe(true);
+    expect(compiled.steps.some((step) => step.name === "Alternating bird dogs")).toBe(true);
     expect(compiled.steps.at(-1)?.name).toBe("Shavasana");
   });
 

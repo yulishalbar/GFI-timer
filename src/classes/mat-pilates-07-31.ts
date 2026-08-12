@@ -3,10 +3,10 @@ import type { FitnessClassDefinition } from "../domain/class-definition";
 export const matPilates0731 = {
   schemaVersion: 1,
   id: "mat-pilates-07-31",
-  version: 1,
+  version: 2,
   title: "Mat Pilates — July 31",
   description:
-    "A standing-to-mat Pilates class focused on lower body, glutes, core, side body, upper body, and a restorative cooldown. Mat required.",
+    "60 MIN MAT PILATES- WARM UP, CORE, ARMS, GLUTES, LOWER BODY, & COOL DOWN. Equipment: mat. Focus on the mind and body connection, stretch the total body, and work the upper body, core, and legs.",
   phases: [
     {
       id: "introduction",
@@ -15,625 +15,331 @@ export const matPilates0731 = {
         {
           type: "exercise",
           id: "class-introduction",
-          name: "Class introduction",
+          name: "INTRODUCTION",
           durationSeconds: 120,
-          shortDescription: "Welcome the class and preview the standing-to-mat full-body sequence.",
-          longDescription:
-            "Invite steady breathing and a mind-body focus. Explain that the class begins standing, progresses through lower-body and mat circuits, and finishes with mobility and rest."
+          shortDescription:
+            "Focus on the mind and body connection, stretch the total body, and work the upper body, core, and legs."
         }
       ]
     },
     {
       id: "standing-warmup",
-      name: "Standing Warm-Up",
+      name: "Warm-Up (Standing)",
       items: [
         {
           type: "exercise",
           id: "alternating-knee-pulls",
-          name: "Alternating standing knee pulls",
+          name: "Knee pulls alternating legs",
           durationSeconds: 60,
-          shortDescription: "Stand tall with feet hip-width and soften the supporting knee.",
-          longDescription:
-            "Draw one knee toward the chest with the hands behind the thigh, return with control, and switch sides. Keep the spine long instead of folding toward the knee.",
+          shortDescription: "Stand up tall with spine straight. Feet hip width apart",
+          longDescription: "pull one leg towards the chest using hands under knee. Switch sides",
           illustration: "exercises/standing-knee-pull.svg"
         },
         {
           type: "exercise",
           id: "standing-roll-down",
-          name: "Standing roll-down",
+          name: "Standing roll down",
           durationSeconds: 30,
-          shortDescription: "Feet parallel; leave a soft bend in the knees if needed.",
+          shortDescription: "Stand up tall with spine straight",
           longDescription:
-            "Exhale to nod the chin and roll down one section of the spine at a time. Inhale at the bottom, then exhale to rebuild the spine from the pelvis upward."
+            "Inhale as you initiate movement through the chest, exhale begin rolling down the chin towards the chest, round the shoulders, then upper back, finally lower back and reach all the way down with straight legs or a slight bend in the knee. Inhale at the bottom, exhale and curl back up vertebrae by vertebrae"
         },
         {
           type: "exercise",
           id: "shoulder-rolls",
-          name: "Standing shoulder rolls",
+          name: "shoulder rolls",
           durationSeconds: 30,
-          shortDescription: "Stand tall with fingertips resting lightly on the shoulders.",
+          shortDescription: "Stand up tall with straight spine, fingers on shoulder blades",
           longDescription:
-            "Circle both elbows from the shoulder blades without swinging the ribs or pelvis. Reverse direction halfway through."
+            "Begin to roll both shoulders simultaneously, initiating the movement through the shoulder blade and not the back; ensure you're not swinging the body"
         },
         {
           type: "exercise",
-          id: "sumo-squat-arm-sweep",
-          name: "Sumo squat with arm sweep",
+          id: "sumo-squat-hand-lifts",
+          name: "Sumo squat and hand lifts",
           durationSeconds: 60,
-          shortDescription: "Take a wide stance and turn the toes out from the hips.",
+          shortDescription: "Bring your feet to a wider stance, turning your toes out from the hips",
           longDescription:
-            "Inhale to bend the knees over the toes while sweeping the arms down and across. Exhale to press through the feet, stand tall, and reach overhead."
+            "Inhale, to lower down sweeping the arms across; exhale, extend up all the way, sweeping the arms upwards, reaching up towards the sky"
         },
         {
           type: "exercise",
           id: "hip-circles",
-          name: "Standing hip circles",
+          name: "Hip circles",
           durationSeconds: 30,
-          shortDescription: "Bring the feet parallel and place the hands on the hips.",
-          longDescription:
-            "Draw slow circles through the pelvis while the feet stay grounded and the upper body remains quiet. Reverse direction after 15 seconds."
+          shortDescription: "Bring feet so that they are parallel, place arms on hips",
+          longDescription: "Draw large and slow circles through the hips. Reverse direction after 15 sec"
         },
         {
           type: "exercise",
           id: "squat-to-twist",
-          name: "Squat to standing twist",
+          name: "Squat to twist",
           durationSeconds: 30,
-          shortDescription: "Feet shoulder-width; hold the forearms at shoulder height.",
+          shortDescription: "Bring feet closer together, shoulder-width apart.",
           longDescription:
-            "Sit into a squat. As you stand, rotate the ribs and lift one knee toward the opposite side; return to center, squat, and alternate. Keep both knees tracking forward."
+            "Squat down and on the way up, with the arms stacked horizontally at the height of the shoulders, twist a single leg towards one side, shift the gaze towards that side. Lower down to a squat and repeat"
         },
         {
           type: "rest",
           id: "standing-circuit-preview",
-          name: "Rest and circuit preview",
-          durationSeconds: 60,
-          shortDescription: "Preview the standing lower-body sequence and begin with feet hip-width."
+          name: "REST",
+          durationSeconds: 60
         }
       ]
     },
     {
       id: "standing-lower-body",
-      name: "Circuit 1 — Standing Lower Body",
+      name: "Circuit #1: Standing lower body",
       items: [
         {
           type: "exercise",
           id: "squat-arms-right-round",
-          name: "Chair squat with arm lift — right round",
+          name: "Squat -> add arms",
           durationSeconds: 30,
-          shortDescription: "Stand tall with the arms by the hips.",
+          shortDescription: "Stand tall with hands by the hips",
           longDescription:
-            "Hinge the hips into a chair squat as the arms reach beside the ears, then press through the feet to stand and lower the arms with control."
+            "Squat down in a chair pose and lift arms up with control. Hinge at the hips"
         },
         {
           type: "exercise",
           id: "squat-hold-right-round",
-          name: "Chair squat hold — right round",
+          name: "Squat hold",
           durationSeconds: 30,
-          shortDescription: "Stay low with the arms reaching beside the ears.",
+          shortDescription:
+            "Same position as before, low chair-pose square with arms lifted next to ears.",
           longDescription:
-            "Hold the chair position with the ribs stacked, pelvis neutral, and weight balanced through the whole foot. Reduce depth if the lower back takes over."
+            "Without a rest, stay low and hold, closing the ribs and tucking the pelvis under"
         },
         {
           type: "exercise",
           id: "squat-hold-leg-lift-right",
-          name: "Squat hold with right leg lift",
+          name: "Squat hold leg lift (R)",
           durationSeconds: 30,
-          shortDescription: "Rise halfway, shift into the left foot, and keep the hips square.",
+          shortDescription:
+            "Come up half-way to chair-pose square with arms lifted next to ears.",
           longDescription:
-            "Maintain a small standing-leg bend while reaching the pointed right leg back and slightly up. Squeeze the right glute without arching the lower back."
+            "Without a rest stay low and hold, closing the ribs and tucking the pelvis under; point and lift the right leg up and back, squeezing the glutes. Stay square to mat"
         },
         {
           type: "exercise",
           id: "squat-arms-left-round",
-          name: "Chair squat with arm lift — left round",
+          name: "Squat -> add arms",
           durationSeconds: 30,
-          shortDescription: "Return both feet to the mat and stand tall.",
+          shortDescription: "Stand tall with hands by the hips",
           longDescription:
-            "Hinge the hips into a chair squat as the arms reach beside the ears, then press through the feet to stand and lower the arms with control."
+            "Squat down in a chair pose and lift arms up with control. Hinge at the hips"
         },
         {
           type: "exercise",
           id: "squat-hold-left-round",
-          name: "Chair squat hold — left round",
+          name: "Squat hold",
           durationSeconds: 30,
-          shortDescription: "Stay low with the arms reaching beside the ears.",
+          shortDescription:
+            "Same position as before, low chair-pose square with arms lifted next to ears.",
           longDescription:
-            "Hold the chair position with the ribs stacked, pelvis neutral, and weight balanced through the whole foot. Reduce depth if needed."
+            "Without a rest, stay low and hold, closing the ribs and tucking the pelvis under"
         },
         {
           type: "exercise",
           id: "squat-hold-leg-lift-left",
-          name: "Squat hold with left leg lift",
+          name: "Squat hold leg lift (L)",
           durationSeconds: 30,
-          shortDescription: "Rise halfway, shift into the right foot, and keep the hips square.",
+          shortDescription:
+            "Come up half-way to chair-pose square with arms lifted next to ears.",
           longDescription:
-            "Maintain a small standing-leg bend while reaching the pointed left leg back and slightly up. Squeeze the left glute without arching the lower back."
+            "Without a rest stay low and hold, closing the ribs and tucking the pelvis under; point and lift the left leg up and back, squeezing the glutes. Stay square to mat"
         },
         {
           type: "rest",
           id: "standing-balance-reset",
-          name: "Rest",
+          name: "REST",
           durationSeconds: 60,
-          shortDescription: "Shake out the legs and prepare for balance work, beginning on the right."
+          shortDescription: "Go over next exercises"
         },
         {
           type: "exercise",
           id: "side-back-kick-right",
-          name: "Side-to-back kick — right",
-          durationSeconds: 45,
-          shortDescription: "Stand on the left leg with a soft knee and hands at the waist.",
+          name: "Side to back kick (R)",
+          durationSeconds: 40,
+          shortDescription: "Standing with a slight bend in the knees, hands on waist",
           longDescription:
-            "Lift the right leg to the side, return through a hover, then hinge forward and extend it behind you. Keep the pelvis square and use a wall for balance if needed.",
+            "Open left leg to the side using left glute muscle; bring it back to center still hovering the leg in the air, and hinge forward as you kick leg towards the back of the room",
           illustration: "exercises/standing-side-back-kick.svg"
         },
         {
           type: "rest",
-          id: "switch-side-back-kick",
-          name: "Switch sides",
+          id: "right-kick-reset",
+          name: "REST",
           durationSeconds: 10,
-          shortDescription: "Transfer weight to the right foot."
-        },
-        {
-          type: "exercise",
-          id: "side-back-kick-left",
-          name: "Side-to-back kick — left",
-          durationSeconds: 45,
-          shortDescription: "Stand on the right leg with a soft knee and hands at the waist.",
-          longDescription:
-            "Lift the left leg to the side, return through a hover, then hinge forward and extend it behind you. Keep the pelvis square and move slowly enough to balance.",
-          illustration: "exercises/standing-side-back-kick.svg"
+          shortDescription: "Go over next movement"
         },
         {
           type: "exercise",
           id: "deadlift-knee-tuck-right",
-          name: "Single-leg deadlift to knee tuck — right",
-          durationSeconds: 45,
-          shortDescription: "Load the left foot and float the right toes behind you.",
+          name: "single-leg deadlift (SLDL) to knee tuck (R)",
+          durationSeconds: 40,
+          shortDescription:
+            "Left leg goes slightly forward with most of the weight, right leg back, have a slight bend in the knees. Arms beside hips",
           longDescription:
-            "Hinge forward as the right leg reaches back and the right hand reaches toward the floor. Stand tall and draw the right knee forward. Option: tap the toes between repetitions; progression: add two knee-tuck pulses.",
+            "SLDL: Lift right leg and hinge forward, touching right hand to the ground. Knee tuck: Lift leg back to original position and place left arm horizontal where right leg lifts towards. P-> pulse leg at knee tuck twice, keep leg hovering R-> place foot on ground in between reps",
           illustration: "exercises/single-leg-deadlift.svg"
+        },
+        {
+          type: "rest",
+          id: "standing-side-switch",
+          name: "REST",
+          durationSeconds: 10,
+          shortDescription: "Switch sides"
+        },
+        {
+          type: "exercise",
+          id: "side-back-kick-left",
+          name: "Side to back kick (L)",
+          durationSeconds: 45,
+          shortDescription: "Standing with a slight bend in the knees, hands on waist",
+          longDescription:
+            "Open left leg to the side using right glute muscle; bring it back to center, still hovering the leg in the air, and hinge forward as you kick leg towards the back of the room",
+          illustration: "exercises/standing-side-back-kick.svg"
+        },
+        {
+          type: "rest",
+          id: "left-kick-reset",
+          name: "REST",
+          durationSeconds: 10,
+          shortDescription: "Go over next movement"
         },
         {
           type: "exercise",
           id: "deadlift-knee-tuck-left",
-          name: "Single-leg deadlift to knee tuck — left",
+          name: "single-leg deadlift (SLDL) to knee tuck (L)",
           durationSeconds: 45,
-          shortDescription: "Load the right foot and float the left toes behind you.",
+          shortDescription:
+            "Right leg goes slightly forward with most of the weight, left leg back, have a slight bend in the knees. Arms beside hips",
           longDescription:
-            "Hinge forward as the left leg reaches back and the left hand reaches toward the floor. Stand tall and draw the left knee forward. Option: tap the toes between repetitions; progression: add two knee-tuck pulses.",
+            "SLDL: Lift right leg and hinge forward, touching left hand to the ground. Knee tuck: Lift leg back to original position and place left arm horizontal where right leg lifts towards. P-> pulse leg at knee tuck twice, keep leg hovering R-> place foot on ground in between reps",
           illustration: "exercises/single-leg-deadlift.svg"
         }
       ]
     },
     {
       id: "quadruped-glutes-core",
-      name: "Circuit 2 — Glutes and Core",
+      name: "Circuit #2: glutes and core",
       items: [
         {
           type: "rest",
           id: "quadruped-setup",
-          name: "Rest and setup",
+          name: "REST",
           durationSeconds: 60,
-          shortDescription: "Come to tabletop or lower to the forearms; begin with the left leg."
+          shortDescription:
+            "Come to tabletop position with hips squared to mat, left hand straight and right hand on elbow. Option to have both straight extended, or both elbows bent"
         },
-        {
-          type: "exercise",
-          id: "quadruped-leg-lift-left",
-          name: "Quadruped straight-leg lift — left",
-          durationSeconds: 40,
-          shortDescription: "Extend the left leg long with the toes pointed toward the mat.",
-          longDescription:
-            "Lift the straight leg from the glute until it reaches hip height, then lower without shifting the pelvis. Brace the core and keep both shoulders square.",
-          illustration: "exercises/quadruped-leg-series.svg"
-        },
-        {
-          type: "exercise",
-          id: "side-crunch-left",
-          name: "Quadruped side crunch — left",
-          durationSeconds: 40,
-          shortDescription: "Keep the left leg lifted and the standing side stable.",
-          longDescription:
-            "Draw the left knee toward the left elbow with a side-body contraction, then extend the leg long behind you without rotating the torso.",
-          illustration: "exercises/quadruped-leg-series.svg"
-        },
-        {
-          type: "exercise",
-          id: "cross-body-crunch-left",
-          name: "Quadruped cross-body crunch — left",
-          durationSeconds: 40,
-          shortDescription: "Extend the left leg and prepare to cross underneath the body.",
-          longDescription:
-            "Bend the left knee and draw it toward the right elbow as the supporting arms bend slightly. Re-extend behind you and return the shoulders over the wrists."
-        },
-        {
-          type: "exercise",
-          id: "combined-crunch-left",
-          name: "Side and cross-body crunch — left",
-          durationSeconds: 40,
-          shortDescription: "Alternate one same-side crunch with one cross-body crunch.",
-          longDescription:
-            "Move the left knee toward the left elbow, extend, then draw it toward the right elbow. Keep the repetitions deliberate and the pelvis as level as possible."
-        },
-        {
-          type: "exercise",
-          id: "side-crunch-extension-left",
-          name: "Side crunch with leg extension — left",
-          durationSeconds: 40,
-          shortDescription: "Bring the left knee toward the left elbow.",
-          longDescription:
-            "From the side crunch, straighten the left leg out to the side, bend it back in, then extend it behind you. Reduce the range to keep the trunk stable."
-        },
-        {
-          type: "exercise",
-          id: "half-rainbow-left",
-          name: "Half rainbow — left",
-          durationSeconds: 40,
-          shortDescription: "Extend and point the left leg behind you.",
-          longDescription:
-            "Sweep the straight left leg in a controlled arc toward the left side of the mat, lift through center, and return. Keep the movement in the hip rather than the lower back.",
-          illustration: "exercises/quadruped-leg-series.svg"
-        },
+        ...quadrupedSide("left"),
         {
           type: "rest",
           id: "quadruped-side-switch",
-          name: "Switch sides",
+          name: "REST",
           durationSeconds: 30,
-          shortDescription: "Reset the wrists or forearms and extend the right leg."
+          shortDescription: "Switch sides"
         },
-        {
-          type: "exercise",
-          id: "quadruped-leg-lift-right",
-          name: "Quadruped straight-leg lift — right",
-          durationSeconds: 40,
-          shortDescription: "Extend the right leg long with the toes pointed toward the mat.",
-          longDescription:
-            "Lift the straight leg from the glute until it reaches hip height, then lower without shifting the pelvis. Brace the core and keep both shoulders square.",
-          illustration: "exercises/quadruped-leg-series.svg"
-        },
-        {
-          type: "exercise",
-          id: "side-crunch-right",
-          name: "Quadruped side crunch — right",
-          durationSeconds: 40,
-          shortDescription: "Keep the right leg lifted and the standing side stable.",
-          longDescription:
-            "Draw the right knee toward the right elbow with a side-body contraction, then extend the leg long behind you without rotating the torso.",
-          illustration: "exercises/quadruped-leg-series.svg"
-        },
-        {
-          type: "exercise",
-          id: "cross-body-crunch-right",
-          name: "Quadruped cross-body crunch — right",
-          durationSeconds: 40,
-          shortDescription: "Extend the right leg and prepare to cross underneath the body.",
-          longDescription:
-            "Bend the right knee and draw it toward the left elbow as the supporting arms bend slightly. Re-extend behind you and return the shoulders over the wrists."
-        },
-        {
-          type: "exercise",
-          id: "combined-crunch-right",
-          name: "Side and cross-body crunch — right",
-          durationSeconds: 40,
-          shortDescription: "Alternate one same-side crunch with one cross-body crunch.",
-          longDescription:
-            "Move the right knee toward the right elbow, extend, then draw it toward the left elbow. Keep the repetitions deliberate and the pelvis as level as possible."
-        },
-        {
-          type: "exercise",
-          id: "side-crunch-extension-right",
-          name: "Side crunch with leg extension — right",
-          durationSeconds: 40,
-          shortDescription: "Bring the right knee toward the right elbow.",
-          longDescription:
-            "From the side crunch, straighten the right leg out to the side, bend it back in, then extend it behind you. Reduce the range to keep the trunk stable."
-        },
-        {
-          type: "exercise",
-          id: "half-rainbow-right",
-          name: "Half rainbow — right",
-          durationSeconds: 40,
-          shortDescription: "Extend and point the right leg behind you.",
-          longDescription:
-            "Sweep the straight right leg in a controlled arc toward the right side of the mat, lift through center, and return. Keep the movement in the hip rather than the lower back.",
-          illustration: "exercises/quadruped-leg-series.svg"
-        }
+        ...quadrupedSide("right")
       ]
     },
     {
       id: "core-circuit",
-      name: "Circuit 3 — Core",
+      name: "Circuit #3: core",
       items: [
         {
           type: "rest",
           id: "core-setup",
-          name: "Transition",
+          name: "REST",
           durationSeconds: 60,
-          shortDescription: "Roll onto the back and bring the legs to tabletop."
+          shortDescription: "Roll on to stomach with extended legs and arms by sides"
         },
-        {
-          type: "repeat",
-          id: "core-rounds",
-          rounds: 2,
-          items: [
-            {
-              type: "exercise",
-              id: "alternating-toe-taps",
-              name: "Alternating toe taps",
-              durationSeconds: 45,
-              shortDescription: "Knees over hips; keep the ribs and pelvis heavy.",
-              longDescription:
-                "Lower one bent leg until the toes tap the mat, return to tabletop, and alternate. Keep the head down or curl up for more challenge."
-            },
-            {
-              type: "exercise",
-              id: "double-toe-taps",
-              name: "Double-leg toe taps",
-              durationSeconds: 45,
-              shortDescription: "Keep both knees bent at tabletop.",
-              longDescription:
-                "Lower both feet toward the mat together and return without changing the shape of the knees. Make the range smaller if the lower back lifts."
-            },
-            {
-              type: "exercise",
-              id: "toe-tap-reverse-crunch",
-              name: "Toe tap to reverse crunch",
-              durationSeconds: 45,
-              shortDescription: "Alternate a controlled double toe tap with a small hip curl.",
-              longDescription:
-                "Tap both toes toward the mat, return to tabletop, then exhale to curl the tailbone and lift the hips slightly. Lower the pelvis softly before repeating.",
-              illustration: "exercises/toe-tap-reverse-crunch.svg"
-            },
-            {
-              type: "exercise",
-              id: "supine-bird-dogs",
-              name: "Supine alternating bird dogs",
-              durationSeconds: 45,
-              shortDescription: "Arms reach over shoulders and legs remain in tabletop.",
-              longDescription:
-                "Extend one arm overhead and the opposite leg away, return to center, and switch. Keep the back of the ribs grounded; shorten the reach as needed."
-            },
-            {
-              type: "exercise",
-              id: "single-leg-stretch",
-              name: "Single-leg stretch",
-              durationSeconds: 45,
-              shortDescription: "Curl up or keep the head supported on the mat.",
-              longDescription:
-                "Draw one knee in as the opposite leg extends, then switch with control. Keep the pelvis stable and breathe continuously."
-            },
-            {
-              type: "exercise",
-              id: "scissors",
-              name: "Pilates scissors",
-              durationSeconds: 45,
-              shortDescription: "Extend both legs and hold behind one thigh or calf.",
-              longDescription:
-                "Draw one straight leg toward you as the other lowers, pulse gently, and switch. Soften the knees or reduce the range to keep the pelvis steady."
-            },
-            {
-              type: "rest",
-              id: "round-reset",
-              name: "Round reset",
-              durationSeconds: 30,
-              shortDescription: "Hug the knees in; after round two, prepare to roll onto the side."
-            }
-          ]
-        }
+        ...coreRound("one", true),
+        ...coreRound("two", false)
       ]
     },
     {
       id: "side-body-circuit",
-      name: "Circuit 4 — Side Body",
+      name: "Circuit #4: side body",
       items: [
         {
           type: "rest",
           id: "side-body-setup",
-          name: "Rest and circuit preview",
+          name: "REST",
           durationSeconds: 60,
-          shortDescription: "Lie on the right side to work the left leg first."
+          shortDescription:
+            "Meet me lying on right side with left leg stacked on top of right leg. Cue full circuit (Starting on right side)"
         },
-        {
-          type: "exercise",
-          id: "leg-lifts-left",
-          name: "Side-lying leg lifts — left",
-          durationSeconds: 30,
-          shortDescription: "Stack the hips and lengthen the left leg.",
-          longDescription:
-            "Lift the top leg from the outer hip and lower with control. Keep the waist long and the kneecap facing forward.",
-          illustration: "exercises/side-lying-leg-series.svg"
-        },
-        {
-          type: "exercise",
-          id: "leg-pulses-left",
-          name: "Top-leg pulses — left",
-          durationSeconds: 30,
-          shortDescription: "Hold the left leg at hip height.",
-          longDescription:
-            "Pulse the straight leg through a small range without rocking the pelvis or shortening the waist."
-        },
-        {
-          type: "exercise",
-          id: "large-circles-left",
-          name: "Large leg circles — left",
-          durationSeconds: 30,
-          shortDescription: "Keep the top leg long; reverse halfway.",
-          longDescription:
-            "Draw the largest circle that allows the hips and ribs to remain stacked. Slow the movement rather than using momentum."
-        },
-        {
-          type: "exercise",
-          id: "small-circles-left",
-          name: "Small leg circles — left",
-          durationSeconds: 30,
-          shortDescription: "Reduce the circle and keep constant outer-hip tension.",
-          longDescription:
-            "Trace small precise circles from the hip joint. Reverse direction after 15 seconds."
-        },
-        {
-          type: "exercise",
-          id: "static-hold-left",
-          name: "Top-leg static hold — left",
-          durationSeconds: 30,
-          shortDescription: "Hold the left leg long at a sustainable height.",
-          longDescription:
-            "Reach through the heel while keeping the pelvis still. Lower briefly whenever alignment starts to change."
-        },
-        {
-          type: "exercise",
-          id: "clamshell-left",
-          name: "Clamshell openers — left",
-          durationSeconds: 30,
-          shortDescription: "Bend both knees and keep the heels together.",
-          longDescription:
-            "Rotate the top knee open without rolling the top hip backward, then close with control."
-        },
-        {
-          type: "exercise",
-          id: "clamshell-kick-left",
-          name: "Clamshell opener with kick — left",
-          durationSeconds: 30,
-          shortDescription: "Open the left knee while the heels stay together.",
-          longDescription:
-            "Open the clamshell, extend the top leg on a diagonal, bend the knee, and close. Keep the pelvis stacked throughout."
-        },
+        ...sideBodySide("left"),
         {
           type: "rest",
           id: "side-body-switch",
-          name: "Switch sides",
+          name: "REST",
           durationSeconds: 30,
-          shortDescription: "Roll onto the left side to work the right leg."
+          shortDescription: "Repeat on left side"
         },
-        {
-          type: "exercise",
-          id: "leg-lifts-right",
-          name: "Side-lying leg lifts — right",
-          durationSeconds: 30,
-          shortDescription: "Stack the hips and lengthen the right leg.",
-          longDescription:
-            "Lift the top leg from the outer hip and lower with control. Keep the waist long and the kneecap facing forward.",
-          illustration: "exercises/side-lying-leg-series.svg"
-        },
-        {
-          type: "exercise",
-          id: "leg-pulses-right",
-          name: "Top-leg pulses — right",
-          durationSeconds: 30,
-          shortDescription: "Hold the right leg at hip height.",
-          longDescription:
-            "Pulse the straight leg through a small range without rocking the pelvis or shortening the waist."
-        },
-        {
-          type: "exercise",
-          id: "large-circles-right",
-          name: "Large leg circles — right",
-          durationSeconds: 30,
-          shortDescription: "Keep the top leg long; reverse halfway.",
-          longDescription:
-            "Draw the largest circle that allows the hips and ribs to remain stacked. Slow the movement rather than using momentum."
-        },
-        {
-          type: "exercise",
-          id: "small-circles-right",
-          name: "Small leg circles — right",
-          durationSeconds: 30,
-          shortDescription: "Reduce the circle and keep constant outer-hip tension.",
-          longDescription:
-            "Trace small precise circles from the hip joint. Reverse direction after 15 seconds."
-        },
-        {
-          type: "exercise",
-          id: "static-hold-right",
-          name: "Top-leg static hold — right",
-          durationSeconds: 30,
-          shortDescription: "Hold the right leg long at a sustainable height.",
-          longDescription:
-            "Reach through the heel while keeping the pelvis still. Lower briefly whenever alignment starts to change."
-        },
-        {
-          type: "exercise",
-          id: "clamshell-right",
-          name: "Clamshell openers — right",
-          durationSeconds: 30,
-          shortDescription: "Bend both knees and keep the heels together.",
-          longDescription:
-            "Rotate the top knee open without rolling the top hip backward, then close with control."
-        },
-        {
-          type: "exercise",
-          id: "clamshell-kick-right",
-          name: "Clamshell opener with kick — right",
-          durationSeconds: 30,
-          shortDescription: "Open the right knee while the heels stay together.",
-          longDescription:
-            "Open the clamshell, extend the top leg on a diagonal, bend the knee, and close. Keep the pelvis stacked throughout."
-        }
+        ...sideBodySide("right")
       ]
     },
     {
       id: "upper-body-back",
-      name: "Circuit 5 — Upper Body and Back",
+      name: "Circuit #5: upper body and back",
       items: [
         {
           type: "rest",
           id: "upper-body-setup",
-          name: "Rest and circuit preview",
+          name: "REST",
           durationSeconds: 60,
-          shortDescription: "Come to tabletop and prepare to row with the left arm."
+          shortDescription: "Cue full circuit (Starting on right side)"
         },
+        { type: "exercise", id: "arm-circles", name: "Arm circles", durationSeconds: 40 },
         {
           type: "exercise",
-          id: "back-row-left",
-          name: "Tabletop back row — left",
-          durationSeconds: 40,
-          shortDescription: "Root through the right hand and reach the left arm toward the mat.",
-          longDescription:
-            "Draw the left elbow toward the ribs and squeeze the shoulder blade toward the spine, then extend the arm down. Keep the torso square."
+          id: "small-arm-circles",
+          name: "Small arm circles",
+          durationSeconds: 40
         },
         {
-          type: "exercise",
-          id: "row-arm-lift-left",
-          name: "Back row to arm lift — left",
-          durationSeconds: 40,
-          shortDescription: "Keep the right hand grounded and the neck long.",
-          longDescription:
-            "Row the left elbow to the ribs, straighten the arm behind you, lift it slightly from the shoulder, then return with control."
-        },
-        {
-          type: "exercise",
-          id: "back-row-right",
-          name: "Tabletop back row — right",
-          durationSeconds: 40,
-          shortDescription: "Root through the left hand and reach the right arm toward the mat.",
-          longDescription:
-            "Draw the right elbow toward the ribs and squeeze the shoulder blade toward the spine, then extend the arm down. Keep the torso square."
-        },
-        {
-          type: "exercise",
-          id: "row-arm-lift-right",
-          name: "Back row to arm lift — right",
-          durationSeconds: 40,
-          shortDescription: "Keep the left hand grounded and the neck long.",
-          longDescription:
-            "Row the right elbow to the ribs, straighten the arm behind you, lift it slightly from the shoulder, then return with control."
+          type: "rest",
+          id: "upper-body-explanation",
+          name: "REST",
+          durationSeconds: 10,
+          shortDescription: "Explain next movements"
         },
         {
           type: "exercise",
           id: "pilates-push-ups",
           name: "Pilates push-ups",
-          durationSeconds: 40,
-          shortDescription: "Hands under shoulders; use knees or toes.",
-          longDescription:
-            "Keep the elbows angled back as the chest lowers, then press the floor away. Maintain one long line from the knees or heels through the crown."
+          durationSeconds: 30
         },
         {
           type: "exercise",
           id: "plank-shoulder-taps",
-          name: "High-plank shoulder taps",
-          durationSeconds: 40,
-          shortDescription: "Widen the feet and brace the core before lifting a hand.",
-          longDescription:
-            "Alternate tapping the opposite shoulder while minimizing hip rotation. Lower the knees or hold a static plank as needed.",
+          name: "High plank shoulder taps, alternating hands",
+          durationSeconds: 30,
           illustration: "exercises/high-plank.svg"
+        },
+        {
+          type: "exercise",
+          id: "alternating-side-planks",
+          name: "High plank opening to a side planks (alternating)",
+          durationSeconds: 30,
+          illustration: "exercises/high-plank.svg"
+        },
+        {
+          type: "exercise",
+          id: "high-plank-hold",
+          name: "High plank hold",
+          durationSeconds: 30,
+          illustration: "exercises/high-plank.svg"
+        },
+        {
+          type: "rest",
+          id: "upper-body-finish-break",
+          name: "REST",
+          durationSeconds: 20,
+          shortDescription: "Repeat on left side. Cue: sit up tall with legs crossed"
         }
       ]
     },
@@ -643,79 +349,280 @@ export const matPilates0731 = {
       items: [
         {
           type: "exercise",
-          id: "seated-overhead-stretch",
-          name: "Seated overhead arm stretch",
+          id: "overhead-arm-stretch",
+          name: "Overhead arm stretch",
           durationSeconds: 30,
-          shortDescription: "Sit tall with crossed legs and relax the shoulders.",
           longDescription:
-            "Inhale to reach both arms overhead and lengthen the sides of the waist. Exhale to soften the shoulders while keeping the spine tall."
+            "Extend arms overhead along the mat. Inhale reaching through fingers and toes to lengthen the body. Exhale relaxing shoulders and allowing the chest to open."
         },
         {
           type: "exercise",
           id: "seated-straddle",
-          name: "Seated straddle folds",
+          name: "Seated Straddle",
           durationSeconds: 90,
-          shortDescription: "Extend the legs into a comfortable V shape.",
+          shortDescription: "Sit on the floor. Spread your legs wide apart into a V-shape.",
           longDescription:
-            "Fold over the right leg for 30 seconds, the left for 30 seconds, then reach through the center for 30 seconds. Lead with a long spine and soften the knees if needed.",
+            "Fold over right leg (30 sec). Then fold over left (30 sec). Fold over middle (30 sec)",
           illustration: "exercises/seated-straddle-fold.jpg"
         },
         {
           type: "exercise",
-          id: "seated-twist",
-          name: "Seated spinal twists",
+          id: "side-twist",
+          name: "Side twist",
           durationSeconds: 60,
-          shortDescription: "Cross the legs and sit evenly on both sitting bones.",
+          shortDescription: "Sit with legs crossed",
           longDescription:
-            "Rotate left with the right hand to the left knee and the left hand behind you. Return to center and switch after 30 seconds without forcing the neck."
+            "Twist towards the left side, grabbing left knee with right hand and left hand towards the back. Switch sides after 30 sec"
         },
         {
           type: "exercise",
-          id: "knee-chest-right",
-          name: "Knee-to-chest stretch — right",
+          id: "knee-chest-left-one",
+          name: "Knee to chest stretch (L)",
           durationSeconds: 30,
-          shortDescription: "Roll onto the back and draw the right knee in.",
-          longDescription:
-            "Hold behind the thigh or over the shin and breathe into the back of the hip while the left leg rests comfortably."
+          shortDescription: "Slowly roll onto back"
         },
         {
           type: "exercise",
-          id: "supine-twist-right",
-          name: "Supine twist — right",
-          durationSeconds: 30,
-          shortDescription: "Guide the right knee across the body toward the left.",
-          longDescription:
-            "Extend the right arm and keep both shoulders relaxed toward the mat. Reduce the twist if the shoulder lifts or the lower back pinches."
+          id: "knee-left-one",
+          name: "Knee to left (L)",
+          durationSeconds: 30
         },
         {
           type: "exercise",
-          id: "knee-chest-left",
-          name: "Knee-to-chest stretch — left",
-          durationSeconds: 30,
-          shortDescription: "Return to center and draw the left knee in.",
-          longDescription:
-            "Hold behind the thigh or over the shin and breathe into the back of the hip while the right leg rests comfortably."
+          id: "knee-chest-left-two",
+          name: "Knee to chest stretch (L)",
+          durationSeconds: 30
         },
         {
           type: "exercise",
-          id: "supine-twist-left",
-          name: "Supine twist — left",
-          durationSeconds: 30,
-          shortDescription: "Guide the left knee across the body toward the right.",
-          longDescription:
-            "Extend the left arm and keep both shoulders relaxed toward the mat. Reduce the twist if the shoulder lifts or the lower back pinches."
+          id: "knee-left-two",
+          name: "Knee to left (L)",
+          durationSeconds: 30
         },
         {
           type: "exercise",
           id: "shavasana",
           name: "Shavasana",
           durationSeconds: 180,
-          shortDescription: "Rest comfortably, then finish seated and thank the class.",
+          shortDescription: "Lie comfortably on back with arms relaxed at sides.",
           longDescription:
-            "Let the arms and legs relax. Breathe slowly through the nose and out through the mouth, allowing the effort of the class to settle.",
+            "Slow inhale through the nose, slow exhale through the mouth. Allow the body to fully relax and breathing to settle naturally. end→ come to seated. Closing words: Thank you for coming today and working out early in the morning, amazing job! Don't forget to wipe down your mat. See you next time!",
           illustration: "exercises/shavasana.jpg"
         }
       ]
     }
   ]
 } satisfies FitnessClassDefinition;
+
+type Side = "left" | "right";
+
+function quadrupedBreak(id: string): FitnessClassDefinition["phases"][number]["items"][number] {
+  return { type: "rest", id, name: "REST", durationSeconds: 10 };
+}
+
+function quadrupedSide(side: Side): FitnessClassDefinition["phases"][number]["items"] {
+  const label = side === "left" ? "L" : "R";
+  const opposite = side === "left" ? "right" : "left";
+  return [
+    {
+      type: "exercise",
+      id: `quadruped-leg-lift-${side}`,
+      name: `Quadruped Glute Lift (${label})`,
+      durationSeconds: 40,
+      shortDescription: `Extend ${side} leg straight`,
+      longDescription: `Lift ${side} leg up using ${side} glutes, engage the core`,
+      illustration: "exercises/quadruped-leg-series.svg"
+    },
+    quadrupedBreak(`after-leg-lift-${side}`),
+    {
+      type: "exercise",
+      id: `side-crunch-${side}`,
+      name: `Side crunch (${label})`,
+      durationSeconds: 40,
+      shortDescription: `Lift leg up so that it is straight and ${side} glute is engaged`,
+      longDescription: `Crunch ${side} leg towards the ${side} elbow and extend back out,`,
+      illustration: "exercises/quadruped-leg-series.svg"
+    },
+    quadrupedBreak(`after-side-crunch-${side}`),
+    {
+      type: "exercise",
+      id: `cross-body-crunch-${side}`,
+      name: `Cross body crunch (${label})`,
+      durationSeconds: 40,
+      shortDescription: `Lift leg up so that it is straight and ${side} glute is engaged`,
+      longDescription: `Bend ${side} and crunch it over across the ${opposite} leg, lowering the elbows back. Extend outwards and repeat`
+    },
+    quadrupedBreak(`after-cross-body-crunch-${side}`),
+    {
+      type: "exercise",
+      id: `combined-crunch-${side}`,
+      name: `Combine Side crunch (${label}) + Cross body crunch (${label})`,
+      durationSeconds: 40,
+      longDescription: `Alternate between Side crunch (${label}) and + Cross body crunch (${label})`
+    },
+    quadrupedBreak(`after-combined-crunch-${side}`),
+    {
+      type: "exercise",
+      id: `side-crunch-extension-${side}`,
+      name: `Side crunch with leg extension (${label})`,
+      durationSeconds: 40,
+      longDescription: `Crunch ${side} leg towards the ${side} elbow, extend leg straight to the side, then extend back out and repeat`
+    },
+    quadrupedBreak(`after-side-crunch-extension-${side}`),
+    {
+      type: "exercise",
+      id: `half-rainbow-${side}`,
+      name: `Half rainbow (${label})`,
+      durationSeconds: 40,
+      shortDescription: `Extend ${side} leg and point`,
+      longDescription: `In a circular motion lower the ${side} leg towards the ${side} side of the ground, lift back up and repeat`,
+      illustration: "exercises/quadruped-leg-series.svg"
+    }
+  ];
+}
+
+function coreBreak(id: string): FitnessClassDefinition["phases"][number]["items"][number] {
+  return { type: "rest", id, name: "REST", durationSeconds: 10 };
+}
+
+function coreRound(
+  round: "one" | "two",
+  includeReset: boolean
+): FitnessClassDefinition["phases"][number]["items"] {
+  const items: FitnessClassDefinition["phases"][number]["items"] = [
+    {
+      type: "exercise",
+      id: `alternating-toe-taps-${round}`,
+      name: "Toe taps alternating legs",
+      durationSeconds: 40,
+      shortDescription: "Bring legs up to a tabletop position",
+      longDescription:
+        "Tap one leg down pointing the toes, lift back up and alternate legs. The head neck and shoulders can stay on the ground or be lifted for an increased challenge"
+    },
+    {
+      type: "exercise",
+      id: `double-toe-taps-${round}`,
+      name: "Toe taps both legs",
+      durationSeconds: 40,
+      shortDescription: "Stay lying on back in tabletop position with lifted legs",
+      longDescription: "Tap both legs down, head can be on mat or lifted"
+    },
+    {
+      type: "exercise",
+      id: `toe-tap-reverse-crunch-${round}`,
+      name: "Toe tap to reverse crunch",
+      durationSeconds: 40,
+      shortDescription:
+        "Stay lying on back in tabletop position with lifted legs. Arms beside body",
+      longDescription: "Tap both legs down",
+      illustration: "exercises/toe-tap-reverse-crunch.svg"
+    },
+    coreBreak(`after-reverse-crunch-${round}`),
+    {
+      type: "exercise",
+      id: `supine-bird-dogs-${round}`,
+      name: "Alternating bird dogs",
+      durationSeconds: 40,
+      shortDescription:
+        "Stay lying on back in tabletop position with lifted legs. Arms go straight up perpendicular to the body",
+      longDescription: "Lower opposite leg and hand and lower; repeat"
+    },
+    coreBreak(`after-bird-dogs-${round}`),
+    {
+      type: "exercise",
+      id: `single-leg-stretch-${round}`,
+      name: "Single leg stretch",
+      durationSeconds: 40,
+      shortDescription: "Curl up so that the head, neck, and shoulders lift off the mat.",
+      longDescription:
+        "Pull one leg towards chin using the biceps, inhale to lower, exhale to repeat with other leg"
+    },
+    coreBreak(`after-single-leg-stretch-${round}`),
+    {
+      type: "exercise",
+      id: `scissors-${round}`,
+      name: "Scissors",
+      durationSeconds: 40,
+      shortDescription: "Hands go by the sides of the ears",
+      longDescription:
+        "One elbow reaches towards opposite knee as it bends towards the chest, alternating sides with lifted upper body at all times"
+    }
+  ];
+
+  if (includeReset) {
+    items.push({
+      type: "rest",
+      id: "round-one-reset",
+      name: "REST",
+      durationSeconds: 30,
+      shortDescription: "Hug knees in, get ready to repeat"
+    });
+  }
+
+  return items;
+}
+
+function sideBodySide(side: Side): FitnessClassDefinition["phases"][number]["items"] {
+  const label = side === "left" ? "L" : "R";
+  const lyingSide = side === "left" ? "right" : "left";
+  return [
+    {
+      type: "exercise",
+      id: `leg-lifts-${side}`,
+      name: `Leg lifts (${label})`,
+      durationSeconds: 30,
+      shortDescription: `Lie on the ${lyingSide} side of the body, facing ____ ${side} leg stacked on top of ${lyingSide}`,
+      longDescription: `Lift ${side} leg up slowly and controlled`,
+      illustration: "exercises/side-lying-leg-series.svg"
+    },
+    {
+      type: "exercise",
+      id: `leg-pulses-${side}`,
+      name: "Pulse leg at the top",
+      durationSeconds: 30,
+      shortDescription: `Lift ${side} leg up slow and controlled`
+    },
+    {
+      type: "rest",
+      id: `after-leg-pulses-${side}`,
+      name: "REST",
+      durationSeconds: 10
+    },
+    {
+      type: "exercise",
+      id: `large-circles-${side}`,
+      name: "Large leg circles",
+      durationSeconds: 30
+    },
+    {
+      type: "exercise",
+      id: `small-circles-${side}`,
+      name: "Small leg circles",
+      durationSeconds: 30
+    },
+    {
+      type: "exercise",
+      id: `static-hold-${side}`,
+      name: "Static hold",
+      durationSeconds: 30
+    },
+    {
+      type: "rest",
+      id: `after-static-hold-${side}`,
+      name: "REST",
+      durationSeconds: 10
+    },
+    {
+      type: "exercise",
+      id: `clamshell-${side}`,
+      name: "Clam shell openers",
+      durationSeconds: 30
+    },
+    {
+      type: "exercise",
+      id: `clamshell-kick-${side}`,
+      name: "Clam shell openers with kick",
+      durationSeconds: 30
+    }
+  ];
+}
