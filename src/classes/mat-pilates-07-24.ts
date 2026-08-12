@@ -221,7 +221,7 @@ export const matPilates0724 = {
       name: "Cooldown",
       items: [
         { type: "rest", id: "cooldown-transition", name: "Transition", durationSeconds: 30, shortDescription: "Come to the knees and then sit with the legs extended." },
-        { type: "exercise", id: "seated-forward-fold", name: "Hamstring stretch and seated forward fold", durationSeconds: 120, shortDescription: "Lengthen the spine before folding.", longDescription: "Reach overhead on the inhale, then hinge from the hips toward the feet while relaxing the neck and shoulders." },
+        { type: "exercise", id: "seated-forward-fold", name: "Hamstring stretch and seated forward fold", durationSeconds: 120, shortDescription: "Lengthen the spine before folding.", longDescription: "Reach overhead on the inhale, then hinge from the hips toward the feet while relaxing the neck and shoulders.", illustration: "exercises/seated-forward-fold.jpg" },
         { type: "exercise", id: "roll-down", name: "Roll down to the mat", durationSeconds: 30, shortDescription: "Lower one vertebra at a time." },
         { type: "exercise", id: "figure-four-right", name: "Figure four and spinal twist — right", durationSeconds: 120, shortDescription: "Cross the right ankle over the left knee.", longDescription: "Draw the supporting leg in for a glute stretch, then lower the legs left into a twist while keeping the shoulders relaxed." },
         { type: "exercise", id: "figure-four-left", name: "Figure four and spinal twist — left", durationSeconds: 120, shortDescription: "Cross the left ankle over the right knee.", longDescription: "Draw the supporting leg in for a glute stretch, then lower the legs right into a twist while keeping the shoulders relaxed." },

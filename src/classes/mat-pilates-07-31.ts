@@ -657,7 +657,8 @@ export const matPilates0731 = {
           durationSeconds: 90,
           shortDescription: "Extend the legs into a comfortable V shape.",
           longDescription:
-            "Fold over the right leg for 30 seconds, the left for 30 seconds, then reach through the center for 30 seconds. Lead with a long spine and soften the knees if needed."
+            "Fold over the right leg for 30 seconds, the left for 30 seconds, then reach through the center for 30 seconds. Lead with a long spine and soften the knees if needed.",
+          illustration: "exercises/seated-straddle-fold.jpg"
         },
         {
           type: "exercise",
