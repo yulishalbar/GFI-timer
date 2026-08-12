@@ -13,7 +13,7 @@ import {
   startTimer,
   type TimerState
 } from "../domain/timer-state";
-import { clearStoredSession, saveStoredSession } from "../persistence/session-store";
+import { saveStoredSession } from "../persistence/session-store";
 
 export interface SessionInitialization {
   startedAtEpochMs: number;
@@ -44,10 +44,6 @@ export function useSessionTimer(
   });
 
   useEffect(() => {
-    if (state.status === "complete") {
-      return undefined;
-    }
-
     const intervalId = window.setInterval(() => {
       const now = Date.now();
       setNowEpochMs(now);
@@ -124,7 +120,6 @@ export function useSessionTimer(
         : state.status;
   useEffect(() => {
     if (state.status === "complete") {
-      clearStoredSession();
       return;
     }
     if (state.status === "ready") {

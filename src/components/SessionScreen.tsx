@@ -54,7 +54,7 @@ export function SessionScreen({
     ...(audioStep === undefined ? {} : { stepKind: audioStep.kind }),
     remainingMs: audioRemainingMs
   });
-  const wakeLockStatus = useWakeLock(state.status !== "complete");
+  const wakeLockStatus = useWakeLock(true);
 
   if (state.status === "complete") {
     return (
@@ -62,10 +62,11 @@ export function SessionScreen({
         <p className="eyebrow">Class complete</p>
         <h1>Excellent work.</h1>
         <p>
-          {fitnessClass.definition.title} is complete in {formatDuration(timer.sessionElapsedMs)}.
+          {fitnessClass.definition.title} is complete. Real elapsed time: {" "}
+          <time className="session-complete-elapsed">{formatDuration(timer.sessionElapsedMs)}</time>.
         </p>
         <button className="primary-button" type="button" onClick={onExit}>
-          Return to class overview
+          Stop timer and return to class overview
           <span aria-hidden="true">→</span>
         </button>
       </main>

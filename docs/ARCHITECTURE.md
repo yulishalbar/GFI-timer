@@ -285,10 +285,11 @@ Precache the application shell, registered class definitions, essential audio,
 icons, and referenced exercise illustrations. A class shown as available must
 not fail halfway through because its static media was not cached.
 
-Exercise art uses SVG so limbs, joints, hands, and feet stay legible at phone
-sizes. Motion may be embedded in an SVG when it explains a change of position;
-prefer this over GIF so the asset stays sharp, compact, and able to honor
-`prefers-reduced-motion`. Static holds do not animate merely for decoration.
+Exercise art may use SVG or an optimized local raster image. Prefer SVG for
+motion guides so limbs, joints, hands, and feet stay sharp at phone sizes and
+the animation can honor `prefers-reduced-motion`; use compact raster artwork
+when realistic form is more useful for a static hold. Static holds do not
+animate merely for decoration.
 
 Use a conservative update flow: download a new build in the background and ask
 the user to refresh only when no class is running. The update remains pending

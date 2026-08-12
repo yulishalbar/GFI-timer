@@ -147,10 +147,49 @@ test("opens and starts the July 31 class with completed pose guidance", async ({
   const kneePull = page.locator(".step-row").filter({ hasText: "Alternating standing knee pulls" });
   await expect(kneePull).toContainText("Draw one knee toward the chest");
   await expect(kneePull.getByAltText("Illustration for Alternating standing knee pulls")).toBeVisible();
+  const shavasana = page.locator(".step-row").filter({ hasText: "Shavasana" });
+  await expect(shavasana.getByAltText("Illustration for Shavasana")).toBeVisible();
 
   await page.getByRole("button", { name: "Start class" }).click();
   await expect(page.getByRole("heading", { name: "Class introduction" })).toBeVisible();
   await page.getByRole("button", { name: "Next" }).click();
   await expect(page.getByRole("heading", { name: "Alternating standing knee pulls" })).toBeVisible();
   await expect(page.locator(".exercise-details img")).toBeVisible();
+});
+
+test("keeps real elapsed time running after scheduled completion until stopped", async ({ page }) => {
+  await page.goto("./");
+  await page.evaluate(() => {
+    const now = Date.now();
+    window.localStorage.setItem(
+      "gfi-timer:session:v2",
+      JSON.stringify({
+        version: 2,
+        classId: "mat-pilates-07-31",
+        classVersion: 1,
+        startedAtEpochMs: now - 5_000,
+        elapsedMsFloor: 4_000,
+        status: "running",
+        stepIndex: 79,
+        stepDurationMs: 180_000,
+        targetEndEpochMs: now - 1_000,
+        savedAtEpochMs: now
+      })
+    );
+  });
+  await page.reload();
+
+  await expect(page.getByText("its real elapsed timer is still running")).toBeVisible();
+  await page.getByRole("button", { name: "Resume session" }).click();
+  await expect(page.getByRole("heading", { name: "Excellent work." })).toBeVisible();
+  const elapsed = page.locator(".session-complete-elapsed");
+  const initialElapsed = durationToSeconds(await elapsed.textContent());
+  await expect.poll(async () => durationToSeconds(await elapsed.textContent())).toBeGreaterThan(
+    initialElapsed
+  );
+
+  await page.getByRole("button", { name: "Stop timer and return to class overview" }).click();
+  await expect(page.getByRole("button", { name: "Start class" })).toBeVisible();
+  await expect.poll(() => page.evaluate(() => window.localStorage.getItem("gfi-timer:session:v2")))
+    .toBeNull();
 });

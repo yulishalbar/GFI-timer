@@ -52,10 +52,6 @@ function loadRecoveryState(): RecoveryState {
   if (timerState === null) {
     return { status: "invalid", message: "The saved step is not valid for this class." };
   }
-  if (timerState.status === "complete") {
-    clearStoredSession();
-    return { status: "none" };
-  }
   return {
     status: "available",
     fitnessClass,
@@ -158,7 +154,11 @@ export function App() {
       {recovery.status === "available" ? (
         <RecoveryPrompt
           classTitle={recovery.fitnessClass.definition.title}
-          message="Continue from the saved step. Real elapsed time includes the time since you originally started."
+          message={
+            recovery.initialization.timerState?.status === "complete"
+              ? "The scheduled class is complete, but its real elapsed timer is still running. Resume to stop it manually."
+              : "Continue from the saved step. Real elapsed time includes the time since you originally started."
+          }
           onResume={() => {
             if (settings.soundEnabled) {
               initializeAudioCues();

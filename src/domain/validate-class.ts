@@ -79,9 +79,9 @@ function checkIllustration(value: unknown, path: string, issues: string[]): void
     typeof value !== "string" ||
     value.startsWith("/") ||
     value.includes("..") ||
-    !/^[a-zA-Z0-9][a-zA-Z0-9/_-]*\.svg$/.test(value)
+    !/^[a-zA-Z0-9][a-zA-Z0-9/_-]*\.(?:svg|png|jpe?g|webp)$/.test(value)
   ) {
-    issues.push(`${path}: expected a safe relative SVG path`);
+    issues.push(`${path}: expected a safe relative SVG, PNG, JPEG, or WebP path`);
   }
 }
 

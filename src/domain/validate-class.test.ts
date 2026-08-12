@@ -20,6 +20,35 @@ describe("validateClassDefinition", () => {
     expect(validateClassDefinition(definition)).toBe(definition);
   });
 
+  it.each(["pose.svg", "pose.png", "pose.jpg", "pose.jpeg", "pose.webp"])(
+    "accepts local %s illustration assets",
+    (illustration) => {
+      expect(() =>
+        validateClassDefinition({
+          schemaVersion: 1,
+          id: "illustrated",
+          version: 1,
+          title: "Illustrated class",
+          phases: [
+            {
+              id: "main",
+              name: "Main",
+              items: [
+                {
+                  type: "exercise",
+                  id: "pose",
+                  name: "Pose",
+                  durationSeconds: 30,
+                  illustration
+                }
+              ]
+            }
+          ]
+        })
+      ).not.toThrow();
+    }
+  );
+
   it("reports invalid durations and unsafe illustration paths", () => {
     expect(() =>
       validateClassDefinition({

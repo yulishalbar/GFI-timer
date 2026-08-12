@@ -91,8 +91,10 @@ mode.
   tests where applicable.
 
 Session hierarchy, transition-aware previews, the final-10-second state, and
-the final-three visual treatment are implemented. Expanded media coverage and
-visual review on physical devices remain pending.
+the final-three visual treatment are implemented. The realistic static-art
+direction is established with an optimized Shavasana prototype and larger
+in-session media. Full static/motion coverage and visual review on physical
+devices remain pending.
 
 Candidate features, prioritized after real class use:
 

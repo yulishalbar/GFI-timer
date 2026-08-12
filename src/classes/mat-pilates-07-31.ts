@@ -711,7 +711,8 @@ export const matPilates0731 = {
           durationSeconds: 180,
           shortDescription: "Rest comfortably, then finish seated and thank the class.",
           longDescription:
-            "Let the arms and legs relax. Breathe slowly through the nose and out through the mouth, allowing the effort of the class to settle."
+            "Let the arms and legs relax. Breathe slowly through the nose and out through the mouth, allowing the effort of the class to settle.",
+          illustration: "exercises/shavasana.jpg"
         }
       ]
     }

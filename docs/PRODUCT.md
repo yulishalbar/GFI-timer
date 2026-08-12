@@ -84,7 +84,9 @@ step and End class, but they must not crowd the interface.
 - During the final ten seconds, current-step instructions recede and the
   upcoming exercise receives greater focus. The final three seconds use an
   unmistakable enlarged visual treatment that respects reduced-motion settings.
-- Completing the last step enters a completed state rather than wrapping.
+- Completing the last step enters a completed state rather than wrapping. Real
+  elapsed time, wake lock, and session recovery remain active until the
+  instructor explicitly stops the timer from the completion screen.
 - Previous goes to the beginning of the previous step.
 - Next goes to the beginning of the next step.
 - Dragging the step progress pauses advancement while dragging. Releasing it
