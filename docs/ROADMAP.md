@@ -4,6 +4,10 @@ Current status: Milestones 1 and 2 are complete. Milestones 3 and 4 are
 implemented and GitHub Pages is enabled. Physical iPhone/iPad installation,
 offline, and reliability verification are pending. Milestone 5 is in progress.
 
+Major multi-user authoring work is planned separately in
+[`V2_AUTHORING.md`](V2_AUTHORING.md). V1 remains focused on reliable offline
+playback and artwork while V2 is designed and validated.
+
 ## Milestone 1: Foundation — complete
 
 Deliver a runnable but visually simple application.

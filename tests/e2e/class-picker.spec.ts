@@ -130,6 +130,21 @@ test("opens a compiled class schedule and returns to the picker", async ({ page 
   await expect(page.getByRole("heading", { name: "Choose today's class" })).toBeVisible();
 });
 
+test("resets a restored launch scroll position", async ({ page }) => {
+  await page.goto("./");
+  await page.evaluate(async () => {
+    await new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve())));
+    document.body.style.minHeight = "200vh";
+    window.scrollTo(0, document.body.scrollHeight);
+  });
+  await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(0);
+
+  await page.reload();
+
+  await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(0);
+  await expect(page.getByRole("heading", { name: "Choose today's class" })).toBeInViewport();
+});
+
 test("opens and starts the July 31 class with completed pose guidance", async ({ page }) => {
   await page.goto("./");
 

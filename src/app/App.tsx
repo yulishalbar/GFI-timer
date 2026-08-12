@@ -77,12 +77,23 @@ export function App() {
   );
 
   useEffect(() => {
-    const previousScrollRestoration = window.history.scrollRestoration;
     window.history.scrollRestoration = "manual";
-    const frameId = window.requestAnimationFrame(() => window.scrollTo({ top: 0, left: 0 }));
+    let secondFrameId = 0;
+    const resetScroll = () => {
+      window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+    };
+    resetScroll();
+    const frameId = window.requestAnimationFrame(() => {
+      resetScroll();
+      secondFrameId = window.requestAnimationFrame(resetScroll);
+    });
+    window.addEventListener("pageshow", resetScroll);
     return () => {
       window.cancelAnimationFrame(frameId);
-      window.history.scrollRestoration = previousScrollRestoration;
+      window.cancelAnimationFrame(secondFrameId);
+      window.removeEventListener("pageshow", resetScroll);
     };
   }, [recovery.status, selectedClassId]);
 

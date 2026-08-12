@@ -163,6 +163,8 @@ Before a release used in class:
 - Lock and unlock; confirm recovery behavior is understandable.
 - Test silent mode and the chosen audio route/speaker.
 - Rotate during running and paused states.
+- Cold-launch the installed app after leaving the picker and overview scrolled;
+  verify it opens at the top without an artificial viewport gap.
 - Check safe areas and primary controls on the smallest supported iPhone.
 - Check iPad portrait, landscape, and split-screen beside Spotify.
 - Refresh during a session and exercise both Resume and Discard.
