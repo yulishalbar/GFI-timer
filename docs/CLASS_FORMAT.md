@@ -42,6 +42,7 @@ interface ExerciseEntry {
   shortDescription?: string;
   longDescription?: string;
   illustration?: string;
+  motionIllustrations?: [string, string];
 }
 
 interface RestEntry {

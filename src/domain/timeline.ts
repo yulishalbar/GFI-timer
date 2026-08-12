@@ -33,6 +33,7 @@ export interface RuntimeStep {
   shortDescription?: string;
   longDescription?: string;
   illustration?: string;
+  motionIllustrations?: [string, string];
 }
 
 export interface CompiledPhase {

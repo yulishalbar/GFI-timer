@@ -164,6 +164,18 @@ test("opens and starts the July 31 class with completed pose guidance", async ({
   await expect(kneePull.getByAltText("Illustration for Knee pulls alternating legs")).toBeVisible();
   const shavasana = page.locator(".step-row").filter({ hasText: "Shavasana" });
   await expect(shavasana.getByAltText("Illustration for Shavasana")).toBeVisible();
+  const deadlift = page
+    .locator(".step-row")
+    .filter({ hasText: "single-leg deadlift (SLDL) to knee tuck (R)" });
+  const motionFrames = deadlift.locator(".exercise-motion img");
+  await expect(motionFrames).toHaveCount(2);
+  await expect
+    .poll(() =>
+      motionFrames.evaluateAll((images) =>
+        images.every((image) => (image as HTMLImageElement).complete && (image as HTMLImageElement).naturalWidth > 0)
+      )
+    )
+    .toBe(true);
 
   await page.getByRole("button", { name: "Start class" }).click();
   await expect(page.getByRole("heading", { name: "INTRODUCTION" })).toBeVisible();

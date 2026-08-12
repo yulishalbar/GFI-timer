@@ -85,6 +85,17 @@ function checkIllustration(value: unknown, path: string, issues: string[]): void
   }
 }
 
+function checkMotionIllustrations(value: unknown, path: string, issues: string[]): void {
+  if (value === undefined) {
+    return;
+  }
+  if (!Array.isArray(value) || value.length !== 2) {
+    issues.push(`${path}: expected exactly two local illustration paths`);
+    return;
+  }
+  value.forEach((frame, index) => checkIllustration(frame, `${path}[${index}]`, issues));
+}
+
 function checkUniqueIds(items: readonly unknown[], path: string, issues: string[]): void {
   const seen = new Set<string>();
   items.forEach((item, index) => {
@@ -106,7 +117,9 @@ function validateTimedEntry(
 ): void {
   const commonKeys = ["type", "id", "name", "durationSeconds", "shortDescription"];
   const allowed =
-    kind === "exercise" ? [...commonKeys, "longDescription", "illustration"] : commonKeys;
+    kind === "exercise"
+      ? [...commonKeys, "longDescription", "illustration", "motionIllustrations"]
+      : commonKeys;
   checkAllowedKeys(value, allowed, path, issues);
   checkId(value.id, `${path}.id`, issues);
 
@@ -114,6 +127,7 @@ function validateTimedEntry(
     checkRequiredText(value.name, `${path}.name`, issues);
     checkOptionalText(value.longDescription, `${path}.longDescription`, issues);
     checkIllustration(value.illustration, `${path}.illustration`, issues);
+    checkMotionIllustrations(value.motionIllustrations, `${path}.motionIllustrations`, issues);
   } else {
     checkOptionalText(value.name, `${path}.name`, issues);
   }

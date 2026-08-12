@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import type { CompiledClass } from "../domain/timeline";
 import { formatDuration, formatMinutes } from "../lib/format-duration";
+import { ExerciseMedia } from "./ExerciseMedia";
 
 interface ClassSummaryProps {
   fitnessClass: CompiledClass;
@@ -12,7 +13,12 @@ export function ClassSummary({ fitnessClass, onBack, onStart }: ClassSummaryProp
   const detailStepIds = useMemo(
     () =>
       fitnessClass.steps
-        .filter((step) => step.longDescription !== undefined || step.illustration !== undefined)
+        .filter(
+          (step) =>
+            step.longDescription !== undefined ||
+            step.illustration !== undefined ||
+            step.motionIllustrations !== undefined
+        )
         .map((step) => step.runtimeId),
     [fitnessClass.steps]
   );
@@ -119,7 +125,7 @@ export function ClassSummary({ fitnessClass, onBack, onStart }: ClassSummaryProp
                         ) : null}
                       </div>
                       {step.shortDescription ? <p>{step.shortDescription}</p> : null}
-                      {step.longDescription || step.illustration ? (
+                      {step.longDescription || step.illustration || step.motionIllustrations ? (
                         <button
                           className="pose-details-toggle"
                           type="button"
@@ -137,12 +143,7 @@ export function ClassSummary({ fitnessClass, onBack, onStart }: ClassSummaryProp
                           className="pose-details"
                           id={`details-${step.runtimeId.replace(/[^a-zA-Z0-9_-]/g, "-")}`}
                         >
-                          {step.illustration ? (
-                            <img
-                              src={`${import.meta.env.BASE_URL}${step.illustration}`}
-                              alt={`Illustration for ${step.name}`}
-                            />
-                          ) : null}
+                          <ExerciseMedia step={step} />
                           {step.longDescription ? <p>{step.longDescription}</p> : null}
                         </div>
                       ) : null}
