@@ -182,7 +182,10 @@ export const matPilates0731 = {
             "Left leg goes slightly forward with most of the weight, right leg back, have a slight bend in the knees. Arms beside hips",
           longDescription:
             "SLDL: Lift right leg and hinge forward, touching right hand to the ground. Knee tuck: Lift leg back to original position and place left arm horizontal where right leg lifts towards. P-> pulse leg at knee tuck twice, keep leg hovering R-> place foot on ground in between reps",
-          illustration: "exercises/single-leg-deadlift.svg"
+          motionIllustrations: [
+            "exercises/single-leg-deadlift-hinge.jpg",
+            "exercises/single-leg-deadlift-knee-tuck.jpg"
+          ]
         },
         {
           type: "rest",
@@ -217,7 +220,10 @@ export const matPilates0731 = {
             "Right leg goes slightly forward with most of the weight, left leg back, have a slight bend in the knees. Arms beside hips",
           longDescription:
             "SLDL: Lift right leg and hinge forward, touching left hand to the ground. Knee tuck: Lift leg back to original position and place left arm horizontal where right leg lifts towards. P-> pulse leg at knee tuck twice, keep leg hovering R-> place foot on ground in between reps",
-          illustration: "exercises/single-leg-deadlift.svg"
+          motionIllustrations: [
+            "exercises/single-leg-deadlift-hinge.jpg",
+            "exercises/single-leg-deadlift-knee-tuck.jpg"
+          ]
         }
       ]
     },
