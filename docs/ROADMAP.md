@@ -62,6 +62,38 @@ mode.
 
 ## Milestone 5: Instructor refinements — in progress
 
+### Next: session hierarchy and transition clarity
+
+- Reduce the visual prominence and footprint of real elapsed time and scheduled
+  progress. Evaluate compact labels and accessible icons, while keeping both
+  values understandable at a glance.
+- Make the Up Next area substantially larger and clearer.
+- Make exercise images and motion guides larger and more realistic. Provide a
+  static image for every static hold and a video or equivalent motion guide for
+  every movement, with offline availability and reduced-motion fallbacks.
+- Add a distinct final-10-second presentation that shifts focus from the current
+  step to what is coming next. Explore collapsing or de-emphasizing current-step
+  instructions while enlarging the upcoming-step preview.
+- Make the final `3, 2, 1` countdown unmistakable through larger type and/or a
+  flashing or pulsing background. Prototype and test the treatment for
+  glanceability, distraction, accessibility, and reduced-motion behavior.
+- Treat transition steps as preparation for the exercise that follows them. In
+  the step before a transition, identify the upcoming rest or transition
+  explicitly.
+- During a transition, give primary visual emphasis to what follows. For a
+  transition into a circuit, preview the names of the exercises in that upcoming
+  circuit.
+- When adding a supplied class, preserve all existing provided wording exactly.
+  Missing instructions may be added, but supplied text must not be rewritten or
+  replaced.
+- Cover the new final-countdown, transition-preview, responsive layout, media
+  fallback, offline-media, and reduced-motion behavior with unit and browser
+  tests where applicable.
+
+Session hierarchy, transition-aware previews, the final-10-second state, and
+the final-three visual treatment are implemented. Expanded media coverage and
+visual review on physical devices remain pending.
+
 Candidate features, prioritized after real class use:
 
 - `+10 sec` and `-10 sec` adjustments. — complete

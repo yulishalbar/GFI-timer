@@ -110,7 +110,12 @@ test("opens a compiled class schedule and returns to the picker", async ({ page 
       controlsBox?.y ?? 0
     );
   }
+  await page.getByRole("slider", { name: "Seek within current step" }).fill("51000");
+  await expect(page.locator(".session-shell")).toHaveClass(/session-shell--ending/);
+  await expect(page.locator(".current-step-details")).toHaveCSS("opacity", "0");
+  await expect(page.getByRole("region", { name: "Next step" })).toContainText("Cat");
   await page.getByRole("slider", { name: "Seek within current step" }).fill("30000");
+  await expect(page.locator(".session-shell")).not.toHaveClass(/session-shell--ending/);
   await expect(page.getByRole("slider", { name: "Seek within current step" })).toHaveValue("30000");
 
   await page.getByRole("button", { name: "Previous" }).click();

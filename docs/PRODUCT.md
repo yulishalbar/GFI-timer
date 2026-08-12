@@ -74,7 +74,16 @@ step and End class, but they must not crowd the interface.
 
 - Reaching zero automatically starts the next step.
 - Exercise, rest, final countdown, and class-complete cues are distinguishable.
-- The next-step preview updates immediately after navigation.
+- The next-step preview updates immediately after navigation and gives the
+  upcoming exercise more visual prominence than compact real/scheduled timing
+  metadata.
+- When a rest or transition is next, the preview identifies it explicitly.
+  During the rest, the phase heading switches to the circuit being prepared for,
+  while the preview emphasizes its first exercise and lists that circuit's
+  unique exercises.
+- During the final ten seconds, current-step instructions recede and the
+  upcoming exercise receives greater focus. The final three seconds use an
+  unmistakable enlarged visual treatment that respects reduced-motion settings.
 - Completing the last step enters a completed state rather than wrapping.
 - Previous goes to the beginning of the previous step.
 - Next goes to the beginning of the next step.

@@ -15,6 +15,7 @@ import { StepProgress } from "./StepProgress";
 import { useAudioCues } from "../hooks/useAudioCues";
 import { useWakeLock } from "../hooks/useWakeLock";
 import { initializeAudioCues } from "../lib/audio-cues";
+import { getSessionPreview } from "../domain/session-preview";
 
 interface SessionScreenProps {
   fitnessClass: CompiledClass;
@@ -75,7 +76,6 @@ export function SessionScreen({
   if (currentStep === undefined) {
     return null;
   }
-  const nextStep = fitnessClass.steps[state.stepIndex + 1];
   const remainingMs = getRemainingMs(state, fitnessClass.steps, nowEpochMs);
   const stepDurationMs = getStepDurationMs(state, fitnessClass.steps);
   const elapsedStepMs = stepDurationMs - remainingMs;
@@ -85,6 +85,11 @@ export function SessionScreen({
     fitnessClass.totalDurationMs,
     nowEpochMs
   );
+  const preview = getSessionPreview(fitnessClass.steps, state.stepIndex);
+  const displayedPhase =
+    currentStep.kind === "rest" && preview.primary ? preview.primary.phase : currentStep.phase;
+  const isFinalTenSeconds = remainingMs <= 10_000;
+  const isFinalThreeSeconds = state.status === "running" && remainingMs <= 3_000;
 
   const handleSeekStart = () => {
     wasRunningBeforeSeek.current = state.status === "running";
@@ -100,7 +105,10 @@ export function SessionScreen({
   };
 
   return (
-    <main className={`session-shell session-shell--${currentStep.kind}`} id="main-content">
+    <main
+      className={`session-shell session-shell--${currentStep.kind}${isFinalTenSeconds ? " session-shell--ending" : ""}${isFinalThreeSeconds ? " session-shell--final-three" : ""}`}
+      id="main-content"
+    >
       <header className="session-topbar">
         <button type="button" onClick={onExit} aria-label="Exit session and return to class overview">
           <span aria-hidden="true">×</span>
@@ -133,7 +141,7 @@ export function SessionScreen({
             <span>{currentStep.kind === "rest" ? "Transition" : "Exercise"}</span>
           </div>
           <p className="session-phase">
-            Phase {currentStep.phase.index}/{currentStep.phase.count} · {currentStep.phase.name}
+            Phase {displayedPhase.index}/{displayedPhase.count} · {displayedPhase.name}
           </p>
           <h1>{currentStep.name}</h1>
           <p className="session-position">
@@ -142,9 +150,16 @@ export function SessionScreen({
               ? ` · Round ${currentStep.round.index}/${currentStep.round.count}`
               : ""}
           </p>
-          <time className="session-countdown" dateTime={`PT${Math.ceil(remainingMs / 1_000)}S`}>
-            {formatCountdown(remainingMs)}
-          </time>
+          <div className="session-timing">
+            <time className="session-countdown" dateTime={`PT${Math.ceil(remainingMs / 1_000)}S`}>
+              {formatCountdown(remainingMs)}
+            </time>
+            <OverallProgress
+              sessionElapsedMs={timer.sessionElapsedMs}
+              scheduledElapsedMs={scheduledElapsedMs}
+              totalDurationMs={fitnessClass.totalDurationMs}
+            />
+          </div>
           <StepProgress
             durationMs={stepDurationMs}
             elapsedMs={elapsedStepMs}
@@ -155,17 +170,22 @@ export function SessionScreen({
         </section>
 
         <aside className="session-context">
-          <ExerciseDetails step={currentStep} />
-          <section className="next-step" aria-label="Next step">
-            <span>Up next</span>
-            <strong>{nextStep?.name ?? "Class complete"}</strong>
-            {nextStep ? <time>{formatDuration(nextStep.durationMs)}</time> : null}
+          <div className="current-step-details">
+            <ExerciseDetails step={currentStep} />
+          </div>
+          <section className="next-step" aria-label="Next step" aria-live="polite">
+            <span>{currentStep.kind === "rest" ? "Prepare for" : "Up next"}</span>
+            <strong>{preview.primary?.name ?? "Class complete"}</strong>
+            {preview.primary ? <time>{formatDuration(preview.primary.durationMs)}</time> : null}
+            {preview.circuitExerciseNames.length > 1 ? (
+              <div className="next-step__circuit">
+                <span>{preview.primary?.phase.name}</span>
+                <ul>
+                  {preview.circuitExerciseNames.map((name) => <li key={name}>{name}</li>)}
+                </ul>
+              </div>
+            ) : null}
           </section>
-          <OverallProgress
-            sessionElapsedMs={timer.sessionElapsedMs}
-            scheduledElapsedMs={scheduledElapsedMs}
-            totalDurationMs={fitnessClass.totalDurationMs}
-          />
         </aside>
       </div>
 

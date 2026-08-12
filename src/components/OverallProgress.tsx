@@ -16,11 +16,11 @@ export function OverallProgress({
     <section className="overall-progress" aria-label="Overall class progress">
       <div className="overall-progress__labels">
         <span>
-          <small>Real elapsed</small>
+          <small><span aria-hidden="true">↗</span> <span className="overall-progress__label">Real elapsed</span></small>
           <strong>{formatDuration(sessionElapsedMs)}</strong>
         </span>
         <span>
-          <small>Scheduled remaining</small>
+          <small><span aria-hidden="true">◷</span> <span className="overall-progress__label">Scheduled remaining</span></small>
           <strong>{formatDuration(remainingMs)}</strong>
         </span>
       </div>
