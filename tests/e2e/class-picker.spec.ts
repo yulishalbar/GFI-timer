@@ -16,17 +16,17 @@ test("opens a compiled class schedule and returns to the picker", async ({ page 
 
   await expect(page.getByRole("heading", { name: "Choose today's class" })).toBeVisible();
   const classCard = page.getByRole("article").filter({ hasText: "Mat Pilates — July 24" });
-  await expect(classCard).toContainText("53.3 min");
+  await expect(classCard).toContainText("60.5 min");
   await expect(classCard).toContainText("8 phases");
-  await expect(classCard).toContainText("77 steps");
+  await expect(classCard).toContainText("92 steps");
 
   await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
   await classCard.getByRole("button", { name: "View class" }).click();
 
   await expect(page.getByRole("heading", { name: "Mat Pilates — July 24" })).toBeVisible();
   await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(0);
-  await expect(page.getByLabel("53.3 min total")).toContainText("53:20");
-  await expect(page.getByText("77 timed steps")).toBeVisible();
+  await expect(page.getByLabel("60.5 min total")).toContainText("1:00:30");
+  await expect(page.getByText("92 timed steps")).toBeVisible();
   await expect(page.getByRole("heading", { name: "Circuit 4 — Lower Body" })).toBeVisible();
   const startButton = page.getByRole("button", { name: "Start class" });
   if (testInfo.project.name === "iphone-15-pro-max-chromium") {
@@ -182,6 +182,38 @@ test("opens and starts the July 31 class with completed pose guidance", async ({
   await page.getByRole("button", { name: "Next" }).click();
   await expect(page.getByRole("heading", { name: "Knee pulls alternating legs" })).toBeVisible();
   await expect(page.locator(".exercise-details img")).toBeVisible();
+});
+
+test("opens and starts the sliders class", async ({ page }) => {
+  await page.goto("./");
+
+  const classCard = page.getByRole("article").filter({ hasText: "HIIT Pilates with Sliders" });
+  await expect(classCard).toContainText("50.5 min");
+  await expect(classCard).toContainText("8 phases");
+  await expect(classCard).toContainText("82 steps");
+  await classCard.getByRole("button", { name: "View class" }).click();
+
+  await expect(page.getByRole("heading", { name: "HIIT Pilates with Sliders" })).toBeVisible();
+  await expect(page.getByLabel("50.5 min total")).toContainText("50:30");
+  await expect(page.getByRole("heading", { name: "Circuit #6: Side Body" })).toBeVisible();
+  await page.getByRole("button", { name: "Start class" }).click();
+  await expect(page.getByRole("heading", { name: "Child's pose" })).toBeVisible();
+});
+
+test("opens and starts the band class", async ({ page }) => {
+  await page.goto("./");
+
+  const classCard = page.getByRole("article").filter({ hasText: "Mat Pilates with Band" });
+  await expect(classCard).toContainText("54.2 min");
+  await expect(classCard).toContainText("8 phases");
+  await expect(classCard).toContainText("85 steps");
+  await classCard.getByRole("button", { name: "View class" }).click();
+
+  await expect(page.getByRole("heading", { name: "Mat Pilates with Band" })).toBeVisible();
+  await expect(page.getByLabel("54.2 min total")).toContainText("54:10");
+  await expect(page.getByRole("heading", { name: "Circuit #5: Standing Upper Body and Core" })).toBeVisible();
+  await page.getByRole("button", { name: "Start class" }).click();
+  await expect(page.getByRole("heading", { name: "INTRODUCTION" })).toBeVisible();
 });
 
 test("keeps real elapsed time running after scheduled completion until stopped", async ({ page }) => {

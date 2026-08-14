@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 import { matPilates0724 } from "../classes/mat-pilates-07-24";
 import { matPilates0731 } from "../classes/mat-pilates-07-31";
+import { hiitPilatesSliders } from "../classes/hiit-pilates-sliders";
+import { matPilatesBand } from "../classes/mat-pilates-band";
 import { compileClass } from "./compile-class";
 import { ClassValidationError } from "./validate-class";
 
@@ -8,21 +10,23 @@ describe("compileClass", () => {
   it("expands phases and repeated rounds in authored order", () => {
     const compiled = compileClass(matPilates0724);
 
-    expect(compiled.steps).toHaveLength(77);
-    expect(compiled.totalDurationMs).toBe(3_200_000);
+    expect(compiled.steps).toHaveLength(92);
+    expect(compiled.totalDurationMs).toBe(3_630_000);
     expect(compiled.phases).toEqual([
       { id: "introduction", name: "Introduction", index: 1, stepCount: 1, durationMs: 120_000 },
       { id: "warmup", name: "Warm-Up", index: 2, stepCount: 5, durationMs: 300_000 },
       { id: "core-circuit", name: "Circuit 1 — Core", index: 3, stepCount: 11, durationMs: 290_000 },
-      { id: "glutes-circuit", name: "Circuit 2 — Glutes", index: 4, stepCount: 9, durationMs: 380_000 },
+      { id: "glutes-circuit", name: "Circuit 2 — Glutes", index: 4, stepCount: 10, durationMs: 400_000 },
       { id: "posterior-core-circuit", name: "Circuit 3 — Core, Glutes, and Back", index: 5, stepCount: 14, durationMs: 400_000 },
-      { id: "lower-body-circuit", name: "Circuit 4 — Lower Body", index: 6, stepCount: 14, durationMs: 440_000 },
-      { id: "side-body-circuit", name: "Circuit 5 — Side Body", index: 7, stepCount: 16, durationMs: 640_000 },
+      { id: "lower-body-circuit", name: "Circuit 4 — Lower Body", index: 6, stepCount: 18, durationMs: 490_000 },
+      { id: "side-body-circuit", name: "Circuit 5 — Side Body", index: 7, stepCount: 26, durationMs: 1_000_000 },
       { id: "cooldown", name: "Cooldown", index: 8, stepCount: 7, durationMs: 630_000 }
     ]);
 
     expect(compiled.steps[0]?.name).toBe("Class introduction");
     expect(compiled.steps.at(-1)?.name).toBe("Shavasana");
+    expect(compiled.steps.filter((step) => step.kind === "rest").every((step) => step.name === "REST"))
+      .toBe(true);
   });
 
   it("assigns round and within-round step labels", () => {
@@ -86,6 +90,46 @@ describe("compileClass", () => {
     expect(compiled.steps.filter((step) => step.kind === "rest").every((step) => step.name === "REST"))
       .toBe(true);
     expect(compiled.steps.some((step) => step.name === "Alternating bird dogs")).toBe(true);
+    expect(compiled.steps.at(-1)?.name).toBe("Shavasana");
+  });
+
+  it("compiles the sliders class with stable totals", () => {
+    const compiled = compileClass(hiitPilatesSliders);
+
+    expect(compiled.steps).toHaveLength(82);
+    expect(compiled.totalDurationMs).toBe(3_030_000);
+    expect(compiled.phases).toEqual([
+      { id: "warmup", name: "Warm-Up", index: 1, stepCount: 4, durationMs: 180_000 },
+      { id: "abs-circuit", name: "Circuit #1: Abs", index: 2, stepCount: 23, durationMs: 590_000 },
+      { id: "upper-core-one", name: "Circuit #2: Upper Body and Core", index: 3, stepCount: 6, durationMs: 210_000 },
+      { id: "hiit-legs", name: "Circuit #3: HIIT — Legs Focused", index: 4, stepCount: 16, durationMs: 370_000 },
+      { id: "plank-pyramid", name: "Circuit #4: Upper Body and Core Pyramid", index: 5, stepCount: 7, durationMs: 280_000 },
+      { id: "upper-core-two", name: "Circuit #5: Upper Body and Core", index: 6, stepCount: 6, durationMs: 210_000 },
+      { id: "side-body", name: "Circuit #6: Side Body", index: 7, stepCount: 14, durationMs: 560_000 },
+      { id: "cooldown", name: "Cooldown", index: 8, stepCount: 6, durationMs: 630_000 }
+    ]);
+    expect(compiled.steps.filter((step) => step.kind === "rest").every((step) => step.name === "REST"))
+      .toBe(true);
+    expect(compiled.steps.at(-1)?.name).toBe("Shavasana");
+  });
+
+  it("compiles the band class with stable totals", () => {
+    const compiled = compileClass(matPilatesBand);
+
+    expect(compiled.steps).toHaveLength(85);
+    expect(compiled.totalDurationMs).toBe(3_250_000);
+    expect(compiled.phases).toEqual([
+      { id: "introduction", name: "Introduction", index: 1, stepCount: 1, durationMs: 120_000 },
+      { id: "warmup", name: "Warm-Up", index: 2, stepCount: 5, durationMs: 300_000 },
+      { id: "core-circuit", name: "Circuit #1: Core", index: 3, stepCount: 9, durationMs: 360_000 },
+      { id: "glutes-circuit", name: "Circuit #2: Glutes", index: 4, stepCount: 14, durationMs: 600_000 },
+      { id: "standing-legs", name: "Circuit #3: Legs Focused", index: 5, stepCount: 18, durationMs: 500_000 },
+      { id: "lower-body-core-glutes", name: "Circuit #4: Lower Body, Core and Glutes", index: 6, stepCount: 18, durationMs: 500_000 },
+      { id: "standing-upper-body-core", name: "Circuit #5: Standing Upper Body and Core", index: 7, stepCount: 9, durationMs: 350_000 },
+      { id: "cooldown", name: "Cooldown", index: 8, stepCount: 11, durationMs: 520_000 }
+    ]);
+    expect(compiled.steps.filter((step) => step.kind === "rest").every((step) => step.name === "REST"))
+      .toBe(true);
     expect(compiled.steps.at(-1)?.name).toBe("Shavasana");
   });
 

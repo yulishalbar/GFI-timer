@@ -975,7 +975,8 @@ h1 {
   width: 100% !important;
   height: 100% !important;
   max-height: none !important;
-  object-fit: cover;
+  object-fit: contain;
+  background: #f6f2e9;
 }
 
 .exercise-motion__first {
