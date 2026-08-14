@@ -204,13 +204,13 @@ test("opens and starts the band class", async ({ page }) => {
   await page.goto("./");
 
   const classCard = page.getByRole("article").filter({ hasText: "Mat Pilates with Band" });
-  await expect(classCard).toContainText("54.2 min");
+  await expect(classCard).toContainText("60 min");
   await expect(classCard).toContainText("8 phases");
-  await expect(classCard).toContainText("85 steps");
+  await expect(classCard).toContainText("94 steps");
   await classCard.getByRole("button", { name: "View class" }).click();
 
   await expect(page.getByRole("heading", { name: "Mat Pilates with Band" })).toBeVisible();
-  await expect(page.getByLabel("54.2 min total")).toContainText("54:10");
+  await expect(page.getByLabel("60 min total")).toContainText("1:00:00");
   await expect(page.getByRole("heading", { name: "Circuit #5: Standing Upper Body and Core" })).toBeVisible();
   await page.getByRole("button", { name: "Start class" }).click();
   await expect(page.getByRole("heading", { name: "INTRODUCTION" })).toBeVisible();

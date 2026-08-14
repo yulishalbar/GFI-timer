@@ -116,8 +116,8 @@ describe("compileClass", () => {
   it("compiles the band class with stable totals", () => {
     const compiled = compileClass(matPilatesBand);
 
-    expect(compiled.steps).toHaveLength(85);
-    expect(compiled.totalDurationMs).toBe(3_250_000);
+    expect(compiled.steps).toHaveLength(94);
+    expect(compiled.totalDurationMs).toBe(3_600_000);
     expect(compiled.phases).toEqual([
       { id: "introduction", name: "Introduction", index: 1, stepCount: 1, durationMs: 120_000 },
       { id: "warmup", name: "Warm-Up", index: 2, stepCount: 5, durationMs: 300_000 },
@@ -125,7 +125,7 @@ describe("compileClass", () => {
       { id: "glutes-circuit", name: "Circuit #2: Glutes", index: 4, stepCount: 14, durationMs: 600_000 },
       { id: "standing-legs", name: "Circuit #3: Legs Focused", index: 5, stepCount: 18, durationMs: 500_000 },
       { id: "lower-body-core-glutes", name: "Circuit #4: Lower Body, Core and Glutes", index: 6, stepCount: 18, durationMs: 500_000 },
-      { id: "standing-upper-body-core", name: "Circuit #5: Standing Upper Body and Core", index: 7, stepCount: 9, durationMs: 350_000 },
+      { id: "standing-upper-body-core", name: "Circuit #5: Standing Upper Body and Core", index: 7, stepCount: 18, durationMs: 700_000 },
       { id: "cooldown", name: "Cooldown", index: 8, stepCount: 11, durationMs: 520_000 }
     ]);
     expect(compiled.steps.filter((step) => step.kind === "rest").every((step) => step.name === "REST"))

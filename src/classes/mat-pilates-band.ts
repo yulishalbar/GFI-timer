@@ -88,7 +88,7 @@ const sideBodyWithRests = sideBodyPyramid.flatMap((move, index) => [
 export const matPilatesBand = {
   schemaVersion: 1,
   id: "mat-pilates-band",
-  version: 1,
+  version: 2,
   title: "Mat Pilates with Band",
   description: "Warm-up, core, glutes, legs, upper body, and cooldown. Equipment: mat and band.",
   phases: [
@@ -180,6 +180,20 @@ export const matPilatesBand = {
         exercise("band-triceps-ups", "Band triceps ups (behind back)", 40,
           "Bring more of a bend to the knees. Bring the band across wrists behind the back and lift up and lower."),
         exercise("band-outward-extension", "Band outward extension (behind back)", 40,
+          "With the band still behind the back, extend the band out and in."),
+        rest("upper-body-round-two-setup", 60, "Reset and cue the second round."),
+        exercise("standing-punch-outs-round-two", "Standing punch-outs", 40,
+          "Stand with a slight bend in the knees, band around wrists. Start with hands close to the chest, punch out with the right hand and then the left."),
+        exercise("band-hold-out-round-two", "Band hold out", 40, "Straighten hands out and hold the band extended."),
+        exercise("band-pulse-out-round-two", "Band pulse out", 40, "Pulse the band while extended."),
+        rest("upper-body-mid-rest-round-two", 10),
+        exercise("straight-biceps-curl-round-two", "Straight biceps curl", 40,
+          "Bring elbows tight to ribs and curl up with the band using triceps."),
+        exercise("serve-platter-round-two", "Serve the platter", 40,
+          "Start with elbows by ribs and palms facing the ceiling; extend arms up to chest height."),
+        exercise("band-triceps-ups-round-two", "Band triceps ups (behind back)", 40,
+          "Bring more of a bend to the knees. Bring the band across wrists behind the back and lift up and lower."),
+        exercise("band-outward-extension-round-two", "Band outward extension (behind back)", 40,
           "With the band still behind the back, extend the band out and in.")
       ]
     },
