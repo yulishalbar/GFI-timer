@@ -44,7 +44,10 @@ function toDraftStep(entry: Exclude<ClassEntry, { type: "repeat" }>, context: Wa
       ...(entry.illustration === undefined ? {} : { illustration: entry.illustration }),
       ...(entry.motionIllustrations === undefined
         ? {}
-        : { motionIllustrations: entry.motionIllustrations })
+        : { motionIllustrations: entry.motionIllustrations }),
+      ...(entry.exerciseReference === undefined
+        ? {}
+        : { exerciseReference: entry.exerciseReference })
     };
   }
 

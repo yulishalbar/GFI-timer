@@ -4,9 +4,14 @@ Current status: Milestones 1 and 2 are complete. Milestones 3 and 4 are
 implemented and GitHub Pages is enabled. Physical iPhone/iPad installation,
 offline, and reliability verification are pending. Milestone 5 is in progress.
 
-Major multi-user authoring work is planned separately in
-[`V2_AUTHORING.md`](V2_AUTHORING.md). V1 remains focused on reliable offline
-playback and artwork while V2 is designed and validated.
+The next major phase is the static, offline exercise catalog and course model in
+[`V2_CATALOG.md`](V2_CATALOG.md). It prepares reusable exercises, embedded
+circuits, left/right variants, tags, and local search without adding a backend.
+
+Multi-user authoring, authentication, deployment, AI import, and activity
+history now belong to Version 3 and are planned separately in
+[`V3_AUTHORING.md`](V3_AUTHORING.md). V1 remains focused on reliable playback
+and artwork while the Version 2 catalog boundary is implemented and validated.
 
 ## Milestone 1: Foundation — complete
 
@@ -98,7 +103,9 @@ Session hierarchy, transition-aware previews, the final-10-second state, and
 the final-three visual treatment are implemented. The realistic static-art
 direction is established with an optimized Shavasana prototype and larger
 in-session media. Seated forward-fold and straddle-fold reference images are
-also available; the straddle sequence still needs a motion guide. Full
+also available. The first catalog artwork batch now gives the four distinct
+slider-plank movements their own matched two-frame offline guides. The remaining
+coverage audit and batch order are tracked in [`ARTWORK.md`](ARTWORK.md); full
 static/motion coverage and visual review on physical devices remain pending.
 
 Candidate features, prioritized after real class use:
@@ -112,6 +119,48 @@ Candidate features, prioritized after real class use:
 - Class favorites and most-recent selection.
 - Optional phase progress in addition to class progress.
 - Session duration summary without long-term tracking.
+
+## Version 2: Exercise catalog and course model — in progress
+
+- Separate reusable exercise content from course structure. — contracts and
+  compatibility resolver complete
+- Keep circuits embedded inside courses rather than introducing a third entity.
+- Reference exercises from course placements with course-owned durations and
+  explicit rests.
+- Represent left/right movements once and select the side at each placement.
+- Add accessible `L`/`R` directional badges and safe media mirroring rules.
+- Add controlled tags for equipment, body area, modality, focus, and movement
+  type.
+- Add separate searchable Exercise Library and Course Library views.
+- Migrate existing static classes with step-for-step compiled equivalence and
+  no offline or session-timer regression.
+- Establish stable serialization and a repository boundary for Version 3.
+
+The unversioned HIIT Pilates with Sliders and Mat Pilates with Band courses are
+now catalog-backed defaults. Explicit V1 fallbacks remain under separate stable
+IDs for direct comparison and rollback. Both migrations have locked timeline
+and guidance equivalence coverage, normalized left/right placements, accessible
+directional badges, and a merged Exercise library. Next: finish tag specificity
+and media policy, then migrate July 24 and July 31 through the same process.
+
+Local discovery is also available as an early pilot: the picker has separate
+Courses and Exercises tabs with offline text search and tag filters. All courses
+are searchable now; the Exercise library contains the merged Sliders and Band
+catalog and will expand with each migrated course.
+
+Detailed slices and exit criteria are in [`V2_CATALOG.md`](V2_CATALOG.md).
+
+Exit condition: every built-in course is compiled from reusable exercise
+references, side variants are clear at a glance, local search works offline,
+and playback remains behaviorally equivalent to Version 1.
+
+## Version 3: Multi-user authoring — planned
+
+Add authentication, remote persistence, exercise/course authoring, media
+uploads, external-AI JSON import, activity history, and production operations
+on top of the Version 2 catalog boundary.
+
+Detailed scope is in [`V3_AUTHORING.md`](V3_AUTHORING.md).
 
 ## Later: Spotify controls
 

@@ -113,6 +113,16 @@ Timer reducer <------ controls / recovered snapshot / visibility event
 The nested authoring model exists only at the content boundary. Runtime code
 operates on a flat ordered timeline with derived labels and offsets.
 
+Version 2 adds a compatibility resolver before this boundary. It validates a
+static exercise catalog plus a schema-version-2 course, resolves pinned exercise
+references and left/right placements, and produces an immutable
+schema-version-1 class snapshot for the existing compiler. Live playback never
+queries the catalog. This preserves timer behavior while exercise content is
+normalized and allows a future remote repository to use the same resolver.
+During V2.1, a temporary migration adapter mechanically separates a legacy
+class into catalog and course data so equivalence can be proven before manual
+deduplication. It is migration scaffolding, not the final authoring format.
+
 ## Timeline model
 
 A compiled runtime step contains at least:

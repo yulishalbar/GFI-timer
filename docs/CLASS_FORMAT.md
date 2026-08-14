@@ -42,7 +42,7 @@ interface ExerciseEntry {
   shortDescription?: string;
   longDescription?: string;
   illustration?: string;
-  motionIllustrations?: [string, string];
+  motionIllustrations?: [string, string, ...string[]];
 }
 
 interface RestEntry {
@@ -200,6 +200,22 @@ the most immediately useful. Preserve the complete repeat path in runtime data
 so a richer label can be added later without changing the source schema.
 
 ## Authoring workflow
+
+### Version 2 catalog boundary
+
+New catalog-backed courses use the contracts in
+`src/domain/catalog-definition.ts`. An exercise stores canonical instructions,
+media, side support, and tag IDs once. A course placement pins the exercise ID
+and version and supplies its duration and optional left/right side. Named
+circuits are embedded groups inside a course; rests remain explicit timed
+items.
+
+`resolveCourseDefinition(catalog, course)` strictly validates both inputs and
+returns a schema-version-1 immutable snapshot accepted by the existing
+compiler. It rejects unknown properties, tags, or exercises; stale exercise
+versions; missing sides for left/right exercises; and sides supplied to neutral
+exercises. See [`V2_CATALOG.md`](V2_CATALOG.md) for the complete model and
+migration sequence.
 
 1. Copy the closest existing class definition.
 2. Assign a stable unique class ID and start at version 1.

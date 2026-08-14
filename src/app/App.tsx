@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { availableClasses } from "../classes";
+import { availableClasses, availableExerciseCatalog, courseTagsById } from "../classes";
 import { ClassPicker } from "../components/ClassPicker";
 import { ClassSummary } from "../components/ClassSummary";
 import { PwaUpdatePrompt } from "../components/PwaUpdatePrompt";
@@ -208,7 +208,12 @@ export function App() {
           }}
         />
       ) : (
-        <ClassPicker classes={availableClasses} onSelect={setSelectedClassId} />
+        <ClassPicker
+          classes={availableClasses}
+          exerciseCatalog={availableExerciseCatalog}
+          courseTagsById={courseTagsById}
+          onSelect={setSelectedClassId}
+        />
       )}
 
       <footer className="app-footer">

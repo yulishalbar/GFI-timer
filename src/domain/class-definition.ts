@@ -14,6 +14,7 @@ export interface PhaseDefinition {
 }
 
 export type ClassEntry = ExerciseEntry | RestEntry | RepeatEntry;
+export type MotionIllustrations = [string, string, ...string[]];
 
 export interface ExerciseEntry {
   type: "exercise";
@@ -23,7 +24,15 @@ export interface ExerciseEntry {
   shortDescription?: string;
   longDescription?: string;
   illustration?: string;
-  motionIllustrations?: [string, string];
+  motionIllustrations?: MotionIllustrations;
+  exerciseReference?: ResolvedExerciseReference;
+}
+
+export interface ResolvedExerciseReference {
+  exerciseId: string;
+  exerciseVersion: number;
+  side?: "left" | "right";
+  tags: string[];
 }
 
 export interface RestEntry {

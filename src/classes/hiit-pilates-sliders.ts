@@ -1,4 +1,8 @@
 import type { ClassEntry, ExerciseEntry, FitnessClassDefinition } from "../domain/class-definition";
+import { builtInTags } from "../catalog/tags";
+import { normalizeSlidersCatalog } from "../catalog/normalize-sliders";
+import { adaptLegacyClassToCatalog } from "../domain/legacy-catalog-adapter";
+import { resolveCourseDefinition } from "../domain/resolve-course";
 
 const rest = (id: string, durationSeconds: number, shortDescription?: string): ClassEntry => ({
   type: "rest",
@@ -103,11 +107,11 @@ function sideBody(side: "right" | "left"): ClassEntry[] {
   ];
 }
 
-export const hiitPilatesSliders = {
+export const hiitPilatesSlidersLegacy = {
   schemaVersion: 1,
-  id: "hiit-pilates-sliders",
+  id: "hiit-pilates-sliders-v1",
   version: 1,
-  title: "HIIT Pilates with Sliders",
+  title: "HIIT Pilates with Sliders V1",
   description:
     "Warm-up, abs, arms, glutes, lower-body HIIT, and cooldown. Equipment: mat and optional sliders.",
   phases: [
@@ -185,3 +189,26 @@ export const hiitPilatesSliders = {
     }
   ]
 } satisfies FitnessClassDefinition;
+
+const adaptedSlidersCourse = normalizeSlidersCatalog(adaptLegacyClassToCatalog(hiitPilatesSlidersLegacy, {
+  tags: builtInTags,
+  courseTags: ["hiit-pilates", "mat", "sliders", "full-body"],
+  exerciseTags: ["hiit-pilates", "mat", "sliders"]
+}));
+
+export const hiitPilatesSlidersCatalog = {
+  catalog: adaptedSlidersCourse.catalog,
+  course: {
+    ...adaptedSlidersCourse.course,
+    id: "hiit-pilates-sliders",
+    version: 1,
+    title: "HIIT Pilates with Sliders"
+  }
+};
+
+export const hiitPilatesSlidersV1 = hiitPilatesSlidersLegacy;
+
+export const hiitPilatesSliders = resolveCourseDefinition(
+  hiitPilatesSlidersCatalog.catalog,
+  hiitPilatesSlidersCatalog.course
+);

@@ -1,4 +1,4 @@
-import type { FitnessClassDefinition } from "./class-definition";
+import type { FitnessClassDefinition, MotionIllustrations, ResolvedExerciseReference } from "./class-definition";
 
 export interface RuntimePhase {
   id: string;
@@ -33,7 +33,8 @@ export interface RuntimeStep {
   shortDescription?: string;
   longDescription?: string;
   illustration?: string;
-  motionIllustrations?: [string, string];
+  motionIllustrations?: MotionIllustrations;
+  exerciseReference?: ResolvedExerciseReference;
 }
 
 export interface CompiledPhase {

@@ -89,11 +89,30 @@ function checkMotionIllustrations(value: unknown, path: string, issues: string[]
   if (value === undefined) {
     return;
   }
-  if (!Array.isArray(value) || value.length !== 2) {
-    issues.push(`${path}: expected exactly two local illustration paths`);
+  if (!Array.isArray(value) || value.length < 2) {
+    issues.push(`${path}: expected at least two local illustration paths`);
     return;
   }
   value.forEach((frame, index) => checkIllustration(frame, `${path}[${index}]`, issues));
+}
+
+function checkExerciseReference(value: unknown, path: string, issues: string[]): void {
+  if (value === undefined) {
+    return;
+  }
+  if (!isRecord(value)) {
+    issues.push(`${path}: expected an exercise reference object`);
+    return;
+  }
+  checkAllowedKeys(value, ["exerciseId", "exerciseVersion", "side", "tags"], path, issues);
+  checkId(value.exerciseId, `${path}.exerciseId`, issues);
+  checkPositiveInteger(value.exerciseVersion, `${path}.exerciseVersion`, Number.MAX_SAFE_INTEGER, issues);
+  if (value.side !== undefined && value.side !== "left" && value.side !== "right") {
+    issues.push(`${path}.side: expected "left" or "right" when provided`);
+  }
+  if (!Array.isArray(value.tags) || value.tags.some((tag) => typeof tag !== "string" || !ID_PATTERN.test(tag))) {
+    issues.push(`${path}.tags: expected lowercase kebab-case tag IDs`);
+  }
 }
 
 function checkUniqueIds(items: readonly unknown[], path: string, issues: string[]): void {
@@ -118,7 +137,7 @@ function validateTimedEntry(
   const commonKeys = ["type", "id", "name", "durationSeconds", "shortDescription"];
   const allowed =
     kind === "exercise"
-      ? [...commonKeys, "longDescription", "illustration", "motionIllustrations"]
+      ? [...commonKeys, "longDescription", "illustration", "motionIllustrations", "exerciseReference"]
       : commonKeys;
   checkAllowedKeys(value, allowed, path, issues);
   checkId(value.id, `${path}.id`, issues);
@@ -128,6 +147,7 @@ function validateTimedEntry(
     checkOptionalText(value.longDescription, `${path}.longDescription`, issues);
     checkIllustration(value.illustration, `${path}.illustration`, issues);
     checkMotionIllustrations(value.motionIllustrations, `${path}.motionIllustrations`, issues);
+    checkExerciseReference(value.exerciseReference, `${path}.exerciseReference`, issues);
   } else {
     checkOptionalText(value.name, `${path}.name`, issues);
   }

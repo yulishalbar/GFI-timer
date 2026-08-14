@@ -1,15 +1,16 @@
-# Version 2: Authoring and class history
+# Version 3: Authoring and course history
 
 ## Goal
 
 Turn the timer from a static, instructor-specific PWA into a multi-user class
 authoring system without weakening the dependable offline session experience.
-Users can build reusable exercise and circuit libraries, compose courses,
-import AI-generated course JSON, and record when a course was taught.
+Users can build reusable exercise libraries, compose courses containing
+embedded circuits and explicit rests, import AI-generated course JSON, and
+record when a course was taught.
 
-Version 1 remains the playback foundation. Authoring and synchronization are
-additive: a downloaded course must still run to completion without a network
-connection.
+Version 1 remains the playback foundation and Version 2 supplies the normalized
+exercise catalog and course model. Authoring and synchronization are additive:
+a downloaded course must still run to completion without a network connection.
 
 ## Recommended deployment
 
@@ -77,10 +78,8 @@ change a course that has already been taught.
 ```text
 User
  ├── owns Exercise ── has ExerciseVersion ── tagged with Tag
- ├── owns Circuit  ── has CircuitVersion ── contains ExerciseVersion items
- ├── owns Course   ── has CourseVersion  ── contains:
- │                                      ├── ExerciseVersion
- │                                      ├── CircuitVersion
+ ├── owns Course ── has CourseVersion ── contains phases and embedded circuits:
+ │                                      ├── ExerciseVersion placement
  │                                      └── explicit Break
  └── records CourseRun ── references the exact CourseVersion snapshot
 ```
@@ -93,11 +92,12 @@ Suggested tables:
   created time, and publication state.
 - `tags`: normalized tag name and optional category.
 - `exercise_tags`: exercise-to-tag many-to-many join.
-- `circuits` and `circuit_versions`: stable identity and immutable revisions.
-- `circuit_items`: ordered exercise-version references plus duration and notes.
 - `courses` and `course_versions`: stable identity and immutable revisions.
-- `course_items`: ordered discriminated items referencing an exercise version,
-  circuit version, or explicit break definition.
+- `course_groups`: ordered phases and embedded circuits belonging to one course
+  version, with optional round counts.
+- `course_items`: ordered discriminated items referencing an exercise version
+  placement or an explicit break definition. Exercise placements carry duration
+  and optional left/right selection.
 - `course_runs`: owner, exact course version, start/end time, actual duration,
   optional audience label, and optional private notes.
 - `media_assets`: owner, storage path, type, size, poster, processing status, and
@@ -105,7 +105,7 @@ Suggested tables:
 - `import_jobs`: original JSON, validation result, warnings, status, and the
   created draft ID. Retain cautiously and allow deletion.
 
-Circuit and course items should use stable ordering keys and database
+Course groups and items should use stable ordering keys and database
 constraints. Do not store composition only as an opaque JSON blob. A compiled
 snapshot may additionally be stored on a published course version for reliable
 offline playback and historical fidelity.
@@ -115,7 +115,7 @@ offline playback and historical fidelity.
 Start with private, per-user content:
 
 - Users can read and mutate only records they own.
-- Built-in exercises/circuits are system-owned and readable by everyone.
+- Built-in exercises and courses are system-owned and readable by everyone.
 - A user can reuse built-in content or their own content.
 - Editing reused content creates a private fork or new version; it never mutates
   another user's source.
@@ -137,16 +137,14 @@ as authorization.
 - Preserve supplied wording; additional instructions remain separately
   identifiable where provenance matters.
 
-### Circuit builder
-
-- Add ordered exercise references.
-- Set per-item durations, rounds, side/switch behavior, and explicit breaks.
-- Reorder accessibly with buttons and keyboard controls, not drag-only UI.
-- Preview compiled duration and validation errors continuously.
-
 ### Course builder
 
-- Compose exercises, circuits, and explicit breaks.
+- Compose exercise placements and explicit breaks inside named phases and
+  embedded circuits.
+- Set per-placement durations, left/right selection, circuit rounds, and
+  course-specific cues without duplicating canonical exercise instructions.
+- Reorder accessibly with buttons and keyboard controls, not drag-only UI.
+- Preview compiled duration and validation errors continuously.
 - Override durations without mutating reusable library definitions.
 - Compile through the same pure timeline compiler used by playback.
 - Publish an immutable version only after successful validation.
@@ -161,15 +159,15 @@ Treat pasted or uploaded JSON as untrusted proposed data.
 2. Parse with no code execution.
 3. Validate against a documented, versioned JSON Schema.
 4. Enforce depth, item-count, duration, text-length, and total-size limits.
-5. Resolve exercise/circuit references explicitly. Never guess silently when
-   names are ambiguous.
+5. Resolve exercise references explicitly. Never guess silently when names are
+   ambiguous.
 6. Show a review screen with errors, warnings, compiled order, duration, and all
    text before writing records.
 7. Import into a draft transactionally; publishing is a separate action.
 8. Preserve the supplied wording. Missing instructions may be added, but
    existing text is not rewritten.
 
-Do not put an AI provider key in the browser. V2 initially imports AI output;
+Do not put an AI provider key in the browser. V3 initially imports AI output;
 it does not need to call an AI service itself.
 
 ## Activity log and privacy
@@ -223,28 +221,23 @@ Before public launch:
 
 ## Delivery phases
 
-### V2.0 — Backend foundation
+### V3.0 — Backend foundation
 
 - Create development/staging Supabase projects and migrations.
 - Add Auth, profiles, RLS, generated types, and environment configuration.
 - Model exercises, tags, immutable versions, and media metadata.
-- Seed current built-in exercises without removing static V1 classes.
+- Seed the Version 2 built-in exercises and courses without removing static
+  offline fallback data.
 
 Exit: an authenticated user can privately create, search, edit, and version an
 exercise; authorization tests prove users cannot access each other's records.
 
-### V2.1 — Reusable circuits
+### V3.1 — Course authoring and offline publishing
 
-- Add circuit versions and ordered exercise items.
-- Add circuit builder, validation, duration preview, fork/version behavior, and
-  tests.
-
-Exit: users can reuse a circuit in multiple drafts without later edits changing
-published courses.
-
-### V2.2 — Course authoring and offline publishing
-
-- Add course versions and ordered exercise/circuit/break items.
+- Add course versions with ordered phases, embedded circuits, exercise
+  placements, and explicit breaks.
+- Add the course builder, validation, side selection, duration preview,
+  immutable publication, and tests.
 - Adapt the existing compiler to the normalized authoring boundary.
 - Publish immutable compiled snapshots.
 - Download complete courses/media for offline playback.
@@ -254,7 +247,7 @@ published courses.
 Exit: a user-authored course runs through the existing reliable timer online and
 offline.
 
-### V2.3 — AI JSON import
+### V3.2 — AI JSON import
 
 - Publish versioned JSON Schema and examples.
 - Add paste/file import, limits, validation, reference resolution, review, and
@@ -264,7 +257,7 @@ offline.
 Exit: externally generated JSON cannot bypass normal course validation and never
 publishes without user review.
 
-### V2.4 — Activity history
+### V3.3 — Activity history
 
 - Persist manually stopped course runs, including offline queue/sync.
 - Add private audience label and notes.
@@ -275,7 +268,7 @@ publishes without user review.
 Exit: users can see what they taught, when, and to whom, including runs completed
 offline, without cross-user leakage.
 
-### V2.5 — Production hardening
+### V3.4 — Production hardening
 
 - Complete accessibility and physical-device test passes.
 - Add backups/restore verification, monitoring, quota alerts, privacy and account
@@ -286,8 +279,9 @@ offline, without cross-user leakage.
 ## Decisions to make before implementation
 
 1. Are exercises private by default forever, or can users publish/share them?
-2. Does a duration belong to an exercise default, a circuit/course placement,
-   or both? Recommended: default plus placement override.
+2. Does an exercise need a suggested duration, or should duration belong only
+   to a course placement? Version 2 defaults to placement-only; validate this
+   before backend implementation.
 3. Can courses reference the latest reusable item, or only an immutable version?
    Recommended: drafts may opt into updates; published courses pin versions.
 4. Which sign-in methods are required? Recommended pilot: email magic link plus
@@ -298,4 +292,3 @@ offline, without cross-user leakage.
    user's own history.
 7. Must users share libraries or collaborate? Recommended: defer until the
    private single-owner model is proven.
-

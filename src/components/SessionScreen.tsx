@@ -16,6 +16,7 @@ import { useAudioCues } from "../hooks/useAudioCues";
 import { useWakeLock } from "../hooks/useWakeLock";
 import { initializeAudioCues } from "../lib/audio-cues";
 import { getSessionPreview } from "../domain/session-preview";
+import { ExerciseSideBadge } from "./ExerciseSideBadge";
 
 interface SessionScreenProps {
   fitnessClass: CompiledClass;
@@ -144,7 +145,10 @@ export function SessionScreen({
           <p className="session-phase">
             Phase {displayedPhase.index}/{displayedPhase.count} · {displayedPhase.name}
           </p>
-          <h1>{currentStep.name}</h1>
+          <h1>
+            {currentStep.name}
+            <ExerciseSideBadge side={currentStep.exerciseReference?.side} />
+          </h1>
           <p className="session-position">
             Step {currentStep.step.index}/{currentStep.step.count}
             {currentStep.round
@@ -176,7 +180,10 @@ export function SessionScreen({
           </div>
           <section className="next-step" aria-label="Next step" aria-live="polite">
             <span>{currentStep.kind === "rest" ? "Prepare for" : "Up next"}</span>
-            <strong>{preview.primary?.name ?? "Class complete"}</strong>
+            <strong>
+              {preview.primary?.name ?? "Class complete"}
+              <ExerciseSideBadge side={preview.primary?.exerciseReference?.side} />
+            </strong>
             {preview.primary ? <time>{formatDuration(preview.primary.durationMs)}</time> : null}
             {preview.circuitExerciseNames.length > 1 ? (
               <div className="next-step__circuit">

@@ -1,4 +1,8 @@
 import type { ClassEntry, ExerciseEntry, FitnessClassDefinition } from "../domain/class-definition";
+import { builtInTags } from "../catalog/tags";
+import { normalizeBandCatalog } from "../catalog/normalize-band";
+import { adaptLegacyClassToCatalog } from "../domain/legacy-catalog-adapter";
+import { resolveCourseDefinition } from "../domain/resolve-course";
 
 const rest = (id: string, durationSeconds: number, shortDescription?: string): ClassEntry => ({
   type: "rest",
@@ -85,11 +89,11 @@ const sideBodyWithRests = sideBodyPyramid.flatMap((move, index) => [
   ...(index < sideBodyPyramid.length - 1 ? [rest(`side-body-rest-${index + 1}`, 10)] : [])
 ]);
 
-export const matPilatesBand = {
+export const matPilatesBandLegacy = {
   schemaVersion: 1,
-  id: "mat-pilates-band",
+  id: "mat-pilates-band-v1",
   version: 2,
-  title: "Mat Pilates with Band",
+  title: "Mat Pilates with Band V1",
   description: "Warm-up, core, glutes, legs, upper body, and cooldown. Equipment: mat and band.",
   phases: [
     {
@@ -219,3 +223,26 @@ export const matPilatesBand = {
     }
   ]
 } satisfies FitnessClassDefinition;
+
+const adaptedBandCourse = normalizeBandCatalog(adaptLegacyClassToCatalog(matPilatesBandLegacy, {
+  tags: builtInTags,
+  courseTags: ["mat-pilates", "mat", "band", "full-body"],
+  exerciseTags: ["mat-pilates", "mat", "band"]
+}));
+
+export const matPilatesBandCatalog = {
+  catalog: adaptedBandCourse.catalog,
+  course: {
+    ...adaptedBandCourse.course,
+    id: "mat-pilates-band",
+    version: 2,
+    title: "Mat Pilates with Band"
+  }
+};
+
+export const matPilatesBandV1 = matPilatesBandLegacy;
+
+export const matPilatesBand = resolveCourseDefinition(
+  matPilatesBandCatalog.catalog,
+  matPilatesBandCatalog.course
+);

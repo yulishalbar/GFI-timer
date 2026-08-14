@@ -1,8 +1,11 @@
 import { describe, expect, it } from "vitest";
 import { matPilates0724 } from "../classes/mat-pilates-07-24";
 import { matPilates0731 } from "../classes/mat-pilates-07-31";
-import { hiitPilatesSliders } from "../classes/hiit-pilates-sliders";
-import { matPilatesBand } from "../classes/mat-pilates-band";
+import {
+  hiitPilatesSliders,
+  hiitPilatesSlidersLegacy
+} from "../classes/hiit-pilates-sliders";
+import { matPilatesBand, matPilatesBandLegacy } from "../classes/mat-pilates-band";
 import { compileClass } from "./compile-class";
 import { ClassValidationError } from "./validate-class";
 
@@ -111,6 +114,76 @@ describe("compileClass", () => {
     expect(compiled.steps.filter((step) => step.kind === "rest").every((step) => step.name === "REST"))
       .toBe(true);
     expect(compiled.steps.at(-1)?.name).toBe("Shavasana");
+  });
+
+  it("keeps the catalog-backed sliders course equivalent to its legacy timeline", () => {
+    const legacy = compileClass(hiitPilatesSlidersLegacy);
+    const catalogBacked = compileClass(hiitPilatesSliders);
+    const genericPlankArtNames = new Set([
+      "Straight leg sweep",
+      "Straight leg sweep circles",
+      "Thread the leg and open to the side",
+      "Sliders mountain climbers"
+    ]);
+    const playbackFields = (step: (typeof legacy.steps)[number]) => ({
+      runtimePath: step.runtimeId.slice(step.runtimeId.indexOf("/")),
+      sourceId: step.sourceId,
+      kind: step.kind,
+      name: step.name,
+      durationMs: step.durationMs,
+      startsAtMs: step.startsAtMs,
+      endsAtMs: step.endsAtMs,
+      phase: step.phase,
+      round: step.round,
+      roundPath: step.roundPath,
+      step: step.step,
+      shortDescription: step.shortDescription,
+      longDescription: step.longDescription,
+      illustration: genericPlankArtNames.has(step.name) ? undefined : step.illustration,
+      motionIllustrations: genericPlankArtNames.has(step.name) ? undefined : step.motionIllustrations
+    });
+
+    expect(catalogBacked.steps.map(playbackFields)).toEqual(legacy.steps.map(playbackFields));
+    expect(catalogBacked.phases).toEqual(legacy.phases);
+    expect(catalogBacked.totalDurationMs).toBe(legacy.totalDurationMs);
+    expect(catalogBacked.steps.filter((step) => step.kind === "exercise").every(
+      (step) => step.exerciseReference !== undefined
+    )).toBe(true);
+    expect(catalogBacked.steps.filter((step) => step.exerciseReference?.side === "left")).not.toHaveLength(0);
+    expect(catalogBacked.steps.filter((step) => step.exerciseReference?.side === "right")).not.toHaveLength(0);
+    expect(catalogBacked.steps.filter((step) => step.name === "Single-leg lunge with slider").map(
+      (step) => step.exerciseReference?.side
+    )).toEqual(["left", "right"]);
+    expect(catalogBacked.steps.filter((step) => genericPlankArtNames.has(step.name)).every(
+      (step) => step.illustration === undefined
+    )).toBe(true);
+  });
+
+  it("keeps the catalog-backed band timing and guidance equivalent to V1", () => {
+    const legacy = compileClass(matPilatesBandLegacy);
+    const catalogBacked = compileClass(matPilatesBand);
+    const playbackFields = (step: (typeof legacy.steps)[number]) => ({
+      runtimePath: step.runtimeId.slice(step.runtimeId.indexOf("/")),
+      sourceId: step.sourceId,
+      kind: step.kind,
+      durationMs: step.durationMs,
+      startsAtMs: step.startsAtMs,
+      endsAtMs: step.endsAtMs,
+      phase: step.phase,
+      round: step.round,
+      roundPath: step.roundPath,
+      step: step.step,
+      shortDescription: step.shortDescription,
+      longDescription: step.longDescription,
+      illustration: step.illustration,
+      motionIllustrations: step.motionIllustrations
+    });
+
+    expect(catalogBacked.steps.map(playbackFields)).toEqual(legacy.steps.map(playbackFields));
+    expect(catalogBacked.phases).toEqual(legacy.phases);
+    expect(catalogBacked.totalDurationMs).toBe(legacy.totalDurationMs);
+    expect(catalogBacked.steps.some((step) => step.exerciseReference?.side === "left")).toBe(true);
+    expect(catalogBacked.steps.some((step) => step.exerciseReference?.side === "right")).toBe(true);
   });
 
   it("compiles the band class with stable totals", () => {

@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import type { CompiledClass } from "../domain/timeline";
 import { formatDuration, formatMinutes } from "../lib/format-duration";
 import { ExerciseMedia } from "./ExerciseMedia";
+import { ExerciseSideBadge } from "./ExerciseSideBadge";
 
 interface ClassSummaryProps {
   fitnessClass: CompiledClass;
@@ -118,6 +119,7 @@ export function ClassSummary({ fitnessClass, onBack, onStart }: ClassSummaryProp
                     <div className="step-row__content">
                       <div className="step-row__title">
                         <strong>{step.name}</strong>
+                        <ExerciseSideBadge side={step.exerciseReference?.side} />
                         {step.round ? (
                           <span>
                             Round {step.round.index}/{step.round.count}

@@ -1,53 +1,199 @@
+import { useMemo, useState } from "react";
+import type { ExerciseCatalog, TagDefinition } from "../domain/catalog-definition";
+import { filterLibraryItems } from "../domain/library-search";
 import type { CompiledClass } from "../domain/timeline";
 import { formatMinutes } from "../lib/format-duration";
+import { MotionGuide } from "./MotionGuide";
 
 interface ClassPickerProps {
   classes: readonly CompiledClass[];
+  exerciseCatalog: ExerciseCatalog;
+  courseTagsById: Readonly<Record<string, readonly string[]>>;
   onSelect: (classId: string) => void;
 }
 
-export function ClassPicker({ classes, onSelect }: ClassPickerProps) {
+type LibraryTab = "courses" | "exercises";
+
+const CATEGORY_LABELS: Readonly<Record<TagDefinition["category"], string>> = {
+  "body-area": "Body area",
+  modality: "Type",
+  equipment: "Equipment",
+  "movement-type": "Position",
+  focus: "Focus"
+};
+
+export function ClassPicker({
+  classes,
+  exerciseCatalog,
+  courseTagsById,
+  onSelect
+}: ClassPickerProps) {
+  const [tab, setTab] = useState<LibraryTab>("courses");
+  const [query, setQuery] = useState("");
+  const [selectedTags, setSelectedTags] = useState<ReadonlySet<string>>(() => new Set());
+  const usedTagIds = useMemo(() => new Set(
+    tab === "courses"
+      ? classes.flatMap((fitnessClass) => [...(courseTagsById[fitnessClass.definition.id] ?? [])])
+      : exerciseCatalog.exercises.flatMap((exercise) => exercise.tags)
+  ), [classes, courseTagsById, exerciseCatalog.exercises, tab]);
+  const visibleTags = exerciseCatalog.tags.filter((tag) => usedTagIds.has(tag.id));
+  const groupedTags = Object.entries(visibleTags.reduce<Record<string, TagDefinition[]>>(
+    (groups, tag) => {
+      (groups[tag.category] ??= []).push(tag);
+      return groups;
+    },
+    {}
+  ));
+
+  const courseResults = filterLibraryItems(
+    classes.map((fitnessClass) => ({
+      fitnessClass,
+      searchText: [
+        fitnessClass.definition.title,
+        fitnessClass.definition.description ?? "",
+        ...fitnessClass.phases.map((phase) => phase.name)
+      ].join(" "),
+      tags: courseTagsById[fitnessClass.definition.id] ?? []
+    })),
+    exerciseCatalog.tags,
+    query,
+    selectedTags
+  );
+  const exerciseResults = filterLibraryItems(
+    exerciseCatalog.exercises.map((exercise) => ({
+      exercise,
+      searchText: [exercise.name, exercise.shortDescription ?? "", exercise.longDescription ?? ""].join(" "),
+      tags: exercise.tags
+    })),
+    exerciseCatalog.tags,
+    query,
+    selectedTags
+  );
+
+  const selectTab = (nextTab: LibraryTab) => {
+    setTab(nextTab);
+    setQuery("");
+    setSelectedTags(new Set());
+  };
+  const toggleTag = (tagId: string) => {
+    setSelectedTags((current) => {
+      const next = new Set(current);
+      if (next.has(tagId)) next.delete(tagId);
+      else next.add(tagId);
+      return next;
+    });
+  };
+
   return (
     <main className="page-shell" id="main-content">
       <section className="hero" aria-labelledby="class-picker-title">
         <p className="eyebrow">Instructor console</p>
         <h1 id="class-picker-title">Choose today&apos;s class</h1>
         <p className="hero__intro">
-          Preloaded schedules keep every phase, round, exercise, and rest on time.
+          Find a complete course or review a reusable exercise from the local offline catalog.
         </p>
       </section>
 
-      <section className="class-grid" aria-label="Available fitness classes">
-        {classes.map((fitnessClass) => (
-          <article className="class-card" key={fitnessClass.definition.id}>
-            <div className="class-card__accent" aria-hidden="true" />
-            <div className="class-card__body">
-              <div className="class-card__meta">
-                <span>{formatMinutes(fitnessClass.totalDurationMs)}</span>
-                <span>{fitnessClass.phases.length} phases</span>
-                <span>{fitnessClass.steps.length} steps</span>
-              </div>
-              <h2>{fitnessClass.definition.title}</h2>
-              {fitnessClass.definition.description ? (
-                <p>{fitnessClass.definition.description}</p>
-              ) : null}
-              <div className="phase-pills" aria-label="Class phases">
-                {fitnessClass.phases.map((phase) => (
-                  <span key={phase.id}>{phase.name}</span>
+      <nav className="library-tabs" aria-label="Library">
+        <button type="button" aria-pressed={tab === "courses"} onClick={() => selectTab("courses")}>
+          Courses <span>{classes.length}</span>
+        </button>
+        <button type="button" aria-pressed={tab === "exercises"} onClick={() => selectTab("exercises")}>
+          Exercises <span>{exerciseCatalog.exercises.length}</span>
+        </button>
+      </nav>
+
+      <section className="library-search" aria-label={`${tab === "courses" ? "Course" : "Exercise"} search and filters`}>
+        <label>
+          <span>Search {tab}</span>
+          <input
+            type="search"
+            value={query}
+            placeholder={tab === "courses" ? "Search by name, equipment, or focus" : "Search by movement, body area, or type"}
+            onChange={(event) => setQuery(event.target.value)}
+          />
+        </label>
+        <div className="library-filters">
+          {groupedTags.map(([category, tags]) => (
+            <fieldset key={category}>
+              <legend>{CATEGORY_LABELS[category as TagDefinition["category"]]}</legend>
+              <div>
+                {tags?.map((tag) => (
+                  <button
+                    type="button"
+                    aria-pressed={selectedTags.has(tag.id)}
+                    onClick={() => toggleTag(tag.id)}
+                    key={tag.id}
+                  >
+                    {tag.label}
+                  </button>
                 ))}
               </div>
-              <button
-                className="primary-button"
-                type="button"
-                onClick={() => onSelect(fitnessClass.definition.id)}
-              >
-                View class
-                <span aria-hidden="true">→</span>
-              </button>
-            </div>
-          </article>
-        ))}
+            </fieldset>
+          ))}
+        </div>
+        {selectedTags.size > 0 || query ? (
+          <button className="library-clear" type="button" onClick={() => {
+            setQuery("");
+            setSelectedTags(new Set());
+          }}>
+            Clear search and filters
+          </button>
+        ) : null}
       </section>
+
+      {tab === "courses" ? (
+        <section className="class-grid" aria-label="Available fitness classes">
+          {courseResults.map(({ fitnessClass, tags }) => (
+            <article className="class-card" key={fitnessClass.definition.id}>
+              <div className="class-card__accent" aria-hidden="true" />
+              <div className="class-card__body">
+                <div className="class-card__meta">
+                  <span>{formatMinutes(fitnessClass.totalDurationMs)}</span>
+                  <span>{fitnessClass.phases.length} phases</span>
+                  <span>{fitnessClass.steps.length} steps</span>
+                </div>
+                <h2>{fitnessClass.definition.title}</h2>
+                {fitnessClass.definition.description ? <p>{fitnessClass.definition.description}</p> : null}
+                <div className="phase-pills" aria-label="Course tags">
+                  {tags.map((tagId) => <span key={tagId}>{exerciseCatalog.tags.find((tag) => tag.id === tagId)?.label ?? tagId}</span>)}
+                </div>
+                <button className="primary-button" type="button" onClick={() => onSelect(fitnessClass.definition.id)}>
+                  View class <span aria-hidden="true">→</span>
+                </button>
+              </div>
+            </article>
+          ))}
+          {courseResults.length === 0 ? <p className="library-empty">No courses match this search.</p> : null}
+        </section>
+      ) : (
+        <section className="exercise-library-grid" aria-label="Exercise library">
+          {exerciseResults.map(({ exercise, tags }) => (
+            <article className="exercise-library-card" key={exercise.id}>
+              {exercise.motionIllustrations ? (
+                <MotionGuide frames={exercise.motionIllustrations} name={exercise.name} />
+              ) : exercise.illustration ? (
+                <img
+                  src={`${import.meta.env.BASE_URL}${exercise.illustration}`}
+                  alt={`Illustration for ${exercise.name}`}
+                />
+              ) : null}
+              <div>
+                <div className="exercise-library-card__meta">
+                  <span>{exercise.sideSupport === "left-right" ? "← L / R →" : "No side variation"}</span>
+                  <span>{exercise.motionIllustrations ? "Motion guide" : exercise.illustration ? "Static art" : "Text guide"}</span>
+                </div>
+                <h2>{exercise.name}</h2>
+                {exercise.longDescription || exercise.shortDescription ? <p>{exercise.longDescription ?? exercise.shortDescription}</p> : null}
+                <div className="phase-pills" aria-label={`Tags for ${exercise.name}`}>
+                  {tags.map((tagId) => <span key={tagId}>{exerciseCatalog.tags.find((tag) => tag.id === tagId)?.label ?? tagId}</span>)}
+                </div>
+              </div>
+            </article>
+          ))}
+          {exerciseResults.length === 0 ? <p className="library-empty">No exercises match this search.</p> : null}
+        </section>
+      )}
     </main>
   );
 }
