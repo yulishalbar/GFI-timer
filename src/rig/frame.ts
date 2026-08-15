@@ -65,6 +65,7 @@ const OUTLINE_WIDTH = 5;
 const TRACE_SAMPLES = 72;
 
 const format = ([x, y]: Point): string => `${x.toFixed(1)} ${y.toFixed(1)}`;
+const DEGREES = Math.PI / 180;
 
 const LIMB_JOINTS: Record<LimbId, readonly [JointId, JointId, JointId, JointId]> = {
   armNear: ["shoulderNear", "elbowNear", "wristNear", "handNear"],
@@ -129,6 +130,37 @@ function pushLimb(out: Shape[], joints: Joints, rig: RigDefinition, limb: LimbId
 const midpoint = (a: Point, b: Point): Point => [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2];
 
 /**
+ * A nose on the silhouette. Folded and lying poses are otherwise ambiguous:
+ * face down and face up draw exactly the same shape.
+ *
+ * It sits low on the face and is blunt with a flat underside — a sharp spike
+ * centred on the head reads as an arrow rather than a face, and at the top of
+ * the head it does not say which way the body is turned at all.
+ */
+function noseShape(joints: Joints, facing: number): Point[] {
+  const radius = SEGMENT.headRadius;
+  // The chin is whichever side of the facing line the shoulder lies on.
+  const toShoulder: Point = [joints.shoulder[0] - joints.head[0], joints.shoulder[1] - joints.head[1]];
+  const cross =
+    Math.cos(facing * DEGREES) * toShoulder[1] - Math.sin(facing * DEGREES) * toShoulder[0];
+  const chin = facing + (cross >= 0 ? 90 : -90);
+
+  // Local frame: `out` along the face, `down` toward the chin.
+  const at = (out: number, down: number): Point => project(project(joints.head, facing, out), chin, down);
+
+  // Small and squared off rather than a rounded bump, and deliberately
+  // asymmetric: the bridge slopes out to the tip while the underside meets it
+  // at close to a right angle. That difference is what reads as a face rather
+  // than a spike, even at a couple of millimetres on a phone.
+  return [
+    at(radius * 0.45, -3.4), // bridge, at the brow
+    at(radius + 4.6, -0.4), // tip, top
+    at(radius + 4.4, 1.4), // tip, underside
+    at(radius * 0.45, 3) // base, under the nostril
+  ];
+}
+
+/**
  * The torso is a tapered band from hip to shoulder. Its half-width is the
  * pose's spread or the body's own thickness, whichever is larger, so a side
  * view (no spread) and a front view (real shoulder width) are the same shape at
@@ -168,19 +200,6 @@ function pushTorso(out: Shape[], joints: Joints, pose: Pose, ghost: boolean): vo
   }
   out.push({ kind: "area", key: `${prefix}torso`, role: torsoRole, d, width: corner });
 
-  // A nose on the silhouette. Folded and lying poses are otherwise ambiguous:
-  // face down and face up draw exactly the same shape.
-  const nose: Point[] | undefined =
-    pose.facing === undefined
-      ? undefined
-      : [
-          project(joints.head, pose.facing - 52, SEGMENT.headRadius * 0.94),
-          project(joints.head, pose.facing, SEGMENT.headRadius + 4.5),
-          project(joints.head, pose.facing + 52, SEGMENT.headRadius * 0.94)
-        ];
-
-  // Every outline before every fill, so the expanded shapes never cut notches
-  // out of the parts they are meant to sit behind.
   if (!ghost) {
     out.push({
       kind: "line",
@@ -190,6 +209,23 @@ function pushTorso(out: Shape[], joints: Joints, pose: Pose, ghost: boolean): vo
       to: joints.head,
       width: neckWidth + OUTLINE_WIDTH
     });
+  }
+  out.push({ kind: "line", key: `${prefix}neck`, role: torsoRole, from: joints.shoulder, to: joints.head, width: neckWidth });
+}
+
+/**
+ * Drawn after the limbs. Hands behind the head is a real position — a curl is
+ * held that way — and with the head underneath, the forearm crosses the face
+ * and hides the one feature that says which way the body is turned.
+ */
+function pushHead(out: Shape[], joints: Joints, pose: Pose, ghost: boolean): void {
+  const prefix = ghost ? "ghost-" : "";
+  const role: ShapeRole = ghost ? "ghost" : "near";
+  const nose = pose.facing === undefined ? undefined : noseShape(joints, pose.facing);
+
+  // Every outline before every fill, so the expanded shapes never cut notches
+  // out of the parts they are meant to sit behind.
+  if (!ghost) {
     if (nose) {
       out.push({ kind: "polygon", key: `${prefix}nose-outline`, role: "outline", points: nose, width: OUTLINE_WIDTH });
     }
@@ -201,11 +237,10 @@ function pushTorso(out: Shape[], joints: Joints, pose: Pose, ghost: boolean): vo
       radius: SEGMENT.headRadius + OUTLINE_WIDTH / 2
     });
   }
-  out.push({ kind: "line", key: `${prefix}neck`, role: torsoRole, from: joints.shoulder, to: joints.head, width: neckWidth });
   if (nose) {
-    out.push({ kind: "polygon", key: `${prefix}nose`, role: torsoRole, points: nose, width: 0 });
+    out.push({ kind: "polygon", key: `${prefix}nose`, role, points: nose, width: 0 });
   }
-  out.push({ kind: "dot", key: `${prefix}head`, role: torsoRole, at: joints.head, radius: SEGMENT.headRadius });
+  out.push({ kind: "dot", key: `${prefix}head`, role, at: joints.head, radius: SEGMENT.headRadius });
 }
 
 /** Painting order is far side, torso, near side, so depth reads correctly. */
@@ -215,6 +250,7 @@ function pushFigure(out: Shape[], joints: Joints, pose: Pose, rig: RigDefinition
   pushTorso(out, joints, pose, ghost);
   pushLimb(out, joints, rig, "legNear", ghost);
   pushLimb(out, joints, rig, "armNear", ghost);
+  pushHead(out, joints, pose, ghost);
 }
 
 function pushEquipment(out: Shape[], joints: Joints, rig: RigDefinition): void {

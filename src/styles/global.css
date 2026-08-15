@@ -1335,16 +1335,33 @@ h1 {
   font-size: 0.78rem;
 }
 
+/* Approaching the handover the current step steps back rather than vanishing:
+   it is still what the class is doing. */
 .session-shell--ending .current-step-details {
-  max-height: 0;
-  overflow: hidden;
-  opacity: 0;
+  opacity: 0.45;
 }
 
 .session-shell--ending .next-step {
   border-color: var(--color-accent);
   background: color-mix(in srgb, var(--color-accent) 14%, transparent);
   transform: scale(1.02);
+}
+
+/* A look ahead at the next movement. Deliberately small and dimmed so it
+   cannot be mistaken for the guide to follow right now. */
+.next-step__preview {
+  grid-column: 1 / -1;
+  width: min(11rem, 58%);
+  margin-top: 0.55rem;
+  opacity: 0.5;
+}
+
+.next-step__preview .exercise-rig,
+.next-step__preview .exercise-motion,
+.next-step__preview img {
+  width: 100%;
+  max-height: none;
+  border-radius: var(--radius-sm);
 }
 
 .overall-progress__labels {
@@ -1676,6 +1693,19 @@ h1 {
 
   .current-step-details {
     grid-column: 1 / -1;
+  }
+
+  /* A phone has room for one full-size guide, and it has to be the movement
+     being performed. The look-ahead shrinks to a thumbnail, and the current
+     step keeps its full contrast: the highlighted panel already signals the
+     handover, so dimming it here only costs legibility. */
+  .next-step__preview {
+    width: 5rem;
+    margin-top: 0.4rem;
+  }
+
+  .session-shell--ending .current-step-details {
+    opacity: 1;
   }
 
   .next-step {

@@ -178,6 +178,8 @@ offline behavior.
 - [Product specification](docs/PRODUCT.md)
 - [Architecture](docs/ARCHITECTURE.md)
 - [Class format](docs/CLASS_FORMAT.md)
+- [Adding an exercise to the catalog](docs/EXERCISE_MERGING.md)
+- [Exercise artwork](docs/ARTWORK.md)
 - [Development guide](docs/DEVELOPMENT.md)
 - [Release and rollback](docs/RELEASE.md)
 - [Roadmap](docs/ROADMAP.md)

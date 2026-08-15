@@ -34,6 +34,9 @@ Build from the domain outward:
 5. Add persistence, audio, wake lock, and visibility reconciliation.
 6. Add the manifest, offline caching, and GitHub Pages deployment.
 7. Test on physical iPhone and iPad devices.
+8. Check every session-screen change at 430 × 932 before anything else. The
+   phone is the viewport that is actually used, and vertical space there is the
+   binding constraint: it is where a change that looks fine on a desktop breaks.
 
 Do not start with exercise animations or Spotify. They should not obscure timer
 correctness or offline reliability.

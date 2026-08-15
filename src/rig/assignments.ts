@@ -81,6 +81,32 @@ export const RIG_BY_EXERCISE_NAME: Readonly<Record<string, string>> = {
   "One-leg banded bridge": "one-leg-banded-bridge",
   "Bridge with band around thighs": "banded-bridge",
 
+  // Standing legs, band. Left and right name themselves differently here, so
+  // both spellings point at the one movement.
+  "Static single-leg squat (L), right heel lifts and lowers": "static-single-leg-squat",
+  "Static single-leg squat (R), left heel lifts and lowers": "static-single-leg-squat",
+  "Single leg squat (L) + leg opener": "single-leg-squat-opener",
+  "Single leg squat (R) + leg opener": "single-leg-squat-opener",
+  "Pulse leg openers": "pulse-leg-openers",
+  "Full-range single-leg squat (L), right heel lifted": "full-range-single-leg-squat",
+  "Full-range single-leg squat (R), left heel lifted": "full-range-single-leg-squat",
+  "Side squat to curtsy lunge": "side-squat-curtsy",
+  "Curtsy pulse": "curtsy-pulse",
+
+  // Standing upper body, band
+  "Standing punch-outs": "standing-punch-outs",
+  "Band hold out": "band-hold-out",
+  "Band pulse out": "band-pulse-out",
+  "Serve the platter": "serve-the-platter",
+  "Band triceps ups (behind back)": "band-triceps-ups",
+  "Band outward extension (behind back)": "band-outward-extension",
+
+  // HIIT slider legs
+  "Single-leg lunge with slider": "slider-reverse-lunge",
+  "Isometric hold single-leg lunge with slider with pulse": "slider-lunge-hold-pulse",
+  "Side lunge sliding out": "slider-side-lunge",
+  "Isometric hold squat with side lunge": "slider-squat-side-lunge",
+
   // Standing, band
   "Straight biceps curl": "banded-biceps-curl",
 

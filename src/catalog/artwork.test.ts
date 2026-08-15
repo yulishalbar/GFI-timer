@@ -111,11 +111,17 @@ describe("exercise artwork", () => {
     });
   });
 
-  it("reports how much of the catalog still needs a visual", () => {
+  it("gives every exercise in the catalog a visual", () => {
     const withoutMedia = exercises.filter(
       (exercise) => !exercise.rig && !exercise.illustration && !exercise.motionIllustrations
     );
-    // Tightening target: this must only ever go down as batches land.
-    expect(withoutMedia.length).toBeLessThanOrEqual(23);
+    // The introduction is a spoken preamble, not a movement, so it has nothing
+    // to draw. Everything else is rigged and must stay that way.
+    expect(withoutMedia.map((exercise) => exercise.name)).toEqual(["INTRODUCTION"]);
+  });
+
+  it("draws every movement from pose data rather than an image", () => {
+    const onImages = exercises.filter((exercise) => !exercise.rig && exercise.illustration);
+    expect(onImages.map((exercise) => exercise.name)).toEqual([]);
   });
 });

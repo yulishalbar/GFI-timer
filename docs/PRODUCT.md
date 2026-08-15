@@ -13,8 +13,13 @@ leaving the session screen.
 ## Primary user and environment
 
 - One instructor using their own device.
-- Primarily an iPhone 15 Pro Max in portrait (430 × 932 CSS pixels); smaller
-  iPhones and iPad are also supported.
+- **An iPhone 15 Pro Max in portrait (430 × 932 CSS pixels) is the viewport that
+  matters.** In practice it is close to the only one used. Smaller iPhones and
+  iPad are supported, and desktop exists for development, but a session-screen
+  change is judged narrow-first: anything that reads well wide and pushes the
+  current movement off screen or under the controls on a phone is a regression,
+  not a trade-off. The `iphone-15-pro-max-chromium` Playwright project runs at
+  exactly these dimensions.
 - Used in portrait or landscape orientation during a live class.
 - Often running beside Spotify or another music source.
 - Connectivity may be poor, so the core session must not need a network.

@@ -70,6 +70,11 @@ export interface Pose {
   ikArmNear?: Point;
   ikArmFar?: Point;
   ikBend?: 1 | -1;
+  /**
+   * Bend for the far leg, when it differs from the near one. A squat seen
+   * head-on splays both knees outward, which is opposite directions on screen.
+   */
+  ikBendFar?: 1 | -1;
   ikArmBend?: 1 | -1;
 }
 
@@ -163,11 +168,13 @@ export function solvePose(pose: Pose): Joints {
     const [a, b] = solveIk(root, target, SEGMENT.upperArm * scale, SEGMENT.foreArm * scale, pose.ikArmBend ?? 1);
     return [a, b, chain[2]];
   };
-  const legChain = (chain: Chain, target: Point | undefined, root: Point, scale: number): Chain => {
+  const legChain = (chain: Chain, target: Point | undefined, root: Point, scale: number, bend: 1 | -1): Chain => {
     if (!target) return chain;
-    const [a, b] = solveIk(root, target, SEGMENT.thigh * scale, SEGMENT.shin * scale, pose.ikBend ?? 1);
+    const [a, b] = solveIk(root, target, SEGMENT.thigh * scale, SEGMENT.shin * scale, bend);
     return [a, b, chain[2]];
   };
+  const nearBend = pose.ikBend ?? 1;
+  const farBend = pose.ikBendFar ?? nearBend;
 
   const armNearScale = pose.armNearScale ?? 1;
   const armFarScale = pose.armFarScale ?? 1;
@@ -186,12 +193,12 @@ export function solvePose(pose: Pose): Joints {
   );
   const [kneeNear, ankleNear, toeNear] = chainPoints(
     hipNear,
-    legChain(pose.legNear, pose.ikLegNear, hipNear, legNearScale),
+    legChain(pose.legNear, pose.ikLegNear, hipNear, legNearScale, nearBend),
     legLengths(legNearScale)
   );
   const [kneeFar, ankleFar, toeFar] = chainPoints(
     hipFar,
-    legChain(pose.legFar, pose.ikLegFar, hipFar, legFarScale),
+    legChain(pose.legFar, pose.ikLegFar, hipFar, legFarScale, farBend),
     legLengths(legFarScale)
   );
 
@@ -243,6 +250,7 @@ export function lerpPose(a: Pose, b: Pose, t: number): Pose {
   // other pose stops a loop that only names it at one end from flipping the
   // knee inside out on the way back.
   const ikBend = a.ikBend ?? b.ikBend;
+  const ikBendFar = a.ikBendFar ?? b.ikBendFar;
   const ikArmBend = a.ikArmBend ?? b.ikArmBend;
 
   return {
@@ -269,6 +277,7 @@ export function lerpPose(a: Pose, b: Pose, t: number): Pose {
     ...(ikArmNear === undefined ? {} : { ikArmNear }),
     ...(ikArmFar === undefined ? {} : { ikArmFar }),
     ...(ikBend === undefined ? {} : { ikBend }),
+    ...(ikBendFar === undefined ? {} : { ikBendFar }),
     ...(ikArmBend === undefined ? {} : { ikArmBend })
   };
 }

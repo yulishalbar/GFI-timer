@@ -106,6 +106,10 @@ only source of truth, and the legacy image it replaced is dropped.
 
 ## One movement, one entry
 
+Before adding an exercise, check whether the pool already has it — see
+[Adding an exercise to the catalog](EXERCISE_MERGING.md) for when to reuse,
+when to merge, and when to ask.
+
 The catalog stores a record per course placement, so the same movement can be
 held several times: once per course, and once per side wherever a left/right
 pair was authored with the guidance on one side only. `distinctMovements` in
@@ -115,7 +119,9 @@ different rigs never merge. A test pins the library at zero repeated names.
 
 ## Migration status
 
-Migrated: 58 rigs covering 67 catalog records.
+**The catalog is fully migrated.** 74 rigs cover 89 of 90 records; the
+ninetieth is the non-exercise `INTRODUCTION` entry, which is a spoken preamble
+with nothing to draw.
 
 | Family | Rigs |
 | --- | --- |
@@ -126,39 +132,31 @@ Migrated: 58 rigs covering 67 catalog records.
 | Side-lying | 9 |
 | Bridges | 5 |
 | Cooldown and stretches | 10 |
-| Standing, band | 1 |
+| Standing legs, band | 6 |
+| Standing upper body, band | 7 |
+| HIIT slider legs | 4 |
 
-Two properties the artwork tests now pin rather than merely cap:
+Three properties the tests pin rather than merely cap:
 
-- **No catalog exercise is drawn with another exercise's artwork.** One SVG once
-  stood in for eight different movements.
-- **No catalog exercise is on a legacy image at all.** Every one either has a
-  rig or has no visual yet.
+- every exercise has a visual,
+- every one is drawn from pose data, not an image,
+- no exercise is drawn with another exercise's artwork.
 
-Of 90 catalog records, 67 are rigged and 23 have no visual. Remaining work:
-
-| Batch | Base pose | Records | Rigs |
-| --- | --- | --- | --- |
-| Standing legs, band | standing, front | 12 | 6 |
-| Standing upper body, band | standing, front | 6 | 6 |
-| HIIT slider legs | standing, side | 4 | 4 |
-
-That is 22 exercises; the twenty-third record is the non-exercise
-`INTRODUCTION` entry. All three batches are standing, so they share the two
-standing bases already in place.
-
-The older dated classes (July 24 and July 31) still reference legacy SVGs for
-movements not yet in the assignment map. Those files stay until their movements
-are rigged.
-
-The count of exercises with no visual at all is a tightening target in
-`src/catalog/artwork.test.ts` and must only ever go down.
+The dated July 24 and July 31 classes are still in the legacy format with their
+exercises embedded, so they are not part of this count and still reference a few
+legacy SVGs. Converting them is tracked separately; see
+[Adding an exercise to the catalog](EXERCISE_MERGING.md) for how their exercises
+should be folded into the pool.
 
 ### Known refinements
 
 - The **standing front view** carries real shoulder and hip width via
   `shoulderSpread` / `hipSpread`; `banded-biceps-curl` was the first user and
   the proportions are worth another pass once more standing movements exist.
+- **Standing figures sit small in frame.** A standing body is roughly three
+  times taller than it is wide, so at 16:9 it can never fill the box. The
+  overhead-reach poses are smaller still. Worth revisiting if a taller surface
+  ever becomes an option.
 - **Shavasana** is deliberately plain. It reads well enough for a pose this
   simple, but it is a candidate for refinement.
 - **`rainbow`** is drawn from overhead so its arc is visible, but the overhead

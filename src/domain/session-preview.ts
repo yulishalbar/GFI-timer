@@ -5,6 +5,20 @@ export interface SessionPreview {
   circuitExerciseNames: string[];
 }
 
+/**
+ * How long before a step ends to start previewing the next movement.
+ *
+ * A fixed ten seconds is a third of a thirty-second drill and half of a twenty
+ * second one, so it arrives while there is still real work left to do. The lead
+ * scales with the step, and the shortest steps get none at all: there is no
+ * point pulling attention away from something that is nearly over anyway.
+ */
+export function previewLeadMs(stepDurationMs: number): number {
+  if (stepDurationMs < 20_000) return 0;
+  if (stepDurationMs <= 30_000) return 5_000;
+  return 10_000;
+}
+
 function findNextExerciseIndex(steps: readonly RuntimeStep[], fromIndex: number): number {
   return steps.findIndex((step, index) => index > fromIndex && step.kind === "exercise");
 }

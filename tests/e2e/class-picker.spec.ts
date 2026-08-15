@@ -131,10 +131,15 @@ test("opens a compiled class schedule and returns to the picker", async ({ page 
       controlsBox?.y ?? 0
     );
   }
+  // A 60s step leads the handover by 10s: the next movement is previewed and
+  // the current one steps back rather than disappearing.
   await page.getByRole("slider", { name: "Seek within current step" }).fill("51000");
   await expect(page.locator(".session-shell")).toHaveClass(/session-shell--ending/);
-  await expect(page.locator(".current-step-details")).toHaveCSS("opacity", "0");
+  await expect(page.locator(".current-step-details")).toBeVisible();
   await expect(page.getByRole("region", { name: "Next step" })).toContainText("Cat");
+  // No preview box here: this class is not on rigs yet, so the next movement
+  // has no visual to show and an empty frame would be worse than none.
+  await expect(page.locator(".next-step__preview")).toHaveCount(0);
   await page.getByRole("slider", { name: "Seek within current step" }).fill("30000");
   await expect(page.locator(".session-shell")).not.toHaveClass(/session-shell--ending/);
   await expect(page.getByRole("slider", { name: "Seek within current step" })).toHaveValue("30000");
@@ -239,24 +244,6 @@ test("opens and starts the July 31 class with completed pose guidance", async ({
   await expect(page.locator(".exercise-details img")).toBeVisible();
 });
 
-test("opens and starts the sliders V1 fallback", async ({ page }) => {
-  await page.goto("./");
-
-  const classCard = page.getByRole("article").filter({
-    has: page.getByRole("heading", { name: "HIIT Pilates with Sliders V1", exact: true })
-  });
-  await expect(classCard).toContainText("50.5 min");
-  await expect(classCard).toContainText("8 phases");
-  await expect(classCard).toContainText("82 steps");
-  await classCard.getByRole("button", { name: "View class" }).click();
-
-  await expect(page.getByRole("heading", { name: "HIIT Pilates with Sliders V1" })).toBeVisible();
-  await expect(page.getByLabel("50.5 min total")).toContainText("50:30");
-  await expect(page.getByRole("heading", { name: "Circuit #6: Side Body" })).toBeVisible();
-  await page.getByRole("button", { name: "Start class" }).click();
-  await expect(page.getByRole("heading", { name: "Child's pose" })).toBeVisible();
-});
-
 test("opens and starts the catalog-backed sliders course", async ({ page }) => {
   await page.goto("./");
 
@@ -284,6 +271,57 @@ test("opens and starts the catalog-backed sliders course", async ({ page }) => {
   await expectRigAnimates(mountainClimbers.locator("svg.exercise-rig"));
   await page.getByRole("button", { name: "Start class" }).click();
   await expect(page.getByRole("heading", { name: "Child's pose" })).toBeVisible();
+
+  // Child's pose runs 60s, so the handover leads by 10s. The next movement is
+  // rigged, so it gets a dimmed preview rather than the current step vanishing.
+  await page.getByRole("slider", { name: "Seek within current step" }).fill("52000");
+  await expect(page.locator(".session-shell")).toHaveClass(/session-shell--ending/);
+  const preview = page.locator(".next-step__preview");
+  await expect(preview).toBeVisible();
+  await expect(preview.locator("svg.exercise-rig")).toBeVisible();
+  await expect(page.locator(".current-step-details")).toBeVisible();
+  expect(Number(await preview.evaluate((el) => getComputedStyle(el).opacity))).toBeLessThan(1);
+  await page.getByRole("slider", { name: "Seek within current step" }).fill("20000");
+  await expect(page.locator(".next-step__preview")).toHaveCount(0);
+});
+
+/**
+ * The session screen is operated from a phone during class, so the narrow
+ * layout is the one that has to work. A look-ahead that pushes the movement
+ * being performed off screen or under the controls is a regression there, however
+ * well it reads on a desktop.
+ */
+test("keeps the current movement readable during the handover on a phone", async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name === "desktop-chromium", "narrow layout only");
+  await page.goto("./");
+
+  const classCard = page.getByRole("article").filter({
+    has: page.getByRole("heading", { name: "HIIT Pilates with Sliders", exact: true })
+  });
+  await classCard.getByRole("button", { name: "View class" }).click();
+  await page.getByRole("button", { name: "Start class" }).click();
+  await page.getByRole("slider", { name: "Seek within current step" }).fill("52000");
+  await expect(page.locator(".session-shell")).toHaveClass(/session-shell--ending/);
+
+  const guide = page.locator(".current-step-details svg.exercise-rig");
+  await expect(guide).toBeInViewport();
+  await expect(page.locator(".current-step-details")).toHaveCSS("opacity", "1");
+
+  // Nothing overlaps the controls, and the screen still does not scroll.
+  const overlap = await page.evaluate(() => {
+    const details = document.querySelector(".current-step-details")?.getBoundingClientRect();
+    const controls = document.querySelector(".session-controls")?.getBoundingClientRect();
+    return details && controls ? Math.round(details.bottom - controls.top) : 0;
+  });
+  expect(overlap).toBeLessThanOrEqual(0);
+  expect(
+    await page.evaluate(() => document.documentElement.scrollHeight - window.innerHeight)
+  ).toBeLessThanOrEqual(0);
+
+  // The look-ahead is present but stays a thumbnail beside the name.
+  const previewHeight = await page.locator(".next-step__preview").evaluate((el) => el.getBoundingClientRect().height);
+  const guideHeight = await guide.evaluate((el) => el.getBoundingClientRect().height);
+  expect(previewHeight).toBeLessThan(guideHeight);
 });
 
 test("opens and starts the band class", async ({ page }) => {
@@ -300,20 +338,6 @@ test("opens and starts the band class", async ({ page }) => {
   await expect(page.getByRole("heading", { name: "Mat Pilates with Band" })).toBeVisible();
   await expect(page.getByLabel("60 min total")).toContainText("1:00:00");
   await expect(page.getByRole("heading", { name: "Circuit #5: Standing Upper Body and Core" })).toBeVisible();
-  await page.getByRole("button", { name: "Start class" }).click();
-  await expect(page.getByRole("heading", { name: "INTRODUCTION" })).toBeVisible();
-});
-
-test("opens and starts the band V1 fallback", async ({ page }) => {
-  await page.goto("./");
-
-  const classCard = page.getByRole("article").filter({
-    has: page.getByRole("heading", { name: "Mat Pilates with Band V1", exact: true })
-  });
-  await expect(classCard).toContainText("60 min");
-  await expect(classCard).toContainText("94 steps");
-  await classCard.getByRole("button", { name: "View class" }).click();
-  await expect(page.getByRole("heading", { name: "Mat Pilates with Band V1" })).toBeVisible();
   await page.getByRole("button", { name: "Start class" }).click();
   await expect(page.getByRole("heading", { name: "INTRODUCTION" })).toBeVisible();
 });

@@ -9,13 +9,15 @@ import { useSessionTimer } from "../hooks/useSessionTimer";
 import type { SessionInitialization } from "../hooks/useSessionTimer";
 import { formatDuration } from "../lib/format-duration";
 import { ExerciseDetails } from "./ExerciseDetails";
+import { ExerciseMedia } from "./ExerciseMedia";
 import { OverallProgress } from "./OverallProgress";
 import { SessionControls } from "./SessionControls";
 import { StepProgress } from "./StepProgress";
 import { useAudioCues } from "../hooks/useAudioCues";
 import { useWakeLock } from "../hooks/useWakeLock";
 import { initializeAudioCues } from "../lib/audio-cues";
-import { getSessionPreview } from "../domain/session-preview";
+import { getSessionPreview, previewLeadMs } from "../domain/session-preview";
+import { hasExerciseMedia } from "../domain/step-media";
 import { ExerciseSideBadge } from "./ExerciseSideBadge";
 
 interface SessionScreenProps {
@@ -90,7 +92,9 @@ export function SessionScreen({
   const preview = getSessionPreview(fitnessClass.steps, state.stepIndex);
   const displayedPhase =
     currentStep.kind === "rest" && preview.primary ? preview.primary.phase : currentStep.phase;
-  const isFinalTenSeconds = remainingMs <= 10_000;
+  // The lead scales with the step: see previewLeadMs.
+  const previewLead = previewLeadMs(stepDurationMs);
+  const isEnding = previewLead > 0 && remainingMs <= previewLead;
   const isFinalThreeSeconds = state.status === "running" && remainingMs <= 3_000;
 
   const handleSeekStart = () => {
@@ -108,7 +112,7 @@ export function SessionScreen({
 
   return (
     <main
-      className={`session-shell session-shell--${currentStep.kind}${isFinalTenSeconds ? " session-shell--ending" : ""}${isFinalThreeSeconds ? " session-shell--final-three" : ""}`}
+      className={`session-shell session-shell--${currentStep.kind}${isEnding ? " session-shell--ending" : ""}${isFinalThreeSeconds ? " session-shell--final-three" : ""}`}
       id="main-content"
     >
       <header className="session-topbar">
@@ -185,6 +189,11 @@ export function SessionScreen({
               <ExerciseSideBadge side={preview.primary?.exerciseReference?.side} />
             </strong>
             {preview.primary ? <time>{formatDuration(preview.primary.durationMs)}</time> : null}
+            {isEnding && preview.primary && hasExerciseMedia(preview.primary) ? (
+              <div className="next-step__preview">
+                <ExerciseMedia step={preview.primary} decorative />
+              </div>
+            ) : null}
             {preview.circuitExerciseNames.length > 1 ? (
               <div className="next-step__circuit">
                 <span>{preview.primary?.phase.name}</span>
