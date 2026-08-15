@@ -33,6 +33,8 @@ function ShapeNode({ shape }: { shape: Shape }): React.ReactElement {
       );
     case "polygon":
       return <path className={`${className} rig--filled`} d={pointsToPath(shape.points, true)} strokeWidth={shape.width} />;
+    case "area":
+      return <path className={`${className} rig--filled`} d={shape.d} strokeWidth={shape.width} />;
     case "curve":
       return (
         <path

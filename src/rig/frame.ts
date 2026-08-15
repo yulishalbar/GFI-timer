@@ -31,6 +31,7 @@ export type Shape =
   | { kind: "disc"; key: string; role: ShapeRole; at: Point; rx: number; ry: number }
   | { kind: "polyline"; key: string; role: ShapeRole; points: readonly Point[]; width: number; dashed?: boolean }
   | { kind: "polygon"; key: string; role: ShapeRole; points: readonly Point[]; width: number }
+  | { kind: "area"; key: string; role: ShapeRole; d: string; width: number }
   | { kind: "curve"; key: string; role: ShapeRole; from: Point; control: Point; to: Point; width: number };
 
 export type LimbId = "armNear" | "armFar" | "legNear" | "legFar";
@@ -62,6 +63,8 @@ export interface RigDefinition {
 const BODY_WIDTH = 11;
 const OUTLINE_WIDTH = 5;
 const TRACE_SAMPLES = 72;
+
+const format = ([x, y]: Point): string => `${x.toFixed(1)} ${y.toFixed(1)}`;
 
 const LIMB_JOINTS: Record<LimbId, readonly [JointId, JointId, JointId, JointId]> = {
   armNear: ["shoulderNear", "elbowNear", "wristNear", "handNear"],
@@ -123,11 +126,16 @@ function pushLimb(out: Shape[], joints: Joints, rig: RigDefinition, limb: LimbId
   });
 }
 
+const midpoint = (a: Point, b: Point): Point => [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2];
+
 /**
- * The torso is always a tapered quad. Its half-width is the pose's spread or
- * the body's own thickness, whichever is larger, so a side view (no spread)
- * and a front view (real shoulder width) are the same shape at different
- * widths and nothing pops as one interpolates into the other.
+ * The torso is a tapered band from hip to shoulder. Its half-width is the
+ * pose's spread or the body's own thickness, whichever is larger, so a side
+ * view (no spread) and a front view (real shoulder width) are the same shape at
+ * different widths and nothing pops as one interpolates into the other.
+ *
+ * Both long edges bow together by `spineBow`, which is what lets the back round
+ * and arch.
  */
 function pushTorso(out: Shape[], joints: Joints, pose: Pose, ghost: boolean): void {
   const prefix = ghost ? "ghost-" : "";
@@ -137,19 +145,42 @@ function pushTorso(out: Shape[], joints: Joints, pose: Pose, ghost: boolean): vo
   const shoulderHalf = Math.max(pose.shoulderSpread ?? 0, minHalf);
   const hipHalf = Math.max(pose.hipSpread ?? 0, minHalf);
   const corner = BODY_WIDTH * 0.4;
+  const bow = pose.spineBow ?? 0;
 
-  const points: Point[] = [
-    project(joints.shoulder, pose.spine - 90, shoulderHalf),
-    project(joints.shoulder, pose.spine + 90, shoulderHalf),
-    project(joints.hip, pose.spine + 90, hipHalf),
-    project(joints.hip, pose.spine - 90, hipHalf)
-  ];
+  const shoulderBack = project(joints.shoulder, pose.spine - 90, shoulderHalf);
+  const shoulderFront = project(joints.shoulder, pose.spine + 90, shoulderHalf);
+  const hipFront = project(joints.hip, pose.spine + 90, hipHalf);
+  const hipBack = project(joints.hip, pose.spine - 90, hipHalf);
+
+  // Control points sit twice the bow off the midline: a quadratic passes
+  // through half its control offset, so the drawn back bows by `bow`.
+  const backControl = project(midpoint(shoulderBack, hipBack), pose.spine - 90, bow * 2);
+  const frontControl = project(midpoint(shoulderFront, hipFront), pose.spine - 90, bow * 2);
+  const d =
+    `M${format(shoulderBack)}` +
+    `L${format(shoulderFront)}` +
+    `Q${format(frontControl)} ${format(hipFront)}` +
+    `L${format(hipBack)}` +
+    `Q${format(backControl)} ${format(shoulderBack)}Z`;
 
   if (!ghost) {
-    out.push({ kind: "polygon", key: `${prefix}torso-outline`, role: "outline", points, width: corner + OUTLINE_WIDTH });
+    out.push({ kind: "area", key: `${prefix}torso-outline`, role: "outline", d, width: corner + OUTLINE_WIDTH });
   }
-  out.push({ kind: "polygon", key: `${prefix}torso`, role: torsoRole, points, width: corner });
+  out.push({ kind: "area", key: `${prefix}torso`, role: torsoRole, d, width: corner });
 
+  // A nose on the silhouette. Folded and lying poses are otherwise ambiguous:
+  // face down and face up draw exactly the same shape.
+  const nose: Point[] | undefined =
+    pose.facing === undefined
+      ? undefined
+      : [
+          project(joints.head, pose.facing - 52, SEGMENT.headRadius * 0.94),
+          project(joints.head, pose.facing, SEGMENT.headRadius + 4.5),
+          project(joints.head, pose.facing + 52, SEGMENT.headRadius * 0.94)
+        ];
+
+  // Every outline before every fill, so the expanded shapes never cut notches
+  // out of the parts they are meant to sit behind.
   if (!ghost) {
     out.push({
       kind: "line",
@@ -159,6 +190,9 @@ function pushTorso(out: Shape[], joints: Joints, pose: Pose, ghost: boolean): vo
       to: joints.head,
       width: neckWidth + OUTLINE_WIDTH
     });
+    if (nose) {
+      out.push({ kind: "polygon", key: `${prefix}nose-outline`, role: "outline", points: nose, width: OUTLINE_WIDTH });
+    }
     out.push({
       kind: "dot",
       key: `${prefix}head-outline`,
@@ -168,6 +202,9 @@ function pushTorso(out: Shape[], joints: Joints, pose: Pose, ghost: boolean): vo
     });
   }
   out.push({ kind: "line", key: `${prefix}neck`, role: torsoRole, from: joints.shoulder, to: joints.head, width: neckWidth });
+  if (nose) {
+    out.push({ kind: "polygon", key: `${prefix}nose`, role: torsoRole, points: nose, width: 0 });
+  }
   out.push({ kind: "dot", key: `${prefix}head`, role: torsoRole, at: joints.head, radius: SEGMENT.headRadius });
 }
 

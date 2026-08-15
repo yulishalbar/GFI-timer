@@ -35,6 +35,20 @@ export interface Pose {
   /** Neck direction. Defaults to the spine direction. */
   head?: number;
   spineScale?: number;
+  /**
+   * Sideways bow of the back, perpendicular to the hip-to-shoulder line.
+   * Positive rounds the spine toward `spine - 90`. Flexion and extension carry
+   * a lot of these movements — cat and cow, roll-ups, forward folds — and a
+   * straight segment cannot show any of it.
+   */
+  spineBow?: number;
+  /**
+   * Absolute direction the face points, drawn as a nose on the silhouette.
+   * Without it a folded or lying figure is ambiguous — face down and face up
+   * read identically. Omit on front and overhead views, where a profile nose
+   * would be wrong.
+   */
+  facing?: number;
   armNear: Chain;
   armFar: Chain;
   legNear: Chain;
@@ -225,12 +239,21 @@ export function lerpPose(a: Pose, b: Pose, t: number): Pose {
   const ikLegFar = lerpOptionalPoint(a.ikLegFar, b.ikLegFar, t);
   const ikArmNear = lerpOptionalPoint(a.ikArmNear, b.ikArmNear, t);
   const ikArmFar = lerpOptionalPoint(a.ikArmFar, b.ikArmFar, t);
+  // Bend direction is discrete, so it cannot be blended. Falling back to the
+  // other pose stops a loop that only names it at one end from flipping the
+  // knee inside out on the way back.
+  const ikBend = a.ikBend ?? b.ikBend;
+  const ikArmBend = a.ikArmBend ?? b.ikArmBend;
 
   return {
     hip: lerpPoint(a.hip, b.hip, t),
     spine: lerp(a.spine, b.spine, t),
     head: lerp(a.head ?? a.spine, b.head ?? b.spine, t),
     spineScale: lerp(a.spineScale ?? 1, b.spineScale ?? 1, t),
+    spineBow: lerp(a.spineBow ?? 0, b.spineBow ?? 0, t),
+    ...(a.facing === undefined || b.facing === undefined
+      ? {}
+      : { facing: lerp(a.facing, b.facing, t) }),
     armNear: lerpChain(a.armNear, b.armNear, t),
     armFar: lerpChain(a.armFar, b.armFar, t),
     legNear: lerpChain(a.legNear, b.legNear, t),
@@ -245,8 +268,8 @@ export function lerpPose(a: Pose, b: Pose, t: number): Pose {
     ...(ikLegFar === undefined ? {} : { ikLegFar }),
     ...(ikArmNear === undefined ? {} : { ikArmNear }),
     ...(ikArmFar === undefined ? {} : { ikArmFar }),
-    ...(a.ikBend === undefined ? {} : { ikBend: a.ikBend }),
-    ...(a.ikArmBend === undefined ? {} : { ikArmBend: a.ikArmBend })
+    ...(ikBend === undefined ? {} : { ikBend }),
+    ...(ikArmBend === undefined ? {} : { ikArmBend })
   };
 }
 

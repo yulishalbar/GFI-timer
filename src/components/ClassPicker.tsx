@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import type { ExerciseCatalog, ExerciseDefinition, TagDefinition } from "../domain/catalog-definition";
-import { filterLibraryItems } from "../domain/library-search";
+import { distinctMovements, filterLibraryItems } from "../domain/library-search";
 import type { CompiledClass } from "../domain/timeline";
 import { formatMinutes } from "../lib/format-duration";
 import { getRig } from "../rig/rigs";
@@ -54,11 +54,17 @@ export function ClassPicker({
   const [tab, setTab] = useState<LibraryTab>("courses");
   const [query, setQuery] = useState("");
   const [selectedTags, setSelectedTags] = useState<ReadonlySet<string>>(() => new Set());
+  // The library lists movements, not catalog records: the same movement can be
+  // stored once per course and once per side.
+  const movements = useMemo(
+    () => distinctMovements(exerciseCatalog.exercises),
+    [exerciseCatalog.exercises]
+  );
   const usedTagIds = useMemo(() => new Set(
     tab === "courses"
       ? classes.flatMap((fitnessClass) => [...(courseTagsById[fitnessClass.definition.id] ?? [])])
-      : exerciseCatalog.exercises.flatMap((exercise) => exercise.tags)
-  ), [classes, courseTagsById, exerciseCatalog.exercises, tab]);
+      : movements.flatMap((exercise) => exercise.tags)
+  ), [classes, courseTagsById, movements, tab]);
   const visibleTags = exerciseCatalog.tags.filter((tag) => usedTagIds.has(tag.id));
   const groupedTags = Object.entries(visibleTags.reduce<Record<string, TagDefinition[]>>(
     (groups, tag) => {
@@ -83,7 +89,7 @@ export function ClassPicker({
     selectedTags
   );
   const exerciseResults = filterLibraryItems(
-    exerciseCatalog.exercises.map((exercise) => ({
+    movements.map((exercise) => ({
       exercise,
       searchText: [exercise.name, exercise.shortDescription ?? "", exercise.longDescription ?? ""].join(" "),
       tags: exercise.tags
@@ -122,7 +128,7 @@ export function ClassPicker({
           Courses <span>{classes.length}</span>
         </button>
         <button type="button" aria-pressed={tab === "exercises"} onClick={() => selectTab("exercises")}>
-          Exercises <span>{exerciseCatalog.exercises.length}</span>
+          Exercises <span>{movements.length}</span>
         </button>
       </nav>
 

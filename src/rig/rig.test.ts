@@ -80,6 +80,11 @@ describe("rig definitions", () => {
   it.each(rigEntries)("%s produces finite geometry across the loop", (id, rig) => {
     SAMPLE_PHASES.forEach((phase) => {
       buildFrame(rig, phase).forEach((shape) => {
+        if (shape.kind === "area") {
+          // Path data is a string, so check no coordinate rendered as NaN.
+          expect(shape.d, `${id} ${shape.key}`).not.toMatch(/NaN|Infinity/);
+          return;
+        }
         const points =
           shape.kind === "line"
             ? [shape.from, shape.to]

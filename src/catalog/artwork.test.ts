@@ -92,9 +92,9 @@ describe("exercise artwork", () => {
       .filter(([, names]) => names.size > 1)
       .map(([path, names]) => `${path} -> ${[...names].join(", ")}`);
 
-    // Tightening target: every entry here is an exercise still waiting for a
-    // rig. It must only ever shrink.
-    expect(shared.length, `generic art reused across movements:\n${shared.join("\n")}`).toBeLessThanOrEqual(4);
+    // Reached zero once the side-lying family moved onto rigs. It must stay
+    // there: a movement is never explained by another movement's artwork.
+    expect(shared, "generic art reused across movements").toEqual([]);
   });
 
   it("has migrated the plank and slider floor movements off their images", () => {
@@ -116,6 +116,6 @@ describe("exercise artwork", () => {
       (exercise) => !exercise.rig && !exercise.illustration && !exercise.motionIllustrations
     );
     // Tightening target: this must only ever go down as batches land.
-    expect(withoutMedia.length).toBeLessThanOrEqual(56);
+    expect(withoutMedia.length).toBeLessThanOrEqual(23);
   });
 });
