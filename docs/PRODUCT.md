@@ -86,9 +86,15 @@ step and End class, but they must not crowd the interface.
   During the rest, the phase heading switches to the circuit being prepared for,
   while the preview emphasizes its first exercise and lists that circuit's
   unique exercises.
-- During the final ten seconds, current-step instructions recede and the
-  upcoming exercise receives greater focus. The final three seconds use an
-  unmistakable enlarged visual treatment that respects reduced-motion settings.
+- During the final ten seconds of every step, the upcoming exercise receives
+  greater focus and its visual guide is previewed alongside the current one.
+  The lead is a fixed ten seconds regardless of step length; on a step shorter
+  than that the preview is simply up throughout. The current movement stays
+  legible during the handover - on a narrow screen it keeps full size and
+  contrast and the look-ahead shrinks to a thumbnail, because the instructor is
+  still performing the current movement while the preview is up. The final
+  three seconds use an unmistakable enlarged visual treatment that respects
+  reduced-motion settings.
 - Completing the last step enters a completed state rather than wrapping. Real
   elapsed time, wake lock, and session recovery remain active until the
   instructor explicitly stops the timer from the completion screen.

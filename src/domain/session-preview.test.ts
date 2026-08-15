@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { compileClass } from "./compile-class";
-import { getSessionPreview, previewLeadMs } from "./session-preview";
+import { getSessionPreview, PREVIEW_LEAD_MS } from "./session-preview";
 
 const timeline = compileClass({
   schemaVersion: 1,
@@ -48,26 +48,8 @@ describe("getSessionPreview", () => {
   });
 });
 
-describe("previewLeadMs", () => {
-  it("gives a long step the full ten-second lead", () => {
-    expect(previewLeadMs(60_000)).toBe(10_000);
-    expect(previewLeadMs(40_000)).toBe(10_000);
-  });
-
-  it("shortens the lead for a thirty-second drill", () => {
-    expect(previewLeadMs(30_000)).toBe(5_000);
-    expect(previewLeadMs(20_000)).toBe(5_000);
-  });
-
-  it("skips the preview entirely on steps under twenty seconds", () => {
-    expect(previewLeadMs(19_999)).toBe(0);
-    expect(previewLeadMs(10_000)).toBe(0);
-    expect(previewLeadMs(0)).toBe(0);
-  });
-
-  it("never leads by more than a quarter of the step", () => {
-    [20_000, 30_000, 40_000, 60_000, 180_000].forEach((duration) => {
-      expect(previewLeadMs(duration)).toBeLessThanOrEqual(duration / 2);
-    });
+describe("PREVIEW_LEAD_MS", () => {
+  it("leads the handover by ten seconds on every step", () => {
+    expect(PREVIEW_LEAD_MS).toBe(10_000);
   });
 });

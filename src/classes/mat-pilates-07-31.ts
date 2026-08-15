@@ -1,10 +1,14 @@
 import type { FitnessClassDefinition } from "../domain/class-definition";
+import { builtInTags } from "../catalog/tags";
+import { normalizeDatedCatalog } from "../catalog/normalize-dated";
+import { adaptLegacyClassToCatalog } from "../domain/legacy-catalog-adapter";
+import { resolveCourseDefinition } from "../domain/resolve-course";
 
-export const matPilates0731 = {
+export const matPilates0731Legacy = {
   schemaVersion: 1,
-  id: "mat-pilates-07-31",
+  id: "mat-pilates-07-31-v1",
   version: 2,
-  title: "Mat Pilates — July 31",
+  title: "Mat Pilates — July 31 V1",
   description:
     "60 MIN MAT PILATES- WARM UP, CORE, ARMS, GLUTES, LOWER BODY, & COOL DOWN. Equipment: mat. Focus on the mind and body connection, stretch the total body, and work the upper body, core, and legs.",
   phases: [
@@ -380,29 +384,32 @@ export const matPilates0731 = {
           longDescription:
             "Twist towards the left side, grabbing left knee with right hand and left hand towards the back. Switch sides after 30 sec"
         },
+        // The second pair was authored as (L) as well, which left the right side
+        // unstretched. Corrected to (R), and the twist renamed to name the
+        // movement rather than one side of it, so the side badge can carry it.
         {
           type: "exercise",
-          id: "knee-chest-left-one",
+          id: "knee-chest-left",
           name: "Knee to chest stretch (L)",
           durationSeconds: 30,
           shortDescription: "Slowly roll onto back"
         },
         {
           type: "exercise",
-          id: "knee-left-one",
-          name: "Knee to left (L)",
+          id: "knee-across-left",
+          name: "Knee across the body (L)",
           durationSeconds: 30
         },
         {
           type: "exercise",
-          id: "knee-chest-left-two",
-          name: "Knee to chest stretch (L)",
+          id: "knee-chest-right",
+          name: "Knee to chest stretch (R)",
           durationSeconds: 30
         },
         {
           type: "exercise",
-          id: "knee-left-two",
-          name: "Knee to left (L)",
+          id: "knee-across-right",
+          name: "Knee across the body (R)",
           durationSeconds: 30
         },
         {
@@ -632,3 +639,24 @@ function sideBodySide(side: Side): FitnessClassDefinition["phases"][number]["ite
     }
   ];
 }
+
+const adapted0731 = normalizeDatedCatalog(adaptLegacyClassToCatalog(matPilates0731Legacy, {
+  tags: builtInTags,
+  courseTags: ["mat-pilates", "mat", "full-body"],
+  exerciseTags: ["mat-pilates", "mat"]
+}));
+
+export const matPilates0731Catalog = {
+  catalog: adapted0731.catalog,
+  course: {
+    ...adapted0731.course,
+    id: "mat-pilates-07-31",
+    version: 3,
+    title: "Mat Pilates — July 31"
+  }
+};
+
+export const matPilates0731 = resolveCourseDefinition(
+  matPilates0731Catalog.catalog,
+  matPilates0731Catalog.course
+);

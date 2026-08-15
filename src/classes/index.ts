@@ -1,15 +1,15 @@
 import { compileClass } from "../domain/compile-class";
 import type { CompiledClass } from "../domain/timeline";
-import { matPilates0724 } from "./mat-pilates-07-24";
-import { matPilates0731 } from "./mat-pilates-07-31";
+import { matPilates0724, matPilates0724Catalog } from "./mat-pilates-07-24";
+import { matPilates0731, matPilates0731Catalog } from "./mat-pilates-07-31";
 import { hiitPilatesSliders, hiitPilatesSlidersCatalog } from "./hiit-pilates-sliders";
 import { matPilatesBand, matPilatesBandCatalog } from "./mat-pilates-band";
 import { mergeExerciseCatalogs } from "../catalog/merge-catalogs";
 
 /**
- * The V1 sliders and band courses are not listed: they are the hand-authored
- * originals that their catalog-backed replacements were built from, and both
- * now compile to the same timeline. They stay in the repository because the
+ * Every course here is catalog-backed. The V1 definitions are not listed: they
+ * are the hand-authored originals their replacements were built from, and each
+ * now compiles to the same timeline. They stay in the repository because the
  * catalog is derived from them and the equivalence tests compare against them,
  * but showing both would just be the same class twice.
  */
@@ -24,7 +24,9 @@ export const availableClasses: readonly CompiledClass[] = classDefinitions.map(c
 
 export const availableExerciseCatalog = mergeExerciseCatalogs(
   hiitPilatesSlidersCatalog.catalog,
-  matPilatesBandCatalog.catalog
+  matPilatesBandCatalog.catalog,
+  matPilates0731Catalog.catalog,
+  matPilates0724Catalog.catalog
 );
 
 export const courseTagsById: Readonly<Record<string, readonly string[]>> = {

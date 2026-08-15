@@ -64,13 +64,15 @@ test("opens a compiled class schedule and returns to the picker", async ({ page 
   expect(transitionBox?.x ?? 0).toBeGreaterThan(exerciseBox?.x ?? 0);
 
   await page.getByRole("button", { name: "Expand all pose details" }).click();
+  // The class was authored with its own wording for a movement the pool already
+  // had; the merge policy gives it the pooled name and the pooled rig.
   const childPosePreview = page
     .locator(".step-row")
-    .filter({ hasText: "Child's pose and side-body stretch" });
+    .filter({ hasText: "Child's pose with side stretches" });
   await expect(childPosePreview.locator(".pose-details")).toBeVisible();
   await expect(childPosePreview).toContainText("Bring the big toes together");
-  await expect(childPosePreview.getByAltText("Illustration for Child's pose and side-body stretch"))
-    .toBeVisible();
+  await expect(childPosePreview.locator("img")).toHaveCount(0);
+  await expectRigAnimates(childPosePreview.locator("svg.exercise-rig"));
 
   await startButton.click();
   await expect(page.getByRole("heading", { name: "Class introduction" })).toBeVisible();
@@ -117,8 +119,8 @@ test("opens a compiled class schedule and returns to the picker", async ({ page 
   await expect(countdown).toHaveText(pausedCountdown ?? "");
 
   await page.getByRole("button", { name: "Next" }).click();
-  await expect(page.getByRole("heading", { name: "Child's pose and side-body stretch" })).toBeVisible();
-  await expect(page.locator(".exercise-details img")).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Child's pose with side stretches" })).toBeVisible();
+  await expectRigAnimates(page.locator(".exercise-details svg.exercise-rig"));
   const fullDescription = page.locator(".exercise-details__long");
   await expect(fullDescription).toContainText("Bring the big toes together");
   await expect(fullDescription).toBeVisible();
@@ -137,9 +139,7 @@ test("opens a compiled class schedule and returns to the picker", async ({ page 
   await expect(page.locator(".session-shell")).toHaveClass(/session-shell--ending/);
   await expect(page.locator(".current-step-details")).toBeVisible();
   await expect(page.getByRole("region", { name: "Next step" })).toContainText("Cat");
-  // No preview box here: this class is not on rigs yet, so the next movement
-  // has no visual to show and an empty frame would be worse than none.
-  await expect(page.locator(".next-step__preview")).toHaveCount(0);
+  await expect(page.locator(".next-step__preview svg.exercise-rig")).toBeVisible();
   await page.getByRole("slider", { name: "Seek within current step" }).fill("30000");
   await expect(page.locator(".session-shell")).not.toHaveClass(/session-shell--ending/);
   await expect(page.getByRole("slider", { name: "Seek within current step" })).toHaveValue("30000");
@@ -224,9 +224,13 @@ test("opens and starts the July 31 class with completed pose guidance", async ({
   await expect(kneePull.getByAltText("Illustration for Knee pulls alternating legs")).toBeVisible();
   const shavasana = page.locator(".step-row").filter({ hasText: "Shavasana" });
   await expect(shavasana.getByLabel("Pose guide for Shavasana")).toBeVisible();
+  // Side moved off the name and onto the placement badge when the class was
+  // converted, so the movement is named once and carries a directional badge.
   const deadlift = page
     .locator(".step-row")
-    .filter({ hasText: "single-leg deadlift (SLDL) to knee tuck (R)" });
+    .filter({ hasText: "Single-leg deadlift (SLDL) to knee tuck" })
+    .first();
+  await expect(deadlift.getByLabel("Right side")).toBeVisible();
   const motionFrames = deadlift.locator(".exercise-motion img");
   await expect(motionFrames).toHaveCount(2);
   await expect
@@ -272,7 +276,7 @@ test("opens and starts the catalog-backed sliders course", async ({ page }) => {
   await page.getByRole("button", { name: "Start class" }).click();
   await expect(page.getByRole("heading", { name: "Child's pose" })).toBeVisible();
 
-  // Child's pose runs 60s, so the handover leads by 10s. The next movement is
+  // Child's pose runs 60s and the handover leads by 10s. The next movement is
   // rigged, so it gets a dimmed preview rather than the current step vanishing.
   await page.getByRole("slider", { name: "Seek within current step" }).fill("52000");
   await expect(page.locator(".session-shell")).toHaveClass(/session-shell--ending/);
@@ -283,6 +287,14 @@ test("opens and starts the catalog-backed sliders course", async ({ page }) => {
   expect(Number(await preview.evaluate((el) => getComputedStyle(el).opacity))).toBeLessThan(1);
   await page.getByRole("slider", { name: "Seek within current step" }).fill("20000");
   await expect(page.locator(".next-step__preview")).toHaveCount(0);
+
+  // The lead is the same ten seconds on a short step: this one runs 30s, and
+  // eight seconds out it is already handing over.
+  await page.getByRole("button", { name: "Next" }).click();
+  await expect(page.getByRole("heading", { name: /cat and cows/ })).toBeVisible();
+  await page.getByRole("slider", { name: "Seek within current step" }).fill("22000");
+  await expect(page.locator(".session-shell")).toHaveClass(/session-shell--ending/);
+  await expect(page.locator(".next-step__preview")).toBeVisible();
 });
 
 /**
@@ -351,7 +363,7 @@ test("keeps real elapsed time running after scheduled completion until stopped",
       JSON.stringify({
         version: 2,
         classId: "mat-pilates-07-31",
-        classVersion: 2,
+        classVersion: 3,
         startedAtEpochMs: now - 5_000,
         elapsedMsFloor: 4_000,
         status: "running",

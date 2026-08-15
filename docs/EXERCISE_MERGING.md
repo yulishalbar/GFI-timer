@@ -51,6 +51,11 @@ So merge only when all three should genuinely be shared.
 
 ## Where the mapping lives
 
+- `src/catalog/exercise-names.ts` is the policy in code. It strips the side and
+  then applies `MERGED_INTO`, an explicit table of "this wording means that
+  pooled movement". Every entry is one of the obviously-same cases above;
+  anything doubtful is deliberately absent, so it stays its own movement until
+  someone decides otherwise.
 - `src/rig/assignments.ts` maps an exercise name to its rig. Two names that mean
   the same movement may point at the same rig even before their records are
   merged — that is how the same movement stays drawn one way everywhere.
@@ -60,3 +65,32 @@ So merge only when all three should genuinely be shared.
 
 A test pins the library at zero repeated names, so a duplicate that slips into
 the catalog shows up as a failure rather than as a second card.
+
+## Renaming the pool entry
+
+When the incoming wording is the clearer one, rename at the source — in the V1
+definition the catalog is derived from — rather than adding a table entry
+pointing the good name at the bad one. The catalog picks the change up, the
+equivalence test stays meaningful, and the movement has exactly one name.
+
+This is how `The one leg stretch - alternating sides` became `Single-leg
+stretch` and `Lower down slowly` became `Standing roll down`.
+
+## Decisions taken on the July 24 and July 31 conversion
+
+Merged, as obviously the same movement: `Cat–cow`, `Roll-ups`, `Clam shell
+openers`, `High-plank hold`, `Child's pose and side-body stretch`, `Hamstring
+stretch and seated forward fold`, `Figure four and spinal twist`, `Hovering
+tabletop to downward dog`, `Glute bridge pulses`, `Leg lifts`, `Large leg
+circles`, `Leg circle`, `Single leg stretch`, plus casing fixes.
+
+Kept separate, because the qualifier or the extra element is the exercise:
+`Half rainbow` against `Rainbow`, `Full-range glute bridge` against `Glute
+bridge`, `Small arm circles` against `Arm circles`, `Clam shell openers with
+kick` against `Clamshell openers`, `Criss-cross` against `Single-leg stretch`,
+`Alternating bird dogs` and `Bird-dog extension and crunch` against each other
+and against `Alternating bird dog → add wrist circles`.
+
+Kept separate because the position differs despite similar wording: `Side
+crunch` (quadruped) against `Side-body crunches` (side-lying), and `Pulse leg at
+the top` (side-lying) against `Leg pulses` (quadruped).

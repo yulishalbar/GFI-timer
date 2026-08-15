@@ -234,7 +234,9 @@ const bridge = (
   legFar: [0, 0, -90],
   ...(footNear === null ? {} : { ikLegNear: footNear }),
   ikLegFar: footFar,
-  ikBend: -1,
+  // Heel planted, hip lifted, so the knee is the high point of the leg. The
+  // other bend direction folds the knee down through the mat.
+  ikBend: 1,
   ...over
 });
 
@@ -695,11 +697,17 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
     focus: ["legNear"],
     trace: "ankleNear",
     // One leg stays long on the mat while the other draws the circle overhead.
+    // The circling leg stays near its full reach so it reads as a straight leg
+    // pivoting at the hip: an arc traced by a bent knee is a different exercise.
+    // Seen from the side the circle is a narrow ellipse, so the sweep is wide
+    // and the reach barely changes.
     poses: [0, 1, 2, 3, 4, 5, 6, 7].map((index) => {
       const t = (index / 8) * Math.PI * 2;
+      const angle = (256 + Math.cos(t) * 17) * (Math.PI / 180);
+      const reach = 68 + Math.sin(t) * 3;
       return supine({
-        ikBend: -1,
-        ikLegNear: [212 + Math.cos(t) * 18, 105 + Math.sin(t) * 18]
+        ikBend: 1,
+        ikLegNear: [186 + Math.cos(angle) * reach, 150 + Math.sin(angle) * reach]
       });
     }) as [Pose, ...Pose[]]
   },
@@ -784,7 +792,9 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
         armFar: [87, 2, 82],
         legNear: [0, 0, 20],
         legFar: [0, 0, 20],
-        ikBend: -1,
+        // Seated with the feet on sliders: the knees rise as the feet draw in,
+        // so the knee belongs above the hip-to-ankle line, not below the mat.
+        ikBend: 1,
         ikLegNear: [252, 158],
         ikLegFar: [254, 158]
       },
@@ -797,7 +807,7 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
         armFar: [87, 2, 82],
         legNear: [0, 0, -20],
         legFar: [0, 0, -20],
-        ikBend: -1,
+        ikBend: 1,
         ikLegNear: [210, 158],
         ikLegFar: [212, 158]
       }
@@ -1302,8 +1312,11 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
         hip: [180, 150],
         spine: 322,
         spineBow: -13,
-        head: 8,
-        facing: 40,
+        // Written past 360 rather than wrapped to 8 and 40: interpolation is
+        // linear, so the wrapped value would rotate the head and face the long
+        // way round - backwards through the body - on the way into the fold.
+        head: 368,
+        facing: 400,
         armNear: [14, 6, 4],
         armFar: [16, 6, 4],
         legNear: [-2, 2, -20],

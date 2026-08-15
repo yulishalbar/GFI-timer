@@ -139,6 +139,49 @@ describe("rig definitions", () => {
     });
   });
 
+  it("never rotates a joint the long way round between two poses", () => {
+    // Angles interpolate linearly, so writing 8 where 368 is meant sends the
+    // head sweeping backwards through the body on its way to the same place.
+    rigEntries.forEach(([id, rig]) => {
+      rig.poses.forEach((pose, index) => {
+        const next = rig.poses[index + 1];
+        if (!next) return;
+        (["spine", "head", "facing"] as const).forEach((joint) => {
+          const from = pose[joint] ?? pose.spine;
+          const to = next[joint] ?? next.spine;
+          expect(
+            Math.abs(to - from),
+            `${id} pose ${index}->${index + 1}: ${joint} ${from}->${to} takes the long way; write the second value past 360 instead`
+          ).toBeLessThanOrEqual(180);
+        });
+      });
+    });
+  });
+
+  it("bends a knee away from the mat when the foot is planted on a target", () => {
+    // A foot pinned by inverse kinematics has two solutions. The wrong one
+    // folds the knee downward, which reads as a leg bending backwards and can
+    // put the knee through the floor. Only rigs that draw a mat are checked:
+    // in the overhead views, down the screen is along the mat, not into it.
+    rigEntries.forEach(([id, rig]) => {
+      if (rig.groundY === undefined) return;
+      rig.poses.forEach((pose, index) => {
+        const joints = solvePose(pose);
+        ([
+          ["near", pose.ikLegNear, joints.hipNear, joints.kneeNear, joints.ankleNear],
+          ["far", pose.ikLegFar, joints.hipFar, joints.kneeFar, joints.ankleFar]
+        ] as const).forEach(([side, target, hip, knee, ankle]) => {
+          if (!target) return;
+          const lowest = Math.max(hip[1], ankle[1]);
+          expect(
+            knee[1],
+            `${id} pose ${index}: the ${side} knee folds below both the hip and the ankle`
+          ).toBeLessThan(lowest + 1);
+        });
+      });
+    });
+  });
+
   it("holds a static pose without a ghost or a path", () => {
     const still = rigEntries.filter(([, rig]) => rig.tempoMs === 0);
     still.forEach(([id, rig]) => {

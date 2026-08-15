@@ -1336,8 +1336,10 @@ h1 {
 }
 
 /* Approaching the handover the current step steps back rather than vanishing:
-   it is still what the class is doing. */
-.session-shell--ending .current-step-details {
+   it is still what the class is doing. A rest is exempt - the lead is a fixed
+   ten seconds, so a short transition would otherwise spend its whole duration
+   dimmed, and its cue is the one thing the instructor is reading. */
+.session-shell--ending:not(.session-shell--rest) .current-step-details {
   opacity: 0.45;
 }
 
@@ -1704,7 +1706,8 @@ h1 {
     margin-top: 0.4rem;
   }
 
-  .session-shell--ending .current-step-details {
+  /* Matches the specificity of the wide rule it overrides, :not() included. */
+  .session-shell--ending:not(.session-shell--rest) .current-step-details {
     opacity: 1;
   }
 
@@ -1726,6 +1729,15 @@ h1 {
   .exercise-details img {
     width: 8rem;
     height: 6rem;
+  }
+
+  /* A rig stacks above the cue rather than sitting beside it, so at full bleed
+     its 16:9 height plus a long cue runs under the controls. Bounding the width
+     bounds the height, and the guide still reads as the main thing on screen. */
+  .exercise-details .exercise-rig,
+  .exercise-details .exercise-motion {
+    width: min(100%, 15rem);
+    margin-inline: auto;
   }
 
   .next-step,

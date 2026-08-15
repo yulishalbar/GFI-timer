@@ -142,11 +142,24 @@ Three properties the tests pin rather than merely cap:
 - every one is drawn from pose data, not an image,
 - no exercise is drawn with another exercise's artwork.
 
-The dated July 24 and July 31 classes are still in the legacy format with their
-exercises embedded, so they are not part of this count and still reference a few
-legacy SVGs. Converting them is tracked separately; see
-[Adding an exercise to the catalog](EXERCISE_MERGING.md) for how their exercises
-should be folded into the pool.
+### The backlog
+
+Converting the dated July 24 and July 31 classes brought their movements into
+the shared pool. Roughly a third of them merged into movements that were already
+rigged; the rest are genuinely new and no rig has been authored for them yet, so
+all three properties above are currently stated against an explicit backlog
+rather than against zero.
+
+`AWAITING_RIG` in `src/catalog/artwork.test.ts` is that backlog, and it is a
+target rather than a permission: the assertions compare against it exactly, so
+authoring a rig fails the suite until the name is deleted from the list. It can
+only shrink. When it reaches zero the checks collapse back to the three
+unconditional properties.
+
+A handful of those movements still show a legacy still, including four that
+share one — `quadruped-leg-series.svg` and `high-plank.svg` each stand in for
+three different movements. That is the exact failure the rig was built to end,
+and it is temporary: each leaves the list as its rig lands.
 
 ### Known refinements
 

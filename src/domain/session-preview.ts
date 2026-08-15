@@ -8,16 +8,17 @@ export interface SessionPreview {
 /**
  * How long before a step ends to start previewing the next movement.
  *
- * A fixed ten seconds is a third of a thirty-second drill and half of a twenty
- * second one, so it arrives while there is still real work left to do. The lead
- * scales with the step, and the shortest steps get none at all: there is no
- * point pulling attention away from something that is nearly over anyway.
+ * The lead used to shrink on short steps, back when the look-ahead displaced
+ * the movement being performed. It no longer does: the current guide keeps its
+ * size and contrast and the preview sits beside it as a thumbnail, so showing
+ * the handover early costs the instructor nothing. A single value also means
+ * the handover always arrives at the same point on the countdown, which is one
+ * less thing to relearn per drill.
+ *
+ * On a step shorter than the lead the preview is simply up for its whole
+ * duration - which is what a five-second transition wants anyway.
  */
-export function previewLeadMs(stepDurationMs: number): number {
-  if (stepDurationMs < 20_000) return 0;
-  if (stepDurationMs <= 30_000) return 5_000;
-  return 10_000;
-}
+export const PREVIEW_LEAD_MS = 10_000;
 
 function findNextExerciseIndex(steps: readonly RuntimeStep[], fromIndex: number): number {
   return steps.findIndex((step, index) => index > fromIndex && step.kind === "exercise");

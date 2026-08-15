@@ -136,17 +136,23 @@ Candidate features, prioritized after real class use:
   no offline or session-timer regression.
 - Establish stable serialization and a repository boundary for Version 3.
 
-The unversioned HIIT Pilates with Sliders and Mat Pilates with Band courses are
-now catalog-backed defaults. Explicit V1 fallbacks remain under separate stable
-IDs for direct comparison and rollback. Both migrations have locked timeline
-and guidance equivalence coverage, normalized left/right placements, accessible
-directional badges, and a merged Exercise library. Next: finish tag specificity
-and media policy, then migrate July 24 and July 31 through the same process.
+All four courses are now catalog-backed. Explicit V1 definitions remain under
+separate stable IDs as the source each catalog is derived from and as the
+equivalence baseline; they are not listed in the picker. Every migration has
+normalized left/right placements and accessible directional badges, and the
+Sliders and Band migrations additionally lock timeline and guidance equivalence
+against their originals.
+
+The July 24 and July 31 migrations also applied the merge policy in
+[`EXERCISE_MERGING.md`](EXERCISE_MERGING.md): a movement the pool already had is
+referenced, not copied. That is what took 198 authored exercise records down to
+138 distinct movements, 79 of them rigged. Next: author rigs for the 57 the two
+classes introduced — see the backlog in [`ARTWORK.md`](ARTWORK.md) — then finish
+tag specificity and media policy.
 
 Local discovery is also available as an early pilot: the picker has separate
 Courses and Exercises tabs with offline text search and tag filters. All courses
-are searchable now; the Exercise library contains the merged Sliders and Band
-catalog and will expand with each migrated course.
+are searchable, and the Exercise library is the merged catalog of all four.
 
 Detailed slices and exit criteria are in [`V2_CATALOG.md`](V2_CATALOG.md).
 

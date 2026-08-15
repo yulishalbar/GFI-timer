@@ -16,7 +16,7 @@ import { StepProgress } from "./StepProgress";
 import { useAudioCues } from "../hooks/useAudioCues";
 import { useWakeLock } from "../hooks/useWakeLock";
 import { initializeAudioCues } from "../lib/audio-cues";
-import { getSessionPreview, previewLeadMs } from "../domain/session-preview";
+import { getSessionPreview, PREVIEW_LEAD_MS } from "../domain/session-preview";
 import { hasExerciseMedia } from "../domain/step-media";
 import { ExerciseSideBadge } from "./ExerciseSideBadge";
 
@@ -92,9 +92,7 @@ export function SessionScreen({
   const preview = getSessionPreview(fitnessClass.steps, state.stepIndex);
   const displayedPhase =
     currentStep.kind === "rest" && preview.primary ? preview.primary.phase : currentStep.phase;
-  // The lead scales with the step: see previewLeadMs.
-  const previewLead = previewLeadMs(stepDurationMs);
-  const isEnding = previewLead > 0 && remainingMs <= previewLead;
+  const isEnding = remainingMs <= PREVIEW_LEAD_MS;
   const isFinalThreeSeconds = state.status === "running" && remainingMs <= 3_000;
 
   const handleSeekStart = () => {

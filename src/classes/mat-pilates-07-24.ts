@@ -1,10 +1,14 @@
 import type { FitnessClassDefinition } from "../domain/class-definition";
+import { builtInTags } from "../catalog/tags";
+import { normalizeDatedCatalog } from "../catalog/normalize-dated";
+import { adaptLegacyClassToCatalog } from "../domain/legacy-catalog-adapter";
+import { resolveCourseDefinition } from "../domain/resolve-course";
 
-export const matPilates0724 = {
+export const matPilates0724Legacy = {
   schemaVersion: 1,
-  id: "mat-pilates-07-24",
+  id: "mat-pilates-07-24-v1",
   version: 2,
-  title: "Mat Pilates — July 24",
+  title: "Mat Pilates — July 24 V1",
   description:
     "A full-body mat class with warmup, core, glutes, lower body, side body, and cooldown. Mat required.",
   phases: [
@@ -246,3 +250,24 @@ export const matPilates0724 = {
     }
   ]
 } satisfies FitnessClassDefinition;
+
+const adapted0724 = normalizeDatedCatalog(adaptLegacyClassToCatalog(matPilates0724Legacy, {
+  tags: builtInTags,
+  courseTags: ["mat-pilates", "mat", "full-body"],
+  exerciseTags: ["mat-pilates", "mat"]
+}));
+
+export const matPilates0724Catalog = {
+  catalog: adapted0724.catalog,
+  course: {
+    ...adapted0724.course,
+    id: "mat-pilates-07-24",
+    version: 3,
+    title: "Mat Pilates — July 24"
+  }
+};
+
+export const matPilates0724 = resolveCourseDefinition(
+  matPilates0724Catalog.catalog,
+  matPilates0724Catalog.course
+);

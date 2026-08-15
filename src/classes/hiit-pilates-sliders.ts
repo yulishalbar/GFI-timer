@@ -32,7 +32,7 @@ const exercise = (
 const absMoves = [
   exercise("crunch-legs-lifted", "Crunch w legs lifted", 40,
     "Knees bent, feet grounded on the mat. Exhale as you lift the head and shoulders, drawing the navel toward the spine and curling the ribcage toward the pelvis. Inhale as you slowly lower back to the mat with control. R: option to keep legs on mat."),
-  exercise("one-leg-stretch", "The one leg stretch - alternating sides", 40,
+  exercise("one-leg-stretch", "Single-leg stretch", 40,
     "Lift head and shoulders into an abdominal curl with legs in tabletop. Exhale as one leg extends long and the opposite knee draws toward the chest. Inhale as you switch legs in a controlled alternating motion while maintaining abdominal engagement. R: option to keep head on mat. P: go faster."),
   exercise("bicycle-legs", "Bicycle legs", 40,
     "From an abdominal curl, alternate the legs in a cycling motion. Exhale as one leg extends long, inhale as you transition and switch legs. Maintain a steady torso and controlled breathing rhythm. P: perform slower."),
@@ -177,7 +177,7 @@ export const hiitPilatesSlidersLegacy = {
         rest("cooldown-transition", 30, "Come to knees."),
         exercise("seated-forward-fold", "Hamstring stretch → seated forward fold", 120,
           "Sit with legs extended forward. Inhale reaching arms overhead to lengthen the spine. Exhale as you hinge forward from the hips, reaching toward the feet while relaxing the neck and shoulders.", undefined, "exercises/seated-forward-fold.jpg"),
-        exercise("roll-down", "Lower down slowly", 30,
+        exercise("roll-down", "Standing roll down", 30,
           "From seated, exhale as you slowly roll down to the mat one vertebra at a time. Inhale once fully lying down."),
         exercise("figure-four-twists", "Lying figure four → twist → switch sides", 240,
           "Lie on back with knees bent. Cross one ankle over opposite knee and gently pull the supporting leg toward the chest. From figure four, lower both legs toward the opposite side while keeping shoulders relaxed. Switch sides after 2 minutes."),

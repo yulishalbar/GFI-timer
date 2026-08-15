@@ -35,7 +35,7 @@ export const RIG_BY_EXERCISE_NAME: Readonly<Record<string, string>> = {
 
   // Supine core
   "Crunch w legs lifted": "crunch-legs-lifted",
-  "The one leg stretch - alternating sides": "one-leg-stretch",
+  "Single-leg stretch": "one-leg-stretch",
   "Bicycle legs": "bicycle-legs",
   "Leg lowers": "leg-lowers",
   "One leg circle": "one-leg-circle",
@@ -62,7 +62,7 @@ export const RIG_BY_EXERCISE_NAME: Readonly<Record<string, string>> = {
   "Tricep side push-up": "tricep-side-push-up",
 
   // Cooldown and stretches
-  "Lower down slowly": "standing-roll-down",
+  "Standing roll down": "standing-roll-down",
   "Forward fold": "standing-forward-fold",
   "Standing side-body stretch": "standing-side-stretch",
   "Crescent low lunge": "crescent-lunge",
