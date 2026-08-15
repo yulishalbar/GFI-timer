@@ -158,6 +158,21 @@ describe("rig definitions", () => {
     });
   });
 
+  it("names an inverse kinematics target on every pose or on none", () => {
+    // A target named on only one end of a loop is held for the whole loop, so
+    // the limb it drives sits still while everything else moves. That reads as
+    // a broken guide, and it is silent: nothing throws.
+    rigEntries.forEach(([id, rig]) => {
+      (["ikLegNear", "ikLegFar", "ikArmNear", "ikArmFar"] as const).forEach((target) => {
+        const named = rig.poses.filter((pose) => pose[target] !== undefined).length;
+        expect(
+          named === 0 || named === rig.poses.length,
+          `${id} sets ${target} on ${named} of ${rig.poses.length} poses; the joint will not move`
+        ).toBe(true);
+      });
+    });
+  });
+
   it("bends a knee away from the mat when the foot is planted on a target", () => {
     // A foot pinned by inverse kinematics has two solutions. The wrong one
     // folds the knee downward, which reads as a leg bending backwards and can

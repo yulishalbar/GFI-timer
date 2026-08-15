@@ -15,6 +15,9 @@ export const RIG_BY_EXERCISE_NAME: Readonly<Record<string, string>> = {
   "Straight leg sweep circles": "straight-leg-sweep-circles",
   "Thread the leg and open to the side": "thread-leg-side",
   "Sliders mountain climbers": "slider-mountain-climbers",
+  "High plank hold": "high-plank-hold",
+  "High plank shoulder taps, alternating hands": "high-plank-shoulder-taps",
+  "High plank opening to a side planks (alternating)": "high-plank-side-plank-open",
 
   // Quadruped and kneeling
   "Tabletop → alternating bird dog → add wrist circles": "bird-dog",
@@ -30,6 +33,9 @@ export const RIG_BY_EXERCISE_NAME: Readonly<Record<string, string>> = {
   "Leg extensions": "quadruped-leg-extension",
   "Leg pulses": "quadruped-leg-pulse",
   Rainbow: "rainbow",
+  "Half rainbow": "half-rainbow",
+  "Quadruped Glute Lift": "quadruped-glute-lift",
+  "Side crunch": "quadruped-side-crunch",
   "Child's pose": "childs-pose",
   "Child's pose with side stretches": "childs-pose-side-stretch",
 

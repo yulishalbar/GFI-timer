@@ -325,6 +325,65 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
     ]
   },
 
+  "high-plank-hold": {
+    title: "High plank hold",
+    box: FLOOR_BOX,
+    tempoMs: 0,
+    loop: "cycle",
+    groundY: 170,
+    ghost: false,
+    // A hold has nothing to animate. Drawn a touch flatter than the moving
+    // planks so the shape itself says "this is the position, not a rep".
+    poses: [plank({ spine: 189, head: 174, hip: [172, 126] })]
+  },
+
+  "high-plank-shoulder-taps": {
+    title: "High plank shoulder taps, alternating hands",
+    box: FLOOR_BOX,
+    tempoMs: 1600,
+    loop: "pingpong",
+    groundY: 170,
+    focus: ["armNear"],
+    trace: "handNear",
+    // The tapping hand is pinned to a target at both ends rather than written
+    // as angles, so it arrives at the shoulder instead of near it. Both ends,
+    // because a target named on only one pose is held for the whole loop and
+    // the hand never travels at all.
+    poses: [
+      plank({ ikArmNear: [113, 169], ikArmBend: -1 }),
+      plank({
+        ikArmNear: [124, 110],
+        ikArmBend: -1,
+        shoulderSpread: 9,
+        spine: 191,
+        hip: [172, 127]
+      })
+    ]
+  },
+
+  "high-plank-side-plank-open": {
+    title: "High plank opening to a side planks (alternating)",
+    // Extra headroom: the opening arm finishes straight above the shoulder.
+    box: "32 40 256 144",
+    tempoMs: 2400,
+    loop: "pingpong",
+    groundY: 170,
+    focus: ["armNear"],
+    trace: "handNear",
+    // The rotation itself is into the screen, so the readable part is the arm
+    // stacking overhead and the shoulders narrowing as the chest turns.
+    poses: [
+      plank({}),
+      plank({
+        armNear: [268, -6, -6],
+        shoulderSpread: 4,
+        spine: 188,
+        head: 166,
+        facing: 118
+      })
+    ]
+  },
+
   /* ---- quadruped ---- */
 
   "bird-dog": {
@@ -484,6 +543,51 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
       overhead([250, 102]),
       overhead([180 + Math.cos(32 * (Math.PI / 180)) * 58, 102 + Math.sin(32 * (Math.PI / 180)) * 58])
     ]
+  },
+
+  "half-rainbow": {
+    title: "Half rainbow",
+    box: OVERHEAD_BOX,
+    tempoMs: 2200,
+    loop: "pingpong",
+    ground: false,
+    focus: ["legNear"],
+    trace: "ankleNear",
+    // Half the arc of a rainbow: out to one side and back, rather than tapping
+    // down on both. Same camera, because the arc is still the whole point.
+    poses: [
+      overhead([250, 102]),
+      overhead([180 + Math.cos(34 * (Math.PI / 180)) * 58, 102 + Math.sin(34 * (Math.PI / 180)) * 58])
+    ]
+  },
+
+  "quadruped-glute-lift": {
+    title: "Quadruped Glute Lift",
+    box: FLOOR_BOX,
+    tempoMs: 1900,
+    loop: "pingpong",
+    groundY: 170,
+    focus: ["legNear"],
+    trace: "ankleNear",
+    // Starts already extended, unlike Leg extensions: here the lift from level
+    // to above the hip is the exercise, not getting the leg straight.
+    poses: [
+      quad({ legNear: [14, 0, 18] }),
+      quad({ legNear: [-20, 0, 26], spine: 195 })
+    ]
+  },
+
+  "quadruped-side-crunch": {
+    title: "Side crunch",
+    box: OVERHEAD_BOX,
+    tempoMs: 2000,
+    loop: "pingpong",
+    ground: false,
+    focus: ["legNear"],
+    trace: "kneeNear",
+    // Seen from above. The knee draws in toward the elbow on its own side,
+    // which is a purely lateral travel and all but invisible side-on.
+    poses: [overhead([248, 100]), overhead([152, 76])]
   },
 
   "childs-pose": {
@@ -1089,12 +1193,33 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
     tempoMs: 2000,
     loop: "pingpong",
     groundY: 152,
-    focus: ["armFar"],
+    focus: ["armNear"],
     trace: "shoulder",
-    // The bottom arm does the work: it bends to lower and straightens to press.
+    // The top hand presses the mat and the bottom forearm crosses the belly.
+    // The pressing hand is an inverse kinematics target pinned on the mat, so
+    // it stays planted while the torso rises: writing the arm as angles let the
+    // hand sink through the floor at the bottom of the rep. The shoulder must
+    // also stay above the hip - a spine angle under 180 tips it below, which is
+    // what drove the whole arm underground.
     poses: [
-      sideLying({ hip: [186, 142], spine: 174, armFar: [118, 84, 24], armNear: [16, 6, 4] }),
-      sideLying({ hip: [186, 132], spine: 192, armFar: [100, 16, 30], armNear: [10, 4, 4] })
+      sideLying({
+        hip: [186, 140],
+        spine: 186,
+        head: 190,
+        armNear: [60, 70, -70],
+        ikArmNear: [108, 152],
+        ikArmBend: -1,
+        armFar: [10, -26, -8]
+      }),
+      sideLying({
+        hip: [186, 136],
+        spine: 202,
+        head: 206,
+        armNear: [40, 30, -84],
+        ikArmNear: [108, 152],
+        ikArmBend: -1,
+        armFar: [14, -30, -8]
+      })
     ]
   },
 

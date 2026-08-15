@@ -390,3 +390,40 @@ test("keeps real elapsed time running after scheduled completion until stopped",
   await expect.poll(() => page.evaluate(() => window.localStorage.getItem("gfi-timer:session:v2")))
     .toBeNull();
 });
+
+/**
+ * A short screen used to hide the guide and its cue outright, which removed the
+ * one thing the instructor is looking at. Everything else gives up room
+ * instead, and the dashboard scrolls when that is not enough.
+ */
+test("keeps the guide and its cue on a short screen", async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== "iphone-15-pro-max-chromium", "viewport is set explicitly");
+  await page.setViewportSize({ width: 423, height: 680 });
+  await page.goto("./");
+
+  await page
+    .getByRole("article")
+    .filter({ hasText: "Mat Pilates — July 24" })
+    .getByRole("button", { name: "View class" })
+    .click();
+  await page.getByRole("button", { name: "Start class" }).click();
+  await page.getByRole("button", { name: "Next" }).click();
+
+  const guide = page.locator(".exercise-details svg.exercise-rig");
+  await expect(guide).toBeVisible();
+  await expect(page.locator(".exercise-details__long")).toBeVisible();
+  await expect(guide).toBeInViewport();
+
+  // Anything that still does not fit is reachable rather than clipped away.
+  const overflow = await page.evaluate(() => {
+    const dashboard = document.querySelector(".session-dashboard");
+    if (!dashboard) return null;
+    return {
+      hidden: dashboard.scrollHeight - dashboard.clientHeight,
+      scrollable: getComputedStyle(dashboard).overflowY
+    };
+  });
+  expect(overflow?.scrollable).toMatch(/auto|scroll/);
+  expect(await page.evaluate(() => document.documentElement.scrollHeight - window.innerHeight))
+    .toBeLessThanOrEqual(0);
+});

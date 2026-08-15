@@ -156,10 +156,26 @@ authoring a rig fails the suite until the name is deleted from the list. It can
 only shrink. When it reaches zero the checks collapse back to the three
 unconditional properties.
 
-A handful of those movements still show a legacy still, including four that
-share one — `quadruped-leg-series.svg` and `high-plank.svg` each stand in for
-three different movements. That is the exact failure the rig was built to end,
-and it is temporary: each leaves the list as its rig lands.
+The six that shared a still — `quadruped-leg-series.svg` and `high-plank.svg`
+each stood in for three different movements — were the first batch drawn, and
+both files are gone. Five movements still show a still of their own, which is
+honest if incomplete; no drawing explains a movement it is not.
+
+### Authoring traps the tests now catch
+
+Three mistakes are silent — nothing throws, the guide simply reads wrong — so
+each has a test rather than a note:
+
+- **An angle written the short way round.** Angles interpolate linearly, so a
+  head that ends at `8°` sweeps backwards through the body to get there. Write
+  it as `368°`. No pair of consecutive poses may differ by more than 180°.
+- **The wrong inverse-kinematics solution.** A pinned foot has two, and one
+  folds the knee downward — a leg bending backwards, sometimes through the
+  floor. On any rig that draws a mat, a knee may not sit below both its hip and
+  its ankle.
+- **A target named on one pose only.** `lerpOptionalPoint` holds a one-sided
+  target for the whole loop, so the limb it drives never moves while everything
+  around it does. A target is named on every pose or on none.
 
 ### Known refinements
 

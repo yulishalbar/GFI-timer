@@ -1791,15 +1791,55 @@ h1 {
   }
 }
 
+/* Short screens.
+ *
+ * The guide and its cue used to be hidden here, which removed the one thing the
+ * instructor is looking at. Everything else gives up room instead, and the
+ * dashboard scrolls when that is still not enough - `.session-dashboard` is
+ * already the scroll container, so nothing is ever unreachable. */
 @media (max-height: 700px) and (max-width: 760px) {
   .session-status-row,
-  .session-position,
-  .exercise-details {
+  .session-position {
     display: none;
   }
 
+  .session-dashboard {
+    gap: 0.5rem;
+    padding-block: 0.4rem;
+  }
+
+  .session-primary h1 {
+    font-size: clamp(1.5rem, 6vw, 2.1rem);
+  }
+
+  .session-phase {
+    font-size: 0.72rem;
+  }
+
   .session-countdown {
-    font-size: clamp(3.5rem, 18vh, 6rem);
+    margin-block: 0.35rem;
+    font-size: clamp(3rem, 14vh, 4.5rem);
+  }
+
+  .next-step {
+    padding: 0.6rem 0.75rem;
+  }
+
+  .next-step strong {
+    font-size: clamp(1.1rem, 4.5vw, 1.4rem);
+  }
+
+  .exercise-details {
+    padding: 0.6rem 0.7rem;
+  }
+
+  .exercise-details .exercise-rig,
+  .exercise-details .exercise-motion {
+    width: min(100%, 11rem);
+  }
+
+  .session-controls button {
+    min-height: 3.1rem;
   }
 }
 
@@ -1819,12 +1859,21 @@ h1 {
     font-size: clamp(4rem, 23vh, 7rem);
   }
 
+  /* Landscape puts the guide in its own column, so it keeps its place here too
+     rather than being dropped for want of height. */
   .session-context {
     display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
   }
 
   .exercise-details {
-    display: none;
+    padding: 0.55rem 0.7rem;
+  }
+
+  .exercise-details .exercise-rig,
+  .exercise-details .exercise-motion {
+    width: min(100%, 10rem);
   }
 
   .session-controls button {
