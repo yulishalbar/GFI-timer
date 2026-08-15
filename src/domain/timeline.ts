@@ -32,6 +32,8 @@ export interface RuntimeStep {
   step: RuntimeStepPosition;
   shortDescription?: string;
   longDescription?: string;
+  /** Preferred visual: the id of a pose rig in `src/rig`. */
+  rig?: string;
   illustration?: string;
   motionIllustrations?: MotionIllustrations;
   exerciseReference?: ResolvedExerciseReference;

@@ -119,12 +119,9 @@ describe("compileClass", () => {
   it("keeps the catalog-backed sliders course equivalent to its legacy timeline", () => {
     const legacy = compileClass(hiitPilatesSlidersLegacy);
     const catalogBacked = compileClass(hiitPilatesSliders);
-    const genericPlankArtNames = new Set([
-      "Straight leg sweep",
-      "Straight leg sweep circles",
-      "Thread the leg and open to the side",
-      "Sliders mountain climbers"
-    ]);
+    // Artwork is deliberately excluded: which visual a movement gets is owned by
+    // the rig layer and covered by the artwork tests. This test guards timing,
+    // ordering and guidance surviving the move onto the catalog.
     const playbackFields = (step: (typeof legacy.steps)[number]) => ({
       runtimePath: step.runtimeId.slice(step.runtimeId.indexOf("/")),
       sourceId: step.sourceId,
@@ -138,9 +135,7 @@ describe("compileClass", () => {
       roundPath: step.roundPath,
       step: step.step,
       shortDescription: step.shortDescription,
-      longDescription: step.longDescription,
-      illustration: genericPlankArtNames.has(step.name) ? undefined : step.illustration,
-      motionIllustrations: genericPlankArtNames.has(step.name) ? undefined : step.motionIllustrations
+      longDescription: step.longDescription
     });
 
     expect(catalogBacked.steps.map(playbackFields)).toEqual(legacy.steps.map(playbackFields));
@@ -154,9 +149,6 @@ describe("compileClass", () => {
     expect(catalogBacked.steps.filter((step) => step.name === "Single-leg lunge with slider").map(
       (step) => step.exerciseReference?.side
     )).toEqual(["left", "right"]);
-    expect(catalogBacked.steps.filter((step) => genericPlankArtNames.has(step.name)).every(
-      (step) => step.illustration === undefined
-    )).toBe(true);
   });
 
   it("keeps the catalog-backed band timing and guidance equivalent to V1", () => {
@@ -174,9 +166,7 @@ describe("compileClass", () => {
       roundPath: step.roundPath,
       step: step.step,
       shortDescription: step.shortDescription,
-      longDescription: step.longDescription,
-      illustration: step.illustration,
-      motionIllustrations: step.motionIllustrations
+      longDescription: step.longDescription
     });
 
     expect(catalogBacked.steps.map(playbackFields)).toEqual(legacy.steps.map(playbackFields));

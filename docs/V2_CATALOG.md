@@ -45,6 +45,8 @@ interface ExerciseDefinition {
   name: string;
   shortDescription?: string;
   longDescription?: string;
+  /** Pose rig id; see docs/ARTWORK.md. Takes precedence over the fields below. */
+  rig?: string;
   illustration?: string;
   motionIllustrations?: [string, string, ...string[]];
   sideSupport: ExerciseSideSupport;
@@ -282,8 +284,8 @@ The sliders V2 pilot now normalizes repeated left/right movements, stores side
 selection on each course placement, and shows accessible directional badges in
 the course overview, current step, and Up Next. The legacy sliders option remains
 unchanged for comparison. Four distinct plank movements no longer reuse the
-same generic high-plank illustration in V2; each now has its own two-frame,
-offline motion guide with matched camera direction and pose scale.
+same generic high-plank illustration; each is now drawn by its own pose rig,
+sharing one figure and one camera convention. See `docs/ARTWORK.md`.
 
 Left badges use a cool blue treatment and right badges use a warm orange
 treatment. The visible arrows and `L`/`R` text plus accessible “Left side” and

@@ -1,4 +1,25 @@
-import { expect, test } from "@playwright/test";
+import { expect, type Locator, test } from "@playwright/test";
+
+/**
+ * A pose rig is solved every frame rather than swapped between files, so the
+ * meaningful assertion is that its geometry actually changes: this survives
+ * re-authoring the pose data, which asserting on filenames did not.
+ */
+function rigGeometry(rig: Locator): Promise<string> {
+  return rig.evaluate((element) =>
+    Array.from(element.querySelectorAll("path"))
+      .map((path) => path.getAttribute("d"))
+      .join("|")
+  );
+}
+
+async function expectRigAnimates(rig: Locator): Promise<void> {
+  await expect(rig).toBeVisible();
+  // Guides only run while on screen, so bring it into view before sampling.
+  await rig.scrollIntoViewIfNeeded();
+  const first = await rigGeometry(rig);
+  await expect.poll(() => rigGeometry(rig), { timeout: 4_000 }).not.toBe(first);
+}
 
 function durationToSeconds(value: string | null): number {
   const parts = (value ?? "0:00").split(":").map(Number);
@@ -165,16 +186,16 @@ test("searches and filters the offline course and exercise libraries", async ({ 
   const animatedExercise = page.getByRole("article").filter({
     has: page.getByRole("heading", { name: "Straight leg sweep", exact: true })
   });
-  const libraryMotionFrames = animatedExercise.locator(".exercise-motion img");
-  await expect(libraryMotionFrames).toHaveCount(2);
-  await expect(libraryMotionFrames.first()).toHaveClass(/exercise-motion__frame--active/);
-  await expect(libraryMotionFrames.last()).toHaveClass(/exercise-motion__frame--active/, { timeout: 2_000 });
-  await expect(animatedExercise.locator(".exercise-motion")).toHaveCSS("background-color", "rgb(246, 242, 233)");
+  const libraryRig = animatedExercise.locator("svg.exercise-rig");
+  await expectRigAnimates(libraryRig);
+  await expect(animatedExercise).toContainText("Motion guide");
+  // The guide sits on the app's own surface, not a foreign backdrop.
+  await expect(libraryRig).toHaveCSS("background-color", "rgb(25, 34, 28)");
   await search.fill("straight leg sweep circles");
   const circleExercise = page.getByRole("article").filter({
     has: page.getByRole("heading", { name: "Straight leg sweep circles", exact: true })
   });
-  await expect(circleExercise.locator(".exercise-motion img")).toHaveCount(3);
+  await expectRigAnimates(circleExercise.locator("svg.exercise-rig"));
   await search.fill("not a real movement");
   await expect(page.getByText("No exercises match this search.")).toBeVisible();
 });
@@ -197,7 +218,7 @@ test("opens and starts the July 31 class with completed pose guidance", async ({
   await expect(kneePull).toContainText("pull one leg towards the chest using hands under knee");
   await expect(kneePull.getByAltText("Illustration for Knee pulls alternating legs")).toBeVisible();
   const shavasana = page.locator(".step-row").filter({ hasText: "Shavasana" });
-  await expect(shavasana.getByAltText("Illustration for Shavasana")).toBeVisible();
+  await expect(shavasana.getByLabel("Pose guide for Shavasana")).toBeVisible();
   const deadlift = page
     .locator(".step-row")
     .filter({ hasText: "single-leg deadlift (SLDL) to knee tuck (R)" });
@@ -257,15 +278,10 @@ test("opens and starts the catalog-backed sliders course", async ({ page }) => {
     .not.toBe(await rightBadge.evaluate((element) => getComputedStyle(element).backgroundColor));
   await page.getByRole("button", { name: "Expand all pose details" }).click();
   const straightLegSweep = page.locator(".step-row").filter({ hasText: "Straight leg sweep" }).first();
-  const motionFrames = straightLegSweep.locator("img");
-  await expect(motionFrames).toHaveCount(2);
-  await expect(motionFrames.first()).toHaveAttribute("src", /straight-leg-sweep-motion-1\.jpg$/);
-  await expect(motionFrames.last()).toHaveAttribute("src", /straight-leg-sweep-motion-2\.jpg$/);
+  await expect(straightLegSweep.locator("img")).toHaveCount(0);
+  await expectRigAnimates(straightLegSweep.locator("svg.exercise-rig"));
   const mountainClimbers = page.locator(".step-row").filter({ hasText: "Sliders mountain climbers" }).first();
-  const mountainClimberFrames = mountainClimbers.locator(".exercise-motion img");
-  await expect(mountainClimberFrames).toHaveCount(4);
-  await expect(mountainClimberFrames.nth(1)).toHaveClass(/exercise-motion__frame--active/, { timeout: 2_000 });
-  await expect(mountainClimberFrames.nth(3)).toHaveClass(/exercise-motion__frame--active/, { timeout: 4_000 });
+  await expectRigAnimates(mountainClimbers.locator("svg.exercise-rig"));
   await page.getByRole("button", { name: "Start class" }).click();
   await expect(page.getByRole("heading", { name: "Child's pose" })).toBeVisible();
 });

@@ -127,9 +127,10 @@ the app was suspended.
 - Current and overall progress.
 - Audio cues.
 - Short and fully visible longer descriptions.
-- Optional exercise illustrations. Use lightweight animated SVG only when the
-  movement between positions is important; holds remain static, and every
-  animation provides a reduced-motion fallback.
+- An exercise visual for every movement, drawn by the pose rig from shared
+  pose data. Movement animates only when the path between positions matters;
+  holds stay static, and a frozen guide still shows its range of motion through
+  the start-pose ghost and the traced path.
 - Session recovery.
 - Installable, offline-capable iPhone/iPad PWA.
 - Automated deployment to GitHub Pages.

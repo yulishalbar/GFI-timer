@@ -1,3 +1,4 @@
+import { rigIdForExercise } from "../rig/assignments";
 import type { ClassEntry, FitnessClassDefinition } from "./class-definition";
 import type {
   CompiledClass,
@@ -37,14 +38,23 @@ function toDraftStep(entry: Exclude<ClassEntry, { type: "repeat" }>, context: Wa
   };
 
   if (entry.type === "exercise") {
+    // A movement's guide is resolved from its name unless the entry names one
+    // itself, so every representation of a class agrees on how it looks. Once a
+    // rig applies it is the only source of truth, and the legacy image it
+    // replaced is dropped rather than carried alongside it.
+    const rig = entry.rig ?? rigIdForExercise(entry.name ?? "");
     return {
       ...base,
       ...(entry.shortDescription === undefined ? {} : { shortDescription: entry.shortDescription }),
       ...(entry.longDescription === undefined ? {} : { longDescription: entry.longDescription }),
-      ...(entry.illustration === undefined ? {} : { illustration: entry.illustration }),
-      ...(entry.motionIllustrations === undefined
-        ? {}
-        : { motionIllustrations: entry.motionIllustrations }),
+      ...(rig === undefined
+        ? {
+            ...(entry.illustration === undefined ? {} : { illustration: entry.illustration }),
+            ...(entry.motionIllustrations === undefined
+              ? {}
+              : { motionIllustrations: entry.motionIllustrations })
+          }
+        : { rig }),
       ...(entry.exerciseReference === undefined
         ? {}
         : { exerciseReference: entry.exerciseReference })

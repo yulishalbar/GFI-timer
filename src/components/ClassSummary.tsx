@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import type { CompiledClass } from "../domain/timeline";
 import { formatDuration, formatMinutes } from "../lib/format-duration";
+import { hasExerciseMedia } from "../domain/step-media";
 import { ExerciseMedia } from "./ExerciseMedia";
 import { ExerciseSideBadge } from "./ExerciseSideBadge";
 
@@ -14,12 +15,7 @@ export function ClassSummary({ fitnessClass, onBack, onStart }: ClassSummaryProp
   const detailStepIds = useMemo(
     () =>
       fitnessClass.steps
-        .filter(
-          (step) =>
-            step.longDescription !== undefined ||
-            step.illustration !== undefined ||
-            step.motionIllustrations !== undefined
-        )
+        .filter((step) => step.longDescription !== undefined || hasExerciseMedia(step))
         .map((step) => step.runtimeId),
     [fitnessClass.steps]
   );
@@ -127,7 +123,7 @@ export function ClassSummary({ fitnessClass, onBack, onStart }: ClassSummaryProp
                         ) : null}
                       </div>
                       {step.shortDescription ? <p>{step.shortDescription}</p> : null}
-                      {step.longDescription || step.illustration || step.motionIllustrations ? (
+                      {step.longDescription || hasExerciseMedia(step) ? (
                         <button
                           className="pose-details-toggle"
                           type="button"

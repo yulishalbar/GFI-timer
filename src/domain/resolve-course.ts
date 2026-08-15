@@ -122,13 +122,14 @@ function validateCatalog(input: unknown, issues: string[]): ExerciseCatalog | un
       issues.push(`${path}: expected an exercise object`);
       return;
     }
-    allowedKeys(exercise, ["schemaVersion", "id", "version", "name", "shortDescription", "longDescription", "illustration", "motionIllustrations", "sideSupport", "tags"], path, issues);
+    allowedKeys(exercise, ["schemaVersion", "id", "version", "name", "shortDescription", "longDescription", "rig", "illustration", "motionIllustrations", "sideSupport", "tags"], path, issues);
     if (exercise.schemaVersion !== 1) issues.push(`${path}.schemaVersion: expected 1`);
     id(exercise.id, `${path}.id`, issues);
     positiveInteger(exercise.version, `${path}.version`, Number.MAX_SAFE_INTEGER, issues);
     text(exercise.name, `${path}.name`, issues);
     text(exercise.shortDescription, `${path}.shortDescription`, issues, true);
     text(exercise.longDescription, `${path}.longDescription`, issues, true);
+    if (exercise.rig !== undefined) id(exercise.rig, `${path}.rig`, issues);
     if (exercise.illustration !== undefined && !safeAsset(exercise.illustration)) {
       issues.push(`${path}.illustration: expected a safe local image path`);
     }
@@ -244,6 +245,7 @@ function resolveExercise(item: CourseExerciseItem, exercise: ExerciseDefinition)
       ? exercise.shortDescription === undefined ? {} : { shortDescription: exercise.shortDescription }
       : { shortDescription: item.shortDescription }),
     ...(exercise.longDescription === undefined ? {} : { longDescription: exercise.longDescription }),
+    ...(exercise.rig === undefined ? {} : { rig: exercise.rig }),
     ...(exercise.illustration === undefined ? {} : { illustration: exercise.illustration }),
     ...(exercise.motionIllustrations === undefined ? {} : { motionIllustrations: exercise.motionIllustrations }),
     exerciseReference: {

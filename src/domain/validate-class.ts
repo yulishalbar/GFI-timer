@@ -137,7 +137,7 @@ function validateTimedEntry(
   const commonKeys = ["type", "id", "name", "durationSeconds", "shortDescription"];
   const allowed =
     kind === "exercise"
-      ? [...commonKeys, "longDescription", "illustration", "motionIllustrations", "exerciseReference"]
+      ? [...commonKeys, "longDescription", "rig", "illustration", "motionIllustrations", "exerciseReference"]
       : commonKeys;
   checkAllowedKeys(value, allowed, path, issues);
   checkId(value.id, `${path}.id`, issues);
@@ -145,6 +145,7 @@ function validateTimedEntry(
   if (kind === "exercise") {
     checkRequiredText(value.name, `${path}.name`, issues);
     checkOptionalText(value.longDescription, `${path}.longDescription`, issues);
+    if (value.rig !== undefined) checkId(value.rig, `${path}.rig`, issues);
     checkIllustration(value.illustration, `${path}.illustration`, issues);
     checkMotionIllustrations(value.motionIllustrations, `${path}.motionIllustrations`, issues);
     checkExerciseReference(value.exerciseReference, `${path}.exerciseReference`, issues);

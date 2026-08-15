@@ -1,5 +1,6 @@
 import type { CourseExerciseItem, CourseItem, ExerciseDefinition } from "../domain/catalog-definition";
 import type { AdaptedLegacyCourse } from "../domain/legacy-catalog-adapter";
+import { applyRigAssignments } from "./rig-assignments";
 
 function placements(items: readonly CourseItem[]): CourseExerciseItem[] {
   return items.flatMap((item) =>
@@ -26,6 +27,7 @@ function signature(exercise: ExerciseDefinition): string {
     name: exercise.name,
     shortDescription: exercise.shortDescription,
     longDescription: exercise.longDescription,
+    rig: exercise.rig,
     illustration: exercise.illustration,
     motionIllustrations: exercise.motionIllustrations,
     sideSupport: exercise.sideSupport,
@@ -49,6 +51,8 @@ export function normalizeBandCatalog(input: AdaptedLegacyCourse): AdaptedLegacyC
       exercise.name = canonicalName(exercise.name);
     }
   });
+
+  applyRigAssignments(catalog);
 
   const canonicalBySignature = new Map<string, ExerciseDefinition>();
   const replacementIds = new Map<string, string>();

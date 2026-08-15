@@ -241,7 +241,7 @@ export const matPilates0724 = {
         { type: "exercise", id: "figure-four-right", name: "Figure four and spinal twist — right", durationSeconds: 120, shortDescription: "Cross the right ankle over the left knee.", longDescription: "Draw the supporting leg in for a glute stretch, then lower the legs left into a twist while keeping the shoulders relaxed." },
         { type: "exercise", id: "figure-four-left", name: "Figure four and spinal twist — left", durationSeconds: 120, shortDescription: "Cross the left ankle over the right knee.", longDescription: "Draw the supporting leg in for a glute stretch, then lower the legs right into a twist while keeping the shoulders relaxed." },
         { type: "exercise", id: "overhead-arm-stretch", name: "Overhead arm stretch", durationSeconds: 30, shortDescription: "Reach through fingers and toes, then soften the shoulders." },
-        { type: "exercise", id: "shavasana", name: "Shavasana", durationSeconds: 180, shortDescription: "Finish seated and thank the class.", longDescription: "Rest comfortably on the back. Breathe slowly through the nose and out through the mouth, allowing the body to relax.", illustration: "exercises/shavasana.jpg" }
+        { type: "exercise", id: "shavasana", name: "Shavasana", durationSeconds: 180, shortDescription: "Finish seated and thank the class.", longDescription: "Rest comfortably on the back. Breathe slowly through the nose and out through the mouth, allowing the body to relax.", rig: "shavasana" }
       ]
     }
   ]

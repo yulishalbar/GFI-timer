@@ -41,6 +41,8 @@ interface ExerciseEntry {
   durationSeconds: number;
   shortDescription?: string;
   longDescription?: string;
+  /** Pose rig id; see docs/ARTWORK.md. Takes precedence over the fields below. */
+  rig?: string;
   illustration?: string;
   motionIllustrations?: [string, string, ...string[]];
 }

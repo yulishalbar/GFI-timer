@@ -49,8 +49,8 @@ a desktop/mobile browser, including delayed-clock test cases.
 - Add Screen Wake Lock with visibility reacquisition.
 - Reconcile background/suspended time without replaying missed cues.
 - Add short and expandable descriptions.
-- Add clear SVG exercise illustrations with selective reduced-motion-safe
-  animation where movement needs explanation.
+- Give every exercise a clear visual, with a reduced-motion-safe fallback
+  where movement needs explanation.
 - Complete phone and iPad layouts.
 
 Exit condition: an instructor can run and recover a session on physical iPhone
@@ -100,13 +100,13 @@ mode.
   tests where applicable.
 
 Session hierarchy, transition-aware previews, the final-10-second state, and
-the final-three visual treatment are implemented. The realistic static-art
-direction is established with an optimized Shavasana prototype and larger
-in-session media. Seated forward-fold and straddle-fold reference images are
-also available. The first catalog artwork batch now gives the four distinct
-slider-plank movements their own matched two-frame offline guides. The remaining
-coverage audit and batch order are tracked in [`ARTWORK.md`](ARTWORK.md); full
-static/motion coverage and visual review on physical devices remain pending.
+the final-three visual treatment are implemented. Exercise guides have moved from shipped
+artwork to the pose rig: one figure shared by the whole catalog, with each
+movement authored as pose data. Eight movements are migrated, including the four
+slider-plank guides whose crossfaded frames could not convey their motion.
+The remaining batches and the coverage audit are tracked in
+[`ARTWORK.md`](ARTWORK.md); full coverage and visual review on physical devices
+remain pending.
 
 Candidate features, prioritized after real class use:
 

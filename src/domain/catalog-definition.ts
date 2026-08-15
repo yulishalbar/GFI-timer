@@ -15,6 +15,11 @@ export interface ExerciseDefinition {
   name: string;
   shortDescription?: string;
   longDescription?: string;
+  /**
+   * Preferred visual: the id of a pose rig in `src/rig`. Takes precedence over
+   * the image fields below, which remain for exercises not yet migrated.
+   */
+  rig?: string;
   illustration?: string;
   motionIllustrations?: MotionIllustrations;
   sideSupport: ExerciseSideSupport;

@@ -68,6 +68,7 @@ function adaptEntry(
     name: entry.name,
     ...(entry.shortDescription === undefined ? {} : { shortDescription: entry.shortDescription }),
     ...(entry.longDescription === undefined ? {} : { longDescription: entry.longDescription }),
+    ...(entry.rig === undefined ? {} : { rig: entry.rig }),
     ...(entry.illustration === undefined ? {} : { illustration: entry.illustration }),
     ...(entry.motionIllustrations === undefined ? {} : { motionIllustrations: entry.motionIllustrations }),
     sideSupport: "none",

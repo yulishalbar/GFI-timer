@@ -1,39 +1,6 @@
-import type {
-  CourseExerciseItem,
-  CourseItem,
-  ExerciseDefinition,
-  MotionIllustrations
-} from "../domain/catalog-definition";
+import type { CourseExerciseItem, CourseItem, ExerciseDefinition } from "../domain/catalog-definition";
 import type { AdaptedLegacyCourse } from "../domain/legacy-catalog-adapter";
-
-const GENERIC_PLANK_ART_NAMES = new Set([
-  "Straight leg sweep",
-  "Straight leg sweep circles",
-  "Thread the leg and open to the side",
-  "Sliders mountain climbers"
-]);
-
-const PLANK_MOTION_ART: Readonly<Record<string, MotionIllustrations>> = {
-  "Straight leg sweep": [
-    "exercises/straight-leg-sweep-motion-1.jpg",
-    "exercises/straight-leg-sweep-motion-2.jpg"
-  ],
-  "Straight leg sweep circles": [
-    "exercises/straight-leg-sweep-circles-motion-1.jpg",
-    "exercises/straight-leg-sweep-circles-motion-3.jpg",
-    "exercises/straight-leg-sweep-circles-motion-2.jpg"
-  ],
-  "Thread the leg and open to the side": [
-    "exercises/thread-leg-side-motion-1.jpg",
-    "exercises/thread-leg-side-motion-2.jpg"
-  ],
-  "Sliders mountain climbers": [
-    "exercises/slider-mountain-climbers-v2-motion-1.jpg",
-    "exercises/slider-mountain-climbers-v2-motion-2.jpg",
-    "exercises/slider-mountain-climbers-v2-motion-3.jpg",
-    "exercises/slider-mountain-climbers-v2-motion-4.jpg"
-  ]
-};
+import { applyRigAssignments } from "./rig-assignments";
 
 function placements(items: readonly CourseItem[]): CourseExerciseItem[] {
   return items.flatMap((item) =>
@@ -50,6 +17,7 @@ function exerciseSignature(exercise: ExerciseDefinition): string {
     name: exercise.name,
     shortDescription: exercise.shortDescription,
     longDescription: exercise.longDescription,
+    rig: exercise.rig,
     illustration: exercise.illustration,
     motionIllustrations: exercise.motionIllustrations,
     sideSupport: exercise.sideSupport,
@@ -78,13 +46,7 @@ export function normalizeSlidersCatalog(input: AdaptedLegacyCourse): AdaptedLega
     if (exercise) exercise.sideSupport = "left-right";
   });
 
-  catalog.exercises.forEach((exercise) => {
-    if (exercise.illustration === "exercises/high-plank.svg" && GENERIC_PLANK_ART_NAMES.has(exercise.name)) {
-      delete exercise.illustration;
-    }
-    const motionIllustrations = PLANK_MOTION_ART[exercise.name];
-    if (motionIllustrations) exercise.motionIllustrations = motionIllustrations;
-  });
+  applyRigAssignments(catalog);
 
   const canonicalBySignature = new Map<string, ExerciseDefinition>();
   const replacementIds = new Map<string, string>();

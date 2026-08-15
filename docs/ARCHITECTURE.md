@@ -141,7 +141,9 @@ interface RuntimeStep {
   step: { index: number; count: number };
   shortDescription?: string;
   longDescription?: string;
+  rig?: string;
   illustration?: string;
+  motionIllustrations?: [string, string, ...string[]];
 }
 ```
 
@@ -295,11 +297,12 @@ Precache the application shell, registered class definitions, essential audio,
 icons, and referenced exercise illustrations. A class shown as available must
 not fail halfway through because its static media was not cached.
 
-Exercise art may use SVG or an optimized local raster image. Prefer SVG for
-motion guides so limbs, joints, hands, and feet stay sharp at phone sizes and
-the animation can honor `prefers-reduced-motion`; use compact raster artwork
-when realistic form is more useful for a static hold. Static holds do not
-animate merely for decoration.
+Exercise guides are pose data rendered by the rig in `src/rig`, not shipped
+artwork; see `docs/ARTWORK.md`. They stay sharp at any size, follow the app's
+palette, honor `prefers-reduced-motion`, and cost a few hundred bytes each
+rather than a precached image. Exercises not yet migrated fall back to their
+existing SVG or raster art, so nothing needs to move at once. Static holds do
+not animate merely for decoration.
 
 Use a conservative update flow: download a new build in the background and ask
 the user to refresh only when no class is running. The update remains pending

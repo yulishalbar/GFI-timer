@@ -413,7 +413,7 @@ export const matPilates0731 = {
           shortDescription: "Lie comfortably on back with arms relaxed at sides.",
           longDescription:
             "Slow inhale through the nose, slow exhale through the mouth. Allow the body to fully relax and breathing to settle naturally. end→ come to seated. Closing words: Thank you for coming today and working out early in the morning, amazing job! Don't forget to wipe down your mat. See you next time!",
-          illustration: "exercises/shavasana.jpg"
+          rig: "shavasana"
         }
       ]
     }

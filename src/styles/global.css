@@ -550,13 +550,14 @@ h1 {
 
 .exercise-library-card > img {
   width: 100%;
-  aspect-ratio: 1;
+  aspect-ratio: 16 / 9;
   border-radius: var(--radius-sm);
   object-fit: contain;
-  background: #f6f2e9;
+  background: var(--color-surface-raised);
 }
 
-.exercise-library-card > .exercise-motion {
+.exercise-library-card > .exercise-motion,
+.exercise-library-card > .exercise-rig {
   align-self: start;
 }
 
@@ -852,7 +853,8 @@ h1 {
 
 .pose-details {
   display: grid;
-  grid-template-columns: minmax(6rem, 0.3fr) minmax(0, 1fr);
+  /* Wide enough for a 16:9 guide to stay readable beside the instructions. */
+  grid-template-columns: minmax(10rem, 0.42fr) minmax(0, 1fr);
   align-items: start;
   gap: 0.9rem;
   padding-top: 0.8rem;
@@ -1163,14 +1165,16 @@ h1 {
   object-fit: contain;
 }
 
+/* Exercise figures are long and low, so the media surface is 16:9. A square
+   wasted the top half of every plank and lying pose. */
 .exercise-motion {
   position: relative;
   display: block;
   width: 100%;
-  aspect-ratio: 1;
+  aspect-ratio: 16 / 9;
   overflow: hidden;
   border-radius: var(--radius-sm);
-  background: #f6f2e9;
+  background: var(--color-surface-raised);
 }
 
 .exercise-motion img {
@@ -1194,6 +1198,83 @@ h1 {
 
 .exercise-motion--mirrored img {
   transform: scaleX(-1);
+}
+
+/* ---- pose rig ----
+   Exercise guides are solved from pose data rather than shipped as images, so
+   they are painted from the app's own tokens and follow the palette. */
+.exercise-rig {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  max-height: none;
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-raised);
+  overflow: hidden;
+}
+
+.exercise-rig--mirrored {
+  transform: scaleX(-1);
+}
+
+.exercise-rig path,
+.exercise-rig circle,
+.exercise-rig ellipse {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Filled marks re-use the stroke colour so a role is defined once. */
+.exercise-rig .rig--filled {
+  fill: currentcolor;
+  stroke: currentcolor;
+}
+
+.exercise-rig .rig__ground {
+  color: #33453a;
+  stroke: currentcolor;
+}
+
+/* The outline pass sits between overlapping limbs so they stay separable
+   instead of merging into one silhouette. */
+.exercise-rig .rig__outline {
+  color: var(--color-surface-raised);
+  stroke: currentcolor;
+}
+
+.exercise-rig .rig__near {
+  color: var(--color-text);
+  stroke: currentcolor;
+}
+
+.exercise-rig .rig__far {
+  color: #66766c;
+  stroke: currentcolor;
+}
+
+/* The limb the viewer is meant to watch. */
+.exercise-rig .rig__focus {
+  color: var(--color-accent);
+  stroke: currentcolor;
+}
+
+.exercise-rig .rig__equipment {
+  color: var(--color-rest);
+  stroke: currentcolor;
+}
+
+/* Onion-skin of the starting position: range of motion stays readable even
+   when the guide is frozen. */
+.exercise-rig .rig__ghost {
+  color: #3d4d43;
+  stroke: currentcolor;
+}
+
+.exercise-rig .rig__path {
+  color: var(--color-accent);
+  stroke: currentcolor;
+  opacity: 0.55;
 }
 
 .next-step {

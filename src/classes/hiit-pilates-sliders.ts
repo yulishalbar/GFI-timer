@@ -184,7 +184,7 @@ export const hiitPilatesSlidersLegacy = {
         exercise("overhead-arm-stretch", "Overhead arm stretch", 30,
           "Extend arms overhead along the mat. Inhale reaching through fingers and toes to lengthen the body. Exhale relaxing shoulders and allowing the chest to open."),
         exercise("shavasana", "Shavasana", 180,
-          "Lie comfortably on back with arms relaxed at sides. Slow inhale through the nose, slow exhale through the mouth. Allow the body to fully relax and breathing to settle naturally. End: come to seated. Closing words: Thank you for coming today and working out early in the morning, amazing job! Don't forget to wipe down your mat and the sliders. Have a great spring break!!", undefined, "exercises/shavasana.jpg")
+          "Lie comfortably on back with arms relaxed at sides. Slow inhale through the nose, slow exhale through the mouth. Allow the body to fully relax and breathing to settle naturally. End: come to seated. Closing words: Thank you for coming today and working out early in the morning, amazing job! Don't forget to wipe down your mat and the sliders. Have a great spring break!!")
       ]
     }
   ]

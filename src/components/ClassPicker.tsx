@@ -1,8 +1,10 @@
 import { useMemo, useState } from "react";
-import type { ExerciseCatalog, TagDefinition } from "../domain/catalog-definition";
+import type { ExerciseCatalog, ExerciseDefinition, TagDefinition } from "../domain/catalog-definition";
 import { filterLibraryItems } from "../domain/library-search";
 import type { CompiledClass } from "../domain/timeline";
 import { formatMinutes } from "../lib/format-duration";
+import { getRig } from "../rig/rigs";
+import { ExerciseRig } from "./ExerciseRig";
 import { MotionGuide } from "./MotionGuide";
 
 interface ClassPickerProps {
@@ -21,6 +23,27 @@ const CATEGORY_LABELS: Readonly<Record<TagDefinition["category"], string>> = {
   "movement-type": "Position",
   focus: "Focus"
 };
+
+const exerciseRig = (exercise: ExerciseDefinition) => (exercise.rig ? getRig(exercise.rig) : undefined);
+
+function mediaLabel(exercise: ExerciseDefinition): string {
+  const rig = exerciseRig(exercise);
+  if (rig) return rig.tempoMs > 0 ? "Motion guide" : "Pose guide";
+  if (exercise.motionIllustrations) return "Motion guide";
+  return exercise.illustration ? "Static art" : "Text guide";
+}
+
+/** Same resolution order as ExerciseMedia: rig, then motion frames, then a still. */
+function LibraryCardMedia({ exercise }: { exercise: ExerciseDefinition }) {
+  const rig = exerciseRig(exercise);
+  if (rig) return <ExerciseRig rig={rig} name={exercise.name} />;
+  if (exercise.motionIllustrations) {
+    return <MotionGuide frames={exercise.motionIllustrations} name={exercise.name} />;
+  }
+  return exercise.illustration ? (
+    <img src={`${import.meta.env.BASE_URL}${exercise.illustration}`} alt={`Illustration for ${exercise.name}`} />
+  ) : null;
+}
 
 export function ClassPicker({
   classes,
@@ -170,18 +193,11 @@ export function ClassPicker({
         <section className="exercise-library-grid" aria-label="Exercise library">
           {exerciseResults.map(({ exercise, tags }) => (
             <article className="exercise-library-card" key={exercise.id}>
-              {exercise.motionIllustrations ? (
-                <MotionGuide frames={exercise.motionIllustrations} name={exercise.name} />
-              ) : exercise.illustration ? (
-                <img
-                  src={`${import.meta.env.BASE_URL}${exercise.illustration}`}
-                  alt={`Illustration for ${exercise.name}`}
-                />
-              ) : null}
+              <LibraryCardMedia exercise={exercise} />
               <div>
                 <div className="exercise-library-card__meta">
                   <span>{exercise.sideSupport === "left-right" ? "← L / R →" : "No side variation"}</span>
-                  <span>{exercise.motionIllustrations ? "Motion guide" : exercise.illustration ? "Static art" : "Text guide"}</span>
+                  <span>{mediaLabel(exercise)}</span>
                 </div>
                 <h2>{exercise.name}</h2>
                 {exercise.longDescription || exercise.shortDescription ? <p>{exercise.longDescription ?? exercise.shortDescription}</p> : null}
