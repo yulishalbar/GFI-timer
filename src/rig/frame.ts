@@ -689,7 +689,7 @@ function holdPhase(phase: number, hold: number): number {
 
 /** Everything needed to paint one frame, as plain geometry. */
 export function buildFrame(rig: RigDefinition, phase: number, tracedPath?: readonly Point[]): Shape[] {
-  if (rig.spatial) return buildSpatialFrame(rig.spatial, holdPhase(phase, rig.hold ?? 0));
+  if (rig.spatial) return buildSpatialFrame(rig.spatial, holdPhase(phase, rig.hold ?? 0), rig.loop);
 
   const shapes: Shape[] = [];
   const moving = hasMotion(rig);

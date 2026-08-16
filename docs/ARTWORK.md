@@ -111,14 +111,116 @@ leg is a **rotation about the body's long axis**, and both mat taps fall out of
 one number instead of being placed by hand.
 
 A spatial rig sets `spatial` instead of `poses`; a test pins that every rig has
-exactly one of the two. What it is not is a general 3D engine - there is no
-inverse kinematics, no torso shape, and no depth sorting of the traced arc
-against the body. Reach for it only when the flat rig has actually failed.
+exactly one of the two. The working leg is a short list of positions, which the
+loop interpolates the same way it interpolates pose data: `tilt` from the spine,
+`sweep` about it, an optional `knee` bend and an optional `reach`. What it is not
+is a general 3D engine: there is no inverse kinematics, no torso shape, and no
+depth sorting of the traced path against the body. Reach for it only when the
+flat rig has failed.
+
+The second thing it fixes is the face-down cameras. From directly above, a body
+held off the mat and a body lying on it project to the same silhouette - the
+support is vertical and that camera has no vertical axis - so every overhead
+quadruped read as someone lying face down. In floor coordinates the mat recedes
+and the arms and thighs stand as columns, and the pose reads before the movement
+does.
+
+### Two bodies
+
+`support` picks which body is drawn, and it is the whole difference between the
+two families that use the solver.
+
+- **`"quadruped"`**, the default, is a tabletop: hands ahead of the shoulders,
+  shins on the mat, hips high over the knees.
+- **`"plank"`** stands on the hands and the toes. The arms drop as columns from
+  under the shoulders, both legs run straight back, and `hipHeight` is set low
+  enough that the shoulder, the hip and the toes fall on **one line** - that
+  single number is what separates a plank from a tabletop, and set too high the
+  figure simply reads as the quadruped it is not. How far back the toes land is
+  solved from the leg's own length, so the support foot rests on the mat rather
+  than hovering or driving through it.
+
+Three more knobs came out of drawing the plank, and all default to off:
+
+- **`body.shift`** slides the body along its own length before it is turned. A
+  tabletop is roughly symmetric about the hip; a plank runs a leg's length behind
+  it and only a torso in front, so measured from the hip it sits far to the left
+  of the mat with the frame empty beside it.
+- **`reach`**, on a leg position, is how much of the leg's length is used. The
+  leg stays straight and simply does not reach as far, which is the only way a
+  straight leg's foot comes closer to the hip when the hips cannot move. Aiming
+  the leg through the floor instead leaves the knee on the original line once the
+  mat clamps the foot, and that draws a bend nobody authored.
+- **`slider`** draws the disc under the working foot, projected and flattened by
+  the same arithmetic that makes the mat a trapezoid. It is the equipment the
+  movement is named for, and on the floor it is also what says the foot has not
+  left the mat - sliding rather than lifting is the distinction the plank
+  movements exist to teach, and a foot drawn alone at ground level cannot make
+  it. Equipment on the flat rig is named by joint, which a solved rig has no
+  names for; there is only one place a disc can go here.
+
+The plank is drawn a quarter nearer than the tabletop, on a lower camera. That
+is deliberate and it is visible when the families sit side by side: a tabletop
+fills its frame because the working leg swings overhead, and a plank never leaves
+the floor, so at the tabletop's distance the whole movement sat in the bottom
+third of an empty frame.
+
+**A folded limb is the trap here.** A knee bend can be exactly right in space and
+still project onto a straight line, because from where the camera happens to be
+the shin lies along its own thigh. It fails at both ends: near 180 degrees the
+leg reads as straight, and near zero the shin has doubled back onto the thigh and
+the limb is a stub. Which of the two obvious fold directions - trailing back
+along the spine, or hanging toward the mat - avoids it depends on where the thigh
+points, so `fold` is a per-rig choice rather than a rule. A test measures the
+on-screen angle at the knee at the end of the travel and requires it to land
+between 25 and 155 degrees. Nothing about this is visible in the numbers; it was
+found by rendering.
 
 Tune with `node scripts/rig-3d-prototype.mjs`, which writes a page with a knob
-per number, then paste the result into `rigs.ts`. Judging these by reading the
-numbers does not work; the prototype went through several rounds that only
-looked wrong once animated.
+per number and plays the movement back, then paste the result into `rigs.ts`.
+Judging these by reading the numbers does not work, and neither does judging them
+from stills — both the rainbow and the side crunch went through several rounds
+that only looked wrong once animated.
+
+The prototype carries its own copy of the solver and knows only the tabletop: no
+plank, no slider, no `shift` or `reach`. For anything it cannot draw, note that
+`src/rig/spatial.ts` imports cleanly into plain Node — it has only type imports,
+which Node strips — so a throwaway script can sweep cameras against the real
+solver and report what a still cannot: how far the foot travels, how much of the
+leg is left on screen at the end of it, and whether the scene is still inside the
+box and the foot still on the mat. That is how the plank camera was found, and
+then it was rendered and looked at.
+
+The camera is not shared across the family even though the body is. A movement
+whose travel is *across* the mat wants the body turned so that travel lies in the
+picture plane; one that travels *along* the body wants it turned much further, or
+the movement runs straight into the lens and foreshortens to nothing. The rainbow
+sits at `turn: -22`, the side crunch at `turn: 30`, the two that cross the midline
+at `50`, and the two slider planks at `20`, for exactly that reason.
+
+Two constraints pull against each other and both are pinned by tests: the leg has
+to **travel** far enough on screen to read, and the knee has to stay clear of its
+own thigh so the limb never becomes a **stub**. Fixing one by moving the camera
+routinely breaks the other, so search the pair together rather than one at a time
+— for the cross-body crunch, every setting that killed the stub also killed the
+travel until the knee was carried further past the midline.
+
+A foot that stays on the mat is held to less travel, and that is geometry rather
+than a slack test. The foot's screen travel along its arc *is* the change in the
+leg's on-screen length, so the camera that maximises one minimises the other:
+turned to where the sweep runs widest across the screen, the leg ends the travel
+pointing at the lens and reads as lifted rather than slid. Turn the body far
+enough for the movement and the plank itself foreshortens into a tabletop. The
+sliding rigs sit at `turn: 20`, about half of what the tabletops travel, and the
+test asks for half as much of them. Depth is not the way out either: the floor's
+depth axis is worth a quarter of a pixel per unit at this camera, so a movement
+that travels straight up the mat barely moves on screen at all.
+
+Where no single camera serves a movement, the movement is often the thing to
+change rather than the camera. The combined crunch swings from one crunch to the
+other through an angle where the shin hides behind its thigh at every camera
+tried; routing it through the extended position in between fixes that, and is
+also how the movement is actually performed.
 
 ## A rig or a picture
 
@@ -203,7 +305,7 @@ route again — see [A rig or a picture](#a-rig-or-a-picture) — so this table
 records what is drawn today, and a movement moving to a picture is a decision,
 not a regression.
 
-130 rigs, two of them spatial. Some movements share a rig — the two spellings of
+130 rigs, eight of them spatial. Some movements share a rig — the two spellings of
 the bird dog, the left and right namings of the standing squats — so there are
 more exercise names than rigs.
 
@@ -241,9 +343,12 @@ were being drawn. It reached zero, and the assertions are unconditional again.
 
 ### Authoring traps the tests now catch
 
-Three mistakes are silent — nothing throws, the guide simply reads wrong — so
+These mistakes are silent — nothing throws, the guide simply reads wrong — so
 each has a test rather than a note:
 
+- **A knee bend that projects onto its own thigh.** Correct in space, invisible
+  on screen — see [The spatial rig](#the-spatial-rig). Spatial rigs must render
+  an authored bend between 25 and 155 degrees at the end of their travel.
 - **An angle written the short way round.** Angles interpolate linearly, so a
   head that ends at `8°` sweeps backwards through the body to get there. Write
   it as `368°`. No pair of consecutive poses may differ by more than 180°.
@@ -270,11 +375,17 @@ as lying down. Both of those shipped before this existed.
   plank is only about twelve degrees off the mat, so at this camera the body
   reads close to lying down; the highlighted supporting forearm and the gap
   under the hips are what carry it.
-- **The overhead quadruped set** — `quadruped-side-crunch`,
-  `quadruped-cross-body-crunch` and the combined crunch — is drawn from above
-  because the travel is lateral and invisible side-on. It works, but the
-  overhead camera reads less immediately than the side views. The rainbow pair
-  left this set for a spatial rig; the rest are candidates if it proves out.
+- **`straight-leg-sweep` and `straight-leg-sweep-circles`** are solved in space
+  now, on the plank body. What they give up is the pelvis: a straight leg
+  circling on a slider needs the hips to make room, and with the hips fixed the
+  foot can only come in toward the chest by giving up some of the leg's drawn
+  length. `reach` is that trade, and it is visible — the working leg is about a
+  fifth shorter at the inside of the circle. The alternative, aiming the leg
+  through the mat and letting the floor clamp catch it, drew a bent knee, which
+  is a different exercise.
+- **The face-up overheads** — `knee-across-body` and `windshield-wipers` — do
+  not have this problem and should stay flat. Lying face up, the body genuinely
+  is flat on the mat, so that camera hides nothing.
 - The **standing front view** carries real shoulder and hip width via
   `shoulderSpread` / `hipSpread`; `banded-biceps-curl` was the first user and
   the proportions are worth another pass once more standing movements exist.
@@ -284,11 +395,21 @@ as lying down. Both of those shipped before this existed.
   ever becomes an option.
 - **Shavasana** is deliberately plain. It reads well enough for a pose this
   simple, but it is a candidate for refinement.
-- **`rainbow` and `half-rainbow`** are the spatial rig's only users. The leg is
-  rigid — no IK — so the knee does not soften at the top of the arc, and the
-  traced path is drawn behind the whole figure rather than depth-sorted against
-  it. Neither shows at the size it renders, but both would need doing before a
-  third movement moves across.
+- **The spatial rigs** have no inverse kinematics, so a leg only bends where a
+  bend is authored, and the traced path draws behind the whole figure — only the
+  body is depth-sorted, and only where `occlude` asks for it. The body itself
+  never moves: no pelvis, no spine, and one fixed hip height per rig. A movement
+  that needs the trunk to change is not one for this solver.
+- **The plank is drawn larger than the tabletop**, a quarter nearer on a lower
+  camera, because a movement that never leaves the floor cannot fill a 16:9 frame
+  from the tabletop's distance. Side by side in a contact sheet it reads as two
+  sizes of athlete. Worth another look if the two families ever run together.
+- **The quadruped crunches want a pass in the tuner.** All four read as
+  tabletops, which the overhead versions never did, but their end positions were
+  settled by rendering stills and by measuring, not by playing them back. They
+  also sit at three different cameras — `turn: 30` for the side crunch, `50` for
+  the two that cross the midline — which is defensible per movement but looks
+  inconsistent across a family performed back to back.
 - **Lateral movement** is the flat rig's weakest axis, and the reason the
   spatial rig exists. `childs-pose-side-stretch` shows the reach but not which
   way the hands walk, and the clamshells approximate hip rotation. Both are

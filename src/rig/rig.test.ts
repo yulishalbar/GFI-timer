@@ -241,11 +241,18 @@ describe("rig definitions", () => {
     });
   });
 
-  it.each(spatialEntries)("%s sweeps the working foot across the mat", (id, rig) => {
+  it.each(spatialEntries)("%s sweeps the working foot far enough to read", (id, rig) => {
     // The movement is named for its two taps. If the sweep collapses, the guide
     // still animates but stops being this exercise. Measured as the widest gap
     // between any two positions rather than along one axis: most of a lateral
     // sweep's travel is in depth, which the projection turns into vertical.
+    //
+    // A foot on a slider is held to less. It never leaves the mat, so its travel
+    // is an arc of the single floor circle a straight leg can reach, and on
+    // screen that arc is widest exactly where the leg points at the camera and
+    // foreshortens to a stub. The two pull against each other at every camera and
+    // every body size that keeps the scene in frame; half of what a leg swinging
+    // through the air covers is what the geometry allows.
     const feet = SAMPLE_PHASES.map((phase) => {
       const leg = buildFrame(rig, phase).find((shape) => shape.key === "leg-work");
       return leg && leg.kind === "polyline" ? leg.points[leg.points.length - 1] : undefined;
@@ -253,8 +260,43 @@ describe("rig definitions", () => {
     const spread = Math.max(
       ...feet.flatMap((a) => feet.map((b) => Math.hypot(a[0] - b[0], a[1] - b[1])))
     );
-    expect(spread, `${id} barely travels`).toBeGreaterThan(80);
+    expect(spread, `${id} barely travels`).toBeGreaterThan(rig.spatial?.slider ? 45 : 80);
   });
+
+  it.each(spatialEntries.filter(([, rig]) => rig.spatial?.leg.some((leg) => (leg.knee ?? 0) >= 60)))(
+    "%s shows the knee bend it is authored with",
+    (id, rig) => {
+      // A folded limb can be perfectly correct in space and still project onto
+      // a straight line, because the shin lies along its own thigh from where
+      // the camera happens to be. Nothing throws - the leg simply reads as
+      // unbent, which is a different exercise. Both obvious fold directions do
+      // this at some poses, so the bend has to be checked where it renders.
+      // A bend reads only in a middle band. Near 180 the leg looks straight;
+      // near zero the shin has doubled back onto its own thigh and the limb is
+      // a stub. Both ends are the same defect - the shin projecting onto the
+      // thigh - and the second is the one that actually happened here.
+      //
+      // Checked across the loop rather than at one phase: a cycle does not put
+      // its deepest bend at any fixed point, so the stub must never appear at
+      // all, and the bend has to read somewhere.
+      const angles = SAMPLE_PHASES.map((phase) => {
+        const leg = buildFrame(rig, phase).find((shape) => shape.key === "leg-work");
+        if (!leg || leg.kind !== "polyline") return 180;
+        const [hip, knee, foot] = leg.points as [Point, Point, Point];
+        const a = Math.atan2(hip[1] - knee[1], hip[0] - knee[0]);
+        const b = Math.atan2(foot[1] - knee[1], foot[0] - knee[0]);
+        return Math.abs(((((a - b) * 180) / Math.PI + 540) % 360) - 180);
+      });
+      expect(
+        Math.min(...angles),
+        `${id}: the shin projects onto its own thigh, so the working leg renders as a stub`
+      ).toBeGreaterThan(25);
+      expect(
+        Math.min(...angles),
+        `${id}: the authored knee bend never reads - the leg looks straight throughout`
+      ).toBeLessThan(155);
+    }
+  );
 
   it("holds a static pose without a ghost or a path", () => {
     const still = rigEntries.filter(([, rig]) => rig.tempoMs === 0);

@@ -1,5 +1,5 @@
 import type { RigDefinition } from "./frame";
-import type { SpatialRig } from "./spatial";
+import type { SpatialLeg, SpatialRig } from "./spatial";
 import type { Chain, Point, Pose } from "./skeleton";
 
 /**
@@ -32,23 +32,6 @@ const PLANK_KNEE_IN: Chain = [168, -73, -75];
 
 const plank = (over: Partial<Pose>): Pose => ({ ...PLANK, ...over });
 
-/** The same plank seen from above, for movement that leaves the sagittal plane. */
-const OVERHEAD_PLANK: Pose = {
-  hip: [180, 102],
-  spine: 180,
-  head: 180,
-  // Seen from above the arms are foreshortened stubs either side of the chest.
-  armNear: [250, 5, 5],
-  armFar: [110, -5, -5],
-  armNearScale: 0.55,
-  armFarScale: 0.55,
-  legNear: [0, 0, 8],
-  legFar: [12, -4, 4],
-  ikBend: -1
-};
-
-const overhead = (footTarget: Point): Pose => ({ ...OVERHEAD_PLANK, ikLegNear: footTarget });
-
 /** Tabletop: knees and hands down, shoulders stacked over the wrists. */
 const QUADRUPED: Pose = {
   hip: [180, 131],
@@ -69,13 +52,17 @@ const quad = (over: Partial<Pose>): Pose => ({ ...QUADRUPED, ...over });
  * work is actually filmed, solved in floor coordinates rather than as screen
  * angles.
  *
- * The rainbow family is the one place a flat figure genuinely fails: the leg
- * travels sideways across the mat, which side-on collapses into a vertical line
- * and overhead collapses the body. Both members share this camera and body, and
- * differ only in how far the sweep runs, so they read as one movement at two
- * ranges. Tuned in `scripts/rig-3d-prototype.mjs`.
+ * This is where a flat figure genuinely fails. Side-on, a leg travelling across
+ * the mat collapses into a vertical line; from directly above, the height that
+ * makes the pose a tabletop rather than someone lying face down is invisible,
+ * because that camera has no axis for it. Here the mat recedes and the
+ * supporting limbs stand as columns, so the pose reads before the movement does.
+ *
+ * Every quadruped rig shares this camera and body and differs only in what the
+ * working leg does, so the family reads as one athlete. Tuned in
+ * `scripts/rig-3d-prototype.mjs`.
  */
-const RAINBOW_SPACE: Omit<SpatialRig, "sweepFrom" | "sweepTo"> = {
+const QUADRUPED_SPACE: Omit<SpatialRig, "leg" | "trace"> = {
   camera: { focal: 380, horizon: 43, base: 154, lift: 1.15 },
   mat: { width: 228, near: -46, far: 162, lines: 12 },
   body: {
@@ -87,8 +74,90 @@ const RAINBOW_SPACE: Omit<SpatialRig, "sweepFrom" | "sweepTo"> = {
     shin: 33,
     limbWidth: 9.5
   },
-  legTilt: 82,
-  arc: true
+};
+
+/**
+ * High plank on the hands and the toes, in the same floor coordinates as the
+ * tabletop.
+ *
+ * The slider work is the other half of what the overhead camera could not draw.
+ * From above, a body held in a plank and a body lying face down on the mat
+ * project to the same silhouette: the whole difference between them is vertical,
+ * and that camera has no vertical axis. Here the arms stand as columns under the
+ * shoulders and the body runs in one line from them back to the toes, so the
+ * plank is visible before the leg has moved at all.
+ *
+ * Drawn nearer than the tabletop, and the camera lower. A tabletop fills the
+ * frame because its working leg swings overhead; a plank never leaves the floor,
+ * so at the tabletop's distance the whole movement sat in the bottom third with
+ * the frame empty above it. The mat runs further toward the viewer for the same
+ * reason: a foot sliding out to the side crosses ground the kneeling work never
+ * touches.
+ */
+const PLANK_SCALE = 1.25;
+const PLANK_BODY = {
+  turn: 20,
+  // A plank runs a leg's length behind the hip and only a torso in front of it,
+  // so measured from the hip it sits far to the left of the mat. Slid back along
+  // itself, it is centred.
+  shift: 40,
+  length: 52 * PLANK_SCALE,
+  // Low enough that the shoulder, the hip and the toes fall on one line, which
+  // is the difference between a plank and a tabletop. Set higher, the figure
+  // reads as the quadruped it is not.
+  hipHeight: 22 * PLANK_SCALE,
+  shoulderHeight: 40 * PLANK_SCALE,
+  thigh: 33 * PLANK_SCALE,
+  shin: 33 * PLANK_SCALE,
+  limbWidth: 9.5 * PLANK_SCALE
+};
+
+const PLANK_SPACE: Omit<SpatialRig, "leg" | "trace"> = {
+  camera: { focal: 380, horizon: 43, base: 134, lift: 1.35 },
+  mat: { width: 230, near: -95, far: 162, lines: 12 },
+  support: "plank",
+  slider: true,
+  body: PLANK_BODY
+};
+
+const DEGREES = Math.PI / 180;
+const PLANK_LEG = PLANK_BODY.thigh + PLANK_BODY.shin;
+/** How far behind the hip a straight leg's foot lands with the toes on the mat. */
+const PLANK_FOOT_REACH = Math.sqrt(PLANK_LEG ** 2 - PLANK_BODY.hipHeight ** 2);
+/** The feet start hip width apart, which is where the working leg slides from. */
+const PLANK_HOME = -11;
+
+/**
+ * A leg position with the foot flat on the mat, stated as where the foot is
+ * rather than as the angles that put it there.
+ *
+ * On a slider the foot never leaves the floor, and that pins the leg: for a
+ * point on the mat there is exactly one direction and one length that put a
+ * straight leg's foot on it. `azimuth` is the direction, measured on the floor
+ * from straight back along the body, negative toward the viewer's side; `out` is
+ * how far along it the foot sits, one being the full stretch of the leg.
+ *
+ * Under one the foot is inside the circle the straight leg traces, which is the
+ * only way it comes in toward the chest with the hips where a plank holds them.
+ * A real body finds that room by tipping the pelvis. This one gives up a little
+ * of the leg's drawn length instead, which is the smaller lie: the alternative
+ * is aiming the leg through the mat, and what comes back from that is a bent
+ * knee, which is a different exercise.
+ */
+const slide = (azimuth: number, out = 1): SpatialLeg => {
+  const along = PLANK_FOOT_REACH * out;
+  const span = Math.hypot(along, PLANK_BODY.hipHeight);
+  const sweep = Math.atan2((Math.sin(azimuth * DEGREES) * along) / span, -PLANK_BODY.hipHeight / span);
+  return {
+    tilt: Math.acos((Math.cos(azimuth * DEGREES) * along) / span) / DEGREES,
+    // Every position here is near the bottom of the sweep, where the branch cut
+    // of the arc tangent falls: straight back is -180 on one side of the body's
+    // midline and +180 on the other. Left as it comes out, a foot crossing the
+    // midline interpolates the long way round - up through vertical, drawing the
+    // leg through the air the movement never leaves the floor for.
+    sweep: sweep > 0 ? sweep / DEGREES - 360 : sweep / DEGREES,
+    reach: span / PLANK_LEG
+  };
 };
 
 /** Hips high, heels reaching down, head hanging between the arms. */
@@ -290,38 +359,52 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
 
   "straight-leg-sweep": {
     title: "Straight leg sweep",
-    box: OVERHEAD_BOX,
-    view: "overheadDown",
+    box: "0 0 320 180",
     tempoMs: 2400,
     loop: "pingpong",
     ground: false,
-    focus: ["legNear"],
-    trace: "ankleNear",
-    equipment: [{ type: "disc", at: "ankleNear" }],
-    // Square to the mat, sweeping the straight leg out perpendicular and back:
-    // an open arc, which is what separates it from the circles below.
-    poses: [overhead([250, 102]), overhead([229.5, 52.5])]
+    // Square to the mat, sliding the straight leg out to the side and back to
+    // centre. Overhead this read as someone lying face down, which is the one
+    // thing the movement is not: the plank is held throughout, and the slider is
+    // what keeps the foot on the floor while the leg travels.
+    //
+    // Forty-seven degrees of travel from the hip-width stance, which is the far
+    // end of prone abduction and the range the overhead version was drawn at.
+    // Three positions rather than two: the foot follows a circle around the hip,
+    // and interpolating straight between the ends of a long arc cuts the corner
+    // off it, pulling the foot in toward the body on the way.
+    spatial: {
+      ...PLANK_SPACE,
+      trace: "foot",
+      leg: [slide(PLANK_HOME), slide(-34), slide(-58)]
+    }
   },
 
   "straight-leg-sweep-circles": {
     title: "Straight leg sweep circles",
-    box: OVERHEAD_BOX,
-    view: "overheadDown",
+    box: "0 0 320 180",
     tempoMs: 3200,
+    // A cycle, not a ping-pong: the foot draws a closed loop on the mat, and
+    // running it out and back would trace the circle in both directions.
     loop: "cycle",
     ground: false,
-    focus: ["legNear"],
-    trace: "ankleNear",
-    equipment: [{ type: "disc", at: "ankleNear" }],
-    // In toward the chest, then out and around. The foot target walks a closed
-    // loop and the knee angle falls out of it; keeping the radius near full leg
-    // length is what keeps the leg straight.
-    poses: [0, 1, 2, 3, 4, 5, 6, 7].map((index) => {
-      const t = (index / 8) * Math.PI * 2;
-      const theta = -26 * Math.cos(t) * (Math.PI / 180);
-      const radius = 66 + 6 * Math.sin(t);
-      return overhead([180 + Math.cos(theta) * radius, 102 + Math.sin(theta) * radius]);
-    }) as [Pose, ...Pose[]]
+    // In toward the chest, around to the side, then out to full stretch and back
+    // to centre - the same body and camera as the sweep, differing only in the
+    // path the foot walks. Coming in toward the chest is a shorter reach rather
+    // than a different angle: with the hips where a plank holds them, that is the
+    // only way a straight leg's foot moves closer to the hands.
+    spatial: {
+      ...PLANK_SPACE,
+      trace: "foot",
+      leg: [
+        slide(PLANK_HOME),
+        slide(-4, 0.86),
+        slide(-22, 0.72),
+        slide(-44, 0.76),
+        slide(-58, 0.9),
+        slide(-40)
+      ]
+    }
   },
 
   "thread-leg-side": {
@@ -740,7 +823,14 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
     // the mat to the other, which a flat side-on figure can only foreshorten
     // into a vertical line. Solved in floor space instead, so the arc is the
     // shape it actually is and both taps land on the mat.
-    spatial: { ...RAINBOW_SPACE, sweepFrom: -124, sweepTo: 124 }
+    spatial: {
+      ...QUADRUPED_SPACE,
+      trace: "foot",
+      leg: [
+        { tilt: 82, sweep: -124 },
+        { tilt: 82, sweep: 124 }
+      ]
+    }
   },
 
   "half-rainbow": {
@@ -752,7 +842,14 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
     // Half the arc: one tap, then up to the top, rather than crossing to the
     // far side. Same camera and body as the full rainbow, so the pair reads as
     // one movement at two ranges instead of two different exercises.
-    spatial: { ...RAINBOW_SPACE, sweepFrom: -124, sweepTo: 0 }
+    spatial: {
+      ...QUADRUPED_SPACE,
+      trace: "foot",
+      leg: [
+        { tilt: 82, sweep: -124 },
+        { tilt: 82, sweep: 0 }
+      ]
+    }
   },
 
   "quadruped-glute-lift": {
@@ -782,13 +879,17 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
     trace: "kneeNear",
     // Lying twist seen from above: the knee crossing the midline is the whole
     // movement and it happens straight into the screen from the side.
+    //
+    // The arms are splayed rather than a true T. Drawn at 180 degrees apart they
+    // are collinear, and from this camera the two of them plus the shoulders
+    // render as one unbroken bar straight through the torso.
     poses: [
       {
         hip: [180, 102],
         spine: 180,
         head: 180,
-        armNear: [268, 0, 0],
-        armFar: [92, 0, 0],
+        armNear: [244, 5, 4],
+        armFar: [116, -5, -4],
         legNear: [0, 0, 8],
         legFar: [4, 0, 8]
       },
@@ -796,8 +897,8 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
         hip: [180, 102],
         spine: 180,
         head: 180,
-        armNear: [268, 0, 0],
-        armFar: [92, 0, 0],
+        armNear: [244, 5, 4],
+        armFar: [116, -5, -4],
         legNear: [58, -58, 8],
         legFar: [4, 0, 8]
       }
@@ -806,57 +907,107 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
 
   "quadruped-side-crunch": {
     title: "Side crunch",
-    box: OVERHEAD_BOX,
-    view: "overheadDown",
+    box: "0 0 320 180",
     tempoMs: 2000,
     loop: "pingpong",
     ground: false,
-    focus: ["legNear"],
-    trace: "kneeNear",
-    // Seen from above. The knee draws in toward the elbow on its own side,
-    // which is a purely lateral travel and all but invisible side-on.
-    poses: [overhead([248, 100]), overhead([152, 76])]
+    // Extended straight back with the glute engaged, then the knee folds in
+    // toward the elbow on its own side. Overhead this read as someone lying
+    // face down: that camera cannot show the body being held off the mat, which
+    // is most of what makes it a tabletop.
+    spatial: {
+      ...QUADRUPED_SPACE,
+      // Turned further round than the rainbow: this movement travels along the
+      // body rather than across it, and at the rainbow's camera it ran almost
+      // straight into the lens.
+      body: { ...QUADRUPED_SPACE.body, turn: 30 },
+      trace: "foot",
+      fold: "down",
+      leg: [
+        { tilt: 26, sweep: 0 },
+        { tilt: 142, sweep: -88, knee: 112 }
+      ]
+    }
   },
 
   "quadruped-cross-body-crunch": {
     title: "Cross body crunch",
-    box: OVERHEAD_BOX,
-    view: "overheadDown",
+    box: "0 0 320 180",
     tempoMs: 2000,
     loop: "pingpong",
     ground: false,
-    focus: ["legNear"],
-    trace: "kneeNear",
-    // The mirror of the side crunch: the knee crosses the midline instead of
-    // drawing in on its own side, which only a view from above can show.
-    poses: [overhead([248, 100]), overhead([160, 132])]
+    // The side crunch's mirror: the knee crosses the midline instead of drawing
+    // in on its own side. It passes under the torso on the way, so this is the
+    // one rig that has to be painted back to front - drawn on top the knee reads
+    // as crossing in front of the chest, which a leg cannot do.
+    spatial: {
+      ...QUADRUPED_SPACE,
+      // Turned further than the side crunch. That was forced: crossing the
+      // midline swings the leg through angles where, at the side crunch's
+      // camera, the shin lined up with its own thigh and the limb rendered as a
+      // stub for part of the travel. Carrying the knee well past the midline
+      // rather than just to it is both truer to the movement and what keeps the
+      // leg clear of its own thigh throughout.
+      body: { ...QUADRUPED_SPACE.body, turn: 50 },
+      trace: "foot",
+      fold: "down",
+      occlude: true,
+      leg: [
+        { tilt: 26, sweep: 0 },
+        { tilt: 142, sweep: 120, knee: 112 }
+      ]
+    }
   },
 
   "quadruped-combined-crunch": {
     title: "Combine Side crunch + Cross body crunch",
-    box: OVERHEAD_BOX,
-    view: "overheadDown",
+    box: "0 0 320 180",
     tempoMs: 3000,
+    // A cycle, not a ping-pong: the two crunches alternate, and reversing that
+    // would play the alternation backwards rather than repeating it.
     loop: "cycle",
     ground: false,
-    focus: ["legNear"],
-    trace: "kneeNear",
-    // Alternating the two: out, in to its own elbow, out, across the body.
-    poses: [overhead([248, 100]), overhead([152, 76]), overhead([160, 132])]
+    // Literally the other two in one loop: out, in to its own elbow, out, across
+    // the body. The leg extends between the crunches rather than swinging
+    // straight from one to the other - which is how the movement is actually
+    // performed, and it is also what keeps the guide legible, since a leg
+    // travelling directly between the two folds passes through an angle where
+    // the shin hides behind its own thigh.
+    spatial: {
+      ...QUADRUPED_SPACE,
+      body: { ...QUADRUPED_SPACE.body, turn: 50 },
+      trace: "foot",
+      fold: "down",
+      occlude: true,
+      leg: [
+        { tilt: 26, sweep: 0 },
+        { tilt: 142, sweep: -88, knee: 112 },
+        { tilt: 26, sweep: 0 },
+        { tilt: 142, sweep: 120, knee: 112 }
+      ]
+    }
   },
 
   "quadruped-side-crunch-extension": {
     title: "Side crunch with leg extension",
-    box: OVERHEAD_BOX,
-    view: "overheadDown",
+    box: "0 0 320 180",
     tempoMs: 3000,
     loop: "cycle",
     ground: false,
-    focus: ["legNear"],
-    trace: "ankleNear",
-    // Crunch in to the elbow, then extend the same leg straight out to the
-    // side before folding back - the extension is the added element.
-    poses: [overhead([248, 100]), overhead([152, 76]), overhead([188, 46])]
+    // Crunch in to the elbow, then extend the same leg straight out to the side
+    // before folding back - the extension is the added element, and it is the
+    // knee straightening rather than a separate position.
+    spatial: {
+      ...QUADRUPED_SPACE,
+      body: { ...QUADRUPED_SPACE.body, turn: 30 },
+      trace: "foot",
+      fold: "down",
+      leg: [
+        { tilt: 26, sweep: 0 },
+        { tilt: 142, sweep: -88, knee: 112 },
+        { tilt: 90, sweep: -90 }
+      ]
+    }
   },
 
   "bird-dog-crunch": {
@@ -1734,12 +1885,15 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
     focus: ["legFar"],
     trace: "ankleFar",
     // The bottom leg stays lifted and draws the circle; the top leg is parked.
+    // Drawn wider than the movement literally is: at the size this renders on a
+    // phone, a true-to-life circle for the bottom leg was a few pixels across
+    // and read as a leg holding still.
     poses: [0, 1, 2, 3, 4, 5].map((index) => {
       const t = (index / 6) * Math.PI * 2;
       return sideLying({
         legNear: [-40, 54, -10],
         ikBendFar: 1,
-        ikLegFar: sideLyingFoot(-12 - 9 * Math.cos(t), 66 + 4 * Math.sin(t))
+        ikLegFar: sideLyingFoot(-14 - 15 * Math.cos(t), 66 + 6 * Math.sin(t))
       });
     }) as [Pose, ...Pose[]]
   },

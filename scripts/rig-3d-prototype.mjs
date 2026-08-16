@@ -34,17 +34,22 @@ const KNOBS = [
   { group: "Body", key: "thigh", label: "Thigh", min: 20, max: 50, step: 1, value: 33 },
   { group: "Body", key: "shin", label: "Shin", min: 20, max: 50, step: 1, value: 33 },
   { group: "Body", key: "limbWidth", label: "Limb width", min: 4, max: 18, step: 0.5, value: 9.5 },
-  // The sweep is a rotation of the leg about the body's long axis, which is
-  // what the movement actually is. Past ninety degrees either way the foot
-  // drops below the hip, and far enough past it lands back on the mat - which
-  // is the tap the exercise is named for.
-  { group: "Movement", key: "sweepFrom", label: "Taps the mat here", min: -150, max: -20, step: 2, value: -124 },
-  { group: "Movement", key: "sweepTo", label: "And here", min: 20, max: 150, step: 2, value: 124 },
-  // How far the leg is from the body's long axis. This is what sets how wide
-  // the two taps land: near 90 the leg sweeps a full circle across the mat,
-  // low and it barely leaves the midline.
-  { group: "Movement", key: "legTilt", label: "How wide the leg swings", min: 40, max: 90, step: 1, value: 82 },
-  { group: "Movement", key: "showArc", label: "Draw the arc", min: 0, max: 1, step: 1, value: 1 },
+  // The leg is stated as two positions and the loop runs between them, the same
+  // shape as the rig data. Tilt is the angle from the body's backward axis and
+  // sweep is the rotation about it, so a straight-back leg is tilt 0 and a leg
+  // square out from the hip is tilt 90.
+  { group: "Start", key: "tiltA", label: "Tilt", min: 0, max: 180, step: 2, value: 82 },
+  { group: "Start", key: "sweepA", label: "Sweep", min: -180, max: 180, step: 2, value: -124 },
+  { group: "Start", key: "kneeA", label: "Knee bend", min: 0, max: 150, step: 2, value: 0 },
+  { group: "End", key: "tiltB", label: "Tilt", min: 0, max: 180, step: 2, value: 82 },
+  { group: "End", key: "sweepB", label: "Sweep", min: -180, max: 180, step: 2, value: 124 },
+  { group: "End", key: "kneeB", label: "Knee bend", min: 0, max: 150, step: 2, value: 0 },
+  // Which way a bent knee sends the shin. Neither answer is universal: the fold
+  // disappears whenever the shin projects onto its own thigh, and which of the
+  // two does that depends on where the thigh points and where the camera is.
+  { group: "Movement", key: "foldDown", label: "Shin hangs down (else trails back)", min: 0, max: 1, step: 1, value: 0 },
+  { group: "Movement", key: "showArc", label: "Draw the path", min: 0, max: 1, step: 1, value: 1 },
+  { group: "Movement", key: "traceKnee", label: "Path follows the knee (else the foot)", min: 0, max: 1, step: 1, value: 0 },
   { group: "Movement", key: "speed", label: "Seconds per pass", min: 1, max: 6, step: 0.25, value: 2.75 }
 ];
 
@@ -113,7 +118,7 @@ button.primary{background:var(--accent);color:#10160f;border-color:var(--accent)
 const KNOBS = ${JSON.stringify(KNOBS)};
 const state = Object.fromEntries(KNOBS.map((k) => [k.key, k.value]));
 const D = Math.PI / 180;
-const NEAR = "#f2f5f2", FAR = "#66766c", WORK = "#d7ff62", FLOOR = "#33453a", MAT = "#4a7b59", INK = "#0b0f0c";
+const NEAR = "#f2f5f2", FAR = "#66766c", WORK = "#d7ff62", GHOST = "#3d4a3f", FLOOR = "#33453a", MAT = "#4a7b59", INK = "#0b0f0c";
 
 /**
  * One-point perspective. z is depth away from the viewer; s shrinks with it, so
@@ -169,35 +174,70 @@ function mat() {
  * A quadruped with one working leg. The arc is a real sweep in space, which is
  * the whole argument: in the flat rig it had to be faked from a chosen camera.
  */
-/** Where the working foot is, in space, for a given sweep angle. */
-function footAt(sweepDeg) {
+/**
+ * The leg is two positions and the loop runs between them, matching the rig
+ * data exactly so what is tuned here is what gets pasted across.
+ */
+function legAt(t) {
   const k = state;
-  const tilt = k.legTilt * D;
-  const phi = sweepDeg * D;
-  const reach = k.thigh + k.shin;
+  return {
+    tilt: k.tiltA + (k.tiltB - k.tiltA) * t,
+    sweep: k.sweepA + (k.sweepB - k.sweepA) * t,
+    knee: k.kneeA + (k.kneeB - k.kneeA) * t
+  };
+}
+
+const scale3 = (v, n) => [v[0] * n, v[1] * n, v[2] * n];
+const add3 = (a, b) => [a[0] + b[0], a[1] + b[1], a[2] + b[2]];
+const cross3 = (a, b) => [
+  a[1] * b[2] - a[2] * b[1],
+  a[2] * b[0] - a[0] * b[2],
+  a[0] * b[1] - a[1] * b[0]
+];
+function unit(v) {
+  const n = Math.hypot(v[0], v[1], v[2]);
+  return n < 1e-6 ? [0, 0, 1] : scale3(v, 1 / n);
+}
+/** Rotation of v about a unit axis, by Rodrigues' formula. */
+function spin(v, axis, deg) {
+  const a = deg * D;
+  const c = Math.cos(a), sn = Math.sin(a);
+  const dot = v[0] * axis[0] + v[1] * axis[1] + v[2] * axis[2];
+  return add3(add3(scale3(v, c), scale3(cross3(axis, v), sn)), scale3(axis, dot * (1 - c)));
+}
+
+/** Knee and foot in space, with the knee bend folding the shin off the thigh. */
+function legJoints(t) {
+  const k = state;
+  const leg = legAt(t);
+  const tilt = leg.tilt * D;
+  const phi = leg.sweep * D;
   const dir = [-Math.cos(tilt), Math.sin(tilt) * Math.cos(phi), Math.sin(tilt) * Math.sin(phi)];
-  return turn(
-    [
-      -k.bodyLen / 2 + dir[0] * reach,
-      Math.max(0, k.hipHeight + dir[1] * reach),
-      20 + dir[2] * reach
-    ],
-    k.turn,
-    [0, 0, 20]
-  );
+  const hip = [-k.bodyLen / 2, k.hipHeight, 20];
+  const place = (from, along, dist, rise) => {
+    const to = add3(from, scale3(along, dist));
+    return [to[0], Math.max(0, to[1]) + (rise || 0), to[2]];
+  };
+  const knee = place(hip, dir, k.thigh, 2);
+  if (leg.knee === 0) {
+    return { knee: turn(knee, k.turn, [0, 0, 20]), foot: turn(place(hip, dir, k.thigh + k.shin), k.turn, [0, 0, 20]) };
+  }
+  const target = state.foldDown ? [0, -1, 0] : [-1, 0, 0];
+  const axis = unit(cross3(dir, target));
+  const foot = place(knee, spin(dir, axis, leg.knee), k.shin);
+  return { knee: turn(knee, k.turn, [0, 0, 20]), foot: turn(foot, k.turn, [0, 0, 20]) };
 }
 
 /**
- * The path the foot travels, sampled from the same numbers that move the leg
- * rather than drawn by hand - so it is a readout of the movement, and the two
- * taps sit exactly where the foot actually reaches the mat.
+ * The path a joint travels, sampled from the same numbers that move the leg
+ * rather than drawn by hand - so it is a readout of the movement, and the marks
+ * at each end sit exactly where it turns around.
  */
 function arc() {
   if (!state.showArc) return "";
   const steps = 48;
-  const points = Array.from({ length: steps + 1 }, (_, i) =>
-    project(footAt(state.sweepFrom + ((state.sweepTo - state.sweepFrom) * i) / steps))
-  );
+  const which = state.traceKnee ? "knee" : "foot";
+  const points = Array.from({ length: steps + 1 }, (_, i) => project(legJoints(i / steps)[which]));
   const ends = [points[0], points[points.length - 1]];
   return (
     '<path d="' + points.map((p, i) => (i ? "L" : "M") + fmt(p)).join("") +
@@ -212,46 +252,35 @@ function arc() {
   );
 }
 
-function figure(sweepDeg) {
+function figure(t) {
   const k = state;
   const about = [0, 0, 20];
-  const t = (p) => turn(p, k.turn, about);
+  const tp = (p) => turn(p, k.turn, about);
 
-  const hip = t([-k.bodyLen / 2, k.hipHeight, 20]);
-  const shoulder = t([k.bodyLen / 2, k.shoulderHeight, 20]);
-  const head = t([k.bodyLen / 2 + 20, k.shoulderHeight + 4, 20]);
-  const handNear = t([k.bodyLen / 2 + 4, 0, 8]);
-  const handFar = t([k.bodyLen / 2 + 2, 0, 32]);
-  const kneeSupport = t([-k.bodyLen / 2 - 2, k.hipHeight * 0.45, 30]);
-  const footSupport = t([-k.bodyLen / 2 - 16, 0, 34]);
+  const hip = tp([-k.bodyLen / 2, k.hipHeight, 20]);
+  const shoulder = tp([k.bodyLen / 2, k.shoulderHeight, 20]);
+  const head = tp([k.bodyLen / 2 + 20, k.shoulderHeight + 4, 20]);
+  const handNear = tp([k.bodyLen / 2 + 4, 0, 8]);
+  const handFar = tp([k.bodyLen / 2 + 2, 0, 32]);
+  const kneeSupport = tp([-k.bodyLen / 2 - 2, k.hipHeight * 0.45, 30]);
+  const footSupport = tp([-k.bodyLen / 2 - 16, 0, 34]);
 
-  // The working leg is a rotation about the body's long axis. The leg reaches
-  // back by legTilt and then swings around that axis: straight up at zero,
-  // and far enough either way that the foot comes back down onto the mat. That
-  // is the movement, stated once, rather than an arc chosen to look right from
-  // one camera.
-  const tilt = k.legTilt * D;
-  const phi = sweepDeg * D;
-  const dir = [-Math.cos(tilt), Math.sin(tilt) * Math.cos(phi), Math.sin(tilt) * Math.sin(phi)];
-  const along = (length, rise) => t([
-    -k.bodyLen / 2 + dir[0] * length,
-    Math.max(0, k.hipHeight + dir[1] * length) + rise,
-    20 + dir[2] * length
-  ]);
-  const foot = footAt(sweepDeg);
-  const knee = along(k.thigh, 2);
+  const now = legJoints(t);
+  const start = legJoints(0);
 
   const head2d = project(head);
   return [
     mat(),
-    // The arc sits on the mat, under the body, so the figure never hides it.
+    // The path sits on the mat, under the body, so the figure never hides it.
     arc(),
+    // An onion-skin of where the leg starts, so the range reads in a still.
+    limb([hip, start.knee, start.foot], GHOST, 1.05),
     // Far side first so depth reads.
     limb([shoulder, handFar], FAR, 0.85),
     limb([hip, kneeSupport, footSupport], FAR, 0.95),
     limb([hip, shoulder], NEAR, 1.7),
     limb([shoulder, handNear], NEAR, 1),
-    limb([hip, knee, foot], WORK, 1.05),
+    limb([hip, now.knee, now.foot], WORK, 1.05),
     '<circle cx="' + head2d.x.toFixed(1) + '" cy="' + head2d.y.toFixed(1) +
       '" r="' + (12 * head2d.s).toFixed(1) + '" fill="' + NEAR + '"/>'
   ].join("");
@@ -264,13 +293,16 @@ grid.innerHTML = Array.from({ length: FRAMES }, (_, i) =>
   '<figcaption><b>Frame ' + (i + 1) + '</b><span class="sw" id="sw' + i + '"></span></figcaption></figure>'
 ).join("");
 
-const sweepAt = (t) => state.sweepFrom + (state.sweepTo - state.sweepFrom) * t;
+const label = (t) => {
+  const leg = legAt(t);
+  return "tilt " + leg.tilt.toFixed(0) + "  sweep " + leg.sweep.toFixed(0) + "  knee " + leg.knee.toFixed(0);
+};
 
 function render() {
   for (let i = 0; i < FRAMES; i += 1) {
-    const sweep = sweepAt(i / (FRAMES - 1));
-    document.getElementById("svg" + i).innerHTML = figure(sweep);
-    document.getElementById("sw" + i).textContent = sweep.toFixed(0) + "\\u00b0";
+    const t = i / (FRAMES - 1);
+    document.getElementById("svg" + i).innerHTML = figure(t);
+    document.getElementById("sw" + i).textContent = label(t);
   }
   document.getElementById("out").value = JSON.stringify(state, null, 2);
 }
@@ -284,9 +316,8 @@ function play(now) {
   const period = state.speed * 2000;
   const phase = ((now - started) % period) / period;
   const t = phase < 0.5 ? ease(phase * 2) : ease((1 - phase) * 2);
-  const sweep = sweepAt(t);
-  document.getElementById("player").innerHTML = figure(sweep);
-  document.getElementById("playerSweep").textContent = sweep.toFixed(0) + "\\u00b0";
+  document.getElementById("player").innerHTML = figure(t);
+  document.getElementById("playerSweep").textContent = label(t);
   requestAnimationFrame(play);
 }
 requestAnimationFrame(play);
