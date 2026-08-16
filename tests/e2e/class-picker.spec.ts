@@ -178,7 +178,7 @@ test("searches and filters the offline course and exercise libraries", async ({ 
 
   await page.getByRole("button", { name: "Band", exact: true }).click();
   await expect(page.getByRole("heading", { name: "Mat Pilates with Band", exact: true })).toBeVisible();
-  await expect(page.getByRole("heading", { name: "HIIT Pilates with Sliders", exact: true })).toHaveCount(0);
+  await expect(page.getByRole("heading", { name: "Mat Pilates with Sliders", exact: true })).toHaveCount(0);
   await page.getByRole("button", { name: "Clear search and filters" }).click();
 
   await page.getByRole("button", { name: /Exercises/ }).click();
@@ -251,15 +251,15 @@ test("opens and starts the catalog-backed sliders course", async ({ page }) => {
   await page.goto("./");
 
   const classCard = page.getByRole("article").filter({
-    has: page.getByRole("heading", { name: "HIIT Pilates with Sliders", exact: true })
+    has: page.getByRole("heading", { name: "Mat Pilates with Sliders", exact: true })
   });
-  await expect(classCard).toContainText("50.5 min");
+  await expect(classCard).toContainText("60 min");
   await expect(classCard).toContainText("8 phases");
-  await expect(classCard).toContainText("82 steps");
+  await expect(classCard).toContainText("104 steps");
   await classCard.getByRole("button", { name: "View class" }).click();
 
-  await expect(page.getByRole("heading", { name: "HIIT Pilates with Sliders" })).toBeVisible();
-  await expect(page.getByLabel("50.5 min total")).toContainText("50:30");
+  await expect(page.getByRole("heading", { name: "Mat Pilates with Sliders" })).toBeVisible();
+  await expect(page.getByLabel("60 min total")).toContainText("1:00:00");
   const leftBadge = page.getByLabel("Left side").first();
   const rightBadge = page.getByLabel("Right side").first();
   await expect(leftBadge).toBeVisible();
@@ -307,7 +307,7 @@ test("keeps the current movement readable during the handover on a phone", async
   await page.goto("./");
 
   const classCard = page.getByRole("article").filter({
-    has: page.getByRole("heading", { name: "HIIT Pilates with Sliders", exact: true })
+    has: page.getByRole("heading", { name: "Mat Pilates with Sliders", exact: true })
   });
   await classCard.getByRole("button", { name: "View class" }).click();
   await page.getByRole("button", { name: "Start class" }).click();

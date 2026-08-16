@@ -258,7 +258,7 @@ compiler and timer boundary.
 Exit: every built-in course produces its locked expected timeline and runs
 offline with no playback regression.
 
-HIIT Pilates with Sliders and Mat Pilates with Band are the first registered
+Mat Pilates with Sliders and Mat Pilates with Band are the first registered
 catalog-backed courses. The unversioned name is the V2 default; the picker keeps
 explicit **V1** fallbacks under separate stable IDs for comparison and rollback.
 Timing, guidance, and media equivalence tests lock each migrated schedule. A

@@ -99,15 +99,15 @@ describe("compileClass", () => {
   it("compiles the sliders class with stable totals", () => {
     const compiled = compileClass(hiitPilatesSliders);
 
-    expect(compiled.steps).toHaveLength(82);
-    expect(compiled.totalDurationMs).toBe(3_030_000);
+    expect(compiled.steps).toHaveLength(104);
+    expect(compiled.totalDurationMs).toBe(3_600_000);
     expect(compiled.phases).toEqual([
       { id: "warmup", name: "Warm-Up", index: 1, stepCount: 4, durationMs: 180_000 },
       { id: "abs-circuit", name: "Circuit #1: Abs", index: 2, stepCount: 23, durationMs: 590_000 },
       { id: "upper-core-one", name: "Circuit #2: Upper Body and Core", index: 3, stepCount: 6, durationMs: 210_000 },
-      { id: "hiit-legs", name: "Circuit #3: HIIT — Legs Focused", index: 4, stepCount: 16, durationMs: 370_000 },
+      { id: "hiit-legs", name: "Circuit #3: Legs Focused", index: 4, stepCount: 32, durationMs: 730_000 },
       { id: "plank-pyramid", name: "Circuit #4: Upper Body and Core Pyramid", index: 5, stepCount: 7, durationMs: 280_000 },
-      { id: "upper-core-two", name: "Circuit #5: Upper Body and Core", index: 6, stepCount: 6, durationMs: 210_000 },
+      { id: "upper-core-two", name: "Circuit #5: Upper Body and Core", index: 6, stepCount: 12, durationMs: 420_000 },
       { id: "side-body", name: "Circuit #6: Side Body", index: 7, stepCount: 14, durationMs: 560_000 },
       { id: "cooldown", name: "Cooldown", index: 8, stepCount: 6, durationMs: 630_000 }
     ]);
@@ -148,7 +148,7 @@ describe("compileClass", () => {
     expect(catalogBacked.steps.filter((step) => step.exerciseReference?.side === "right")).not.toHaveLength(0);
     expect(catalogBacked.steps.filter((step) => step.name === "Single-leg lunge with slider").map(
       (step) => step.exerciseReference?.side
-    )).toEqual(["left", "right"]);
+    )).toEqual(["left", "right", "left", "right"]);
   });
 
   it("keeps the catalog-backed band timing and guidance equivalent to V1", () => {

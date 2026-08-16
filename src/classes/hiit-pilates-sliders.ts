@@ -65,7 +65,7 @@ const reversePlankSeries = (prefix: string): ClassEntry[] => [
     "Pulse at the top with hips lifted and heels grounded to mat.", undefined, "exercises/glute-bridge.svg")
 ];
 
-const hiitLegRound = (round: "one" | "two"): ClassEntry[] => {
+const hiitLegRound = (round: "one" | "two" | "three" | "four"): ClassEntry[] => {
   const moves = [
     exercise(`reverse-lunge-${round}`, "Single-leg lunge with slider", 30,
       "Stand with one foot planted and the other on a slider behind you. Inhale as the sliding leg moves back into a reverse lunge while the front knee bends. Exhale as you press through the front heel and slide the back foot forward to return to standing. Maintain upright posture and engaged core."),
@@ -111,9 +111,9 @@ export const hiitPilatesSlidersLegacy = {
   schemaVersion: 1,
   id: "hiit-pilates-sliders-v1",
   version: 1,
-  title: "HIIT Pilates with Sliders V1",
+  title: "Mat Pilates with Sliders V1",
   description:
-    "Warm-up, abs, arms, glutes, lower-body HIIT, and cooldown. Equipment: mat and optional sliders.",
+    "A lower-body-focused Mat Pilates class with sliders, including glutes, legs, core, upper-body support, and cooldown. Equipment: mat and optional sliders.",
   phases: [
     {
       id: "warmup",
@@ -141,12 +141,16 @@ export const hiitPilatesSlidersLegacy = {
     { id: "upper-core-one", name: "Circuit #2: Upper Body and Core", items: reversePlankSeries("upper-one") },
     {
       id: "hiit-legs",
-      name: "Circuit #3: HIIT — Legs Focused",
+      name: "Circuit #3: Legs Focused",
       items: [
         rest("hiit-setup", 60, "Come to standing. Start with left leg in front, slider under right leg behind."),
         ...hiitLegRound("one"),
         rest("hiit-side-switch", 10, "Switch sides."),
-        ...hiitLegRound("two")
+        ...hiitLegRound("two"),
+        rest("hiit-round-two-setup", 50, "Repeat both sides. Start with left leg in front, slider under right leg behind."),
+        ...hiitLegRound("three"),
+        rest("hiit-round-two-side-switch", 10, "Switch sides."),
+        ...hiitLegRound("four")
       ]
     },
     {
@@ -159,7 +163,14 @@ export const hiitPilatesSlidersLegacy = {
         { ...plankPyramidMoves[0]!, id: "straight-leg-sweep-return" }
       ]
     },
-    { id: "upper-core-two", name: "Circuit #5: Upper Body and Core", items: reversePlankSeries("upper-two") },
+    {
+      id: "upper-core-two",
+      name: "Circuit #5: Upper Body and Core",
+      items: [
+        ...reversePlankSeries("upper-two"),
+        ...reversePlankSeries("upper-three")
+      ]
+    },
     {
       id: "side-body",
       name: "Circuit #6: Side Body",
@@ -192,8 +203,8 @@ export const hiitPilatesSlidersLegacy = {
 
 const adaptedSlidersCourse = normalizeSlidersCatalog(adaptLegacyClassToCatalog(hiitPilatesSlidersLegacy, {
   tags: builtInTags,
-  courseTags: ["hiit-pilates", "mat", "sliders", "full-body"],
-  exerciseTags: ["hiit-pilates", "mat", "sliders"]
+  courseTags: ["mat-pilates", "mat", "sliders", "full-body"],
+  exerciseTags: ["mat-pilates", "mat", "sliders"]
 }));
 
 export const hiitPilatesSlidersCatalog = {
@@ -202,7 +213,7 @@ export const hiitPilatesSlidersCatalog = {
     ...adaptedSlidersCourse.course,
     id: "hiit-pilates-sliders",
     version: 1,
-    title: "HIIT Pilates with Sliders"
+    title: "Mat Pilates with Sliders"
   }
 };
 
