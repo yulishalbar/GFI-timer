@@ -41,7 +41,7 @@ const gluteSide = (side: "L" | "R"): ClassEntry[] => [
   exercise(`leg-pulses-${side.toLowerCase()}`, `Leg pulses (${side})`, 40,
     "Extend the straight back leg and pulse up and down.", undefined, "exercises/quadruped-leg-series.svg"),
   exercise(`rainbow-${side.toLowerCase()}`, `Rainbow (${side})`, 40,
-    `Extend the ${side === "L" ? "left" : "right"} leg straight back, tap your toe to the outer side of your opposite foot, then lift your leg in a wide arc to tap the floor on the other side.`, undefined, "exercises/quadruped-leg-series.svg")
+    `Extend the ${side === "L" ? "left" : "right"} leg straight back, tap your toe to the outer side of your opposite foot, then lift your leg in a wide arc to tap the floor on the other side.`)
 ];
 
 const standingLegSide = (side: "L" | "R"): ClassEntry[] => {

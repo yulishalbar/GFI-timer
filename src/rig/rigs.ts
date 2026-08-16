@@ -1,4 +1,5 @@
 import type { RigDefinition } from "./frame";
+import type { SpatialRig } from "./spatial";
 import type { Chain, Point, Pose } from "./skeleton";
 
 /**
@@ -62,6 +63,33 @@ const QUADRUPED: Pose = {
 };
 
 const quad = (over: Partial<Pose>): Pose => ({ ...QUADRUPED, ...over });
+
+/**
+ * Tabletop seen three quarters from behind, which is how the lateral quadruped
+ * work is actually filmed, solved in floor coordinates rather than as screen
+ * angles.
+ *
+ * The rainbow family is the one place a flat figure genuinely fails: the leg
+ * travels sideways across the mat, which side-on collapses into a vertical line
+ * and overhead collapses the body. Both members share this camera and body, and
+ * differ only in how far the sweep runs, so they read as one movement at two
+ * ranges. Tuned in `scripts/rig-3d-prototype.mjs`.
+ */
+const RAINBOW_SPACE: Omit<SpatialRig, "sweepFrom" | "sweepTo"> = {
+  camera: { focal: 380, horizon: 43, base: 154, lift: 1.15 },
+  mat: { width: 228, near: -46, far: 162, lines: 12 },
+  body: {
+    turn: -22,
+    length: 52,
+    hipHeight: 36,
+    shoulderHeight: 38,
+    thigh: 33,
+    shin: 33,
+    limbWidth: 9.5
+  },
+  legTilt: 82,
+  arc: true
+};
 
 /** Hips high, heels reaching down, head hanging between the arms. */
 const DOWN_DOG: Pose = {
@@ -131,8 +159,8 @@ const STANDING_SIDE: Pose = {
   facing: 180,
   armNear: [92, 4, 4],
   armFar: [94, 4, 4],
-  legNear: [89, 2, -85],
-  legFar: [91, 2, -83]
+  legNear: [89, 2, 94],
+  legFar: [91, 2, 92]
 };
 
 const standingSide = (over: Partial<Pose>): Pose => ({ ...STANDING_SIDE, ...over });
@@ -140,8 +168,8 @@ const standingSide = (over: Partial<Pose>): Pose => ({ ...STANDING_SIDE, ...over
 /** Side-on lunge: both feet planted, so both legs follow targets on the mat. */
 const lunge = (hipY: number, slidingFoot: Point): Partial<Pose> => ({
   hip: [160, hipY],
-  legNear: [0, 0, -112],
-  legFar: [0, 0, -104],
+  legNear: [0, 0, 116],
+  legFar: [0, 0, 112],
   ikLegNear: slidingFoot,
   ikLegFar: [154, 194],
   ikBend: -1,
@@ -263,6 +291,7 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
   "straight-leg-sweep": {
     title: "Straight leg sweep",
     box: OVERHEAD_BOX,
+    view: "overheadDown",
     tempoMs: 2400,
     loop: "pingpong",
     ground: false,
@@ -277,6 +306,7 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
   "straight-leg-sweep-circles": {
     title: "Straight leg sweep circles",
     box: OVERHEAD_BOX,
+    view: "overheadDown",
     tempoMs: 3200,
     loop: "cycle",
     ground: false,
@@ -437,13 +467,13 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
         ikLegFar: [238, 158]
       }),
       plank({
-        hip: [172, 144],
-        spine: 190,
-        head: 172,
+        hip: [166, 135],
+        spine: 182,
+        head: 167,
         // Third value only: the first two are solved from the target. It lays
         // the hand flat along the mat instead of carrying on downward.
-        armNear: [88, 4, 142],
-        armFar: [85, 6, 144],
+        armNear: [88, 4, 101],
+        armFar: [85, 6, 103],
         ikArmNear: [113, 169],
         ikArmFar: [115, 169],
         ikArmBend: 1,
@@ -700,35 +730,29 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
 
   rainbow: {
     title: "Rainbow",
-    box: OVERHEAD_BOX,
-    tempoMs: 2800,
+    // The full projection canvas. A spatial rig's numbers are tuned against
+    // this frame, so cropping it would move the camera rather than zoom it.
+    box: "0 0 320 180",
+    tempoMs: 3000,
     loop: "pingpong",
     ground: false,
-    focus: ["legNear"],
-    trace: "ankleNear",
-    // Seen from above: the toe arcs from one side, out and over, to the other.
-    // The arc is the whole point of the movement and is invisible side-on.
-    poses: [
-      overhead([180 + Math.cos(-32 * (Math.PI / 180)) * 58, 102 + Math.sin(-32 * (Math.PI / 180)) * 58]),
-      overhead([250, 102]),
-      overhead([180 + Math.cos(32 * (Math.PI / 180)) * 58, 102 + Math.sin(32 * (Math.PI / 180)) * 58])
-    ]
+    // The whole movement is the leg travelling across the body from one side of
+    // the mat to the other, which a flat side-on figure can only foreshorten
+    // into a vertical line. Solved in floor space instead, so the arc is the
+    // shape it actually is and both taps land on the mat.
+    spatial: { ...RAINBOW_SPACE, sweepFrom: -124, sweepTo: 124 }
   },
 
   "half-rainbow": {
     title: "Half rainbow",
-    box: OVERHEAD_BOX,
+    box: "0 0 320 180",
     tempoMs: 2200,
     loop: "pingpong",
     ground: false,
-    focus: ["legNear"],
-    trace: "ankleNear",
-    // Half the arc of a rainbow: out to one side and back, rather than tapping
-    // down on both. Same camera, because the arc is still the whole point.
-    poses: [
-      overhead([250, 102]),
-      overhead([180 + Math.cos(34 * (Math.PI / 180)) * 58, 102 + Math.sin(34 * (Math.PI / 180)) * 58])
-    ]
+    // Half the arc: one tap, then up to the top, rather than crossing to the
+    // far side. Same camera and body as the full rainbow, so the pair reads as
+    // one movement at two ranges instead of two different exercises.
+    spatial: { ...RAINBOW_SPACE, sweepFrom: -124, sweepTo: 0 }
   },
 
   "quadruped-glute-lift": {
@@ -750,6 +774,7 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
   "knee-across-body": {
     title: "Knee across the body",
     box: OVERHEAD_BOX,
+    view: "overheadUp",
     tempoMs: 2600,
     loop: "pingpong",
     ground: false,
@@ -782,6 +807,7 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
   "quadruped-side-crunch": {
     title: "Side crunch",
     box: OVERHEAD_BOX,
+    view: "overheadDown",
     tempoMs: 2000,
     loop: "pingpong",
     ground: false,
@@ -795,6 +821,7 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
   "quadruped-cross-body-crunch": {
     title: "Cross body crunch",
     box: OVERHEAD_BOX,
+    view: "overheadDown",
     tempoMs: 2000,
     loop: "pingpong",
     ground: false,
@@ -808,6 +835,7 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
   "quadruped-combined-crunch": {
     title: "Combine Side crunch + Cross body crunch",
     box: OVERHEAD_BOX,
+    view: "overheadDown",
     tempoMs: 3000,
     loop: "cycle",
     ground: false,
@@ -820,6 +848,7 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
   "quadruped-side-crunch-extension": {
     title: "Side crunch with leg extension",
     box: OVERHEAD_BOX,
+    view: "overheadDown",
     tempoMs: 3000,
     loop: "cycle",
     ground: false,
@@ -1158,8 +1187,8 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
     // upward past the chest, and the wrapped value swings it down through the
     // mat on the way.
     poses: [
-      supine({ ...CURLED, ...HANDS_BEHIND_HEAD, legNear: [248, -62, -12], legFar: [342, 0, -12] }),
-      supine({ ...CURLED, ...HANDS_BEHIND_HEAD, legNear: [342, 0, -12], legFar: [248, -62, -12] })
+      supine({ ...CURLED, ...HANDS_BEHIND_HEAD, legNear: [248, 142, 12], legFar: [342, 0, -12] }),
+      supine({ ...CURLED, ...HANDS_BEHIND_HEAD, legNear: [342, 0, -12], legFar: [248, 142, 12] })
     ]
   },
 
@@ -1252,9 +1281,15 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
     trace: "head",
     // Seated and tall, then down one vertebra at a time. The bow deepening as
     // the spine lowers is the "one vertebra at a time" part.
+    //
+    // Seated, the face looks out along the legs; lying, it looks at the
+    // ceiling. That is a quarter turn one way, written as 8 to -82 rather than
+    // wrapped, so the chin keeps a constant offset from the face. Values that
+    // rotate the face and the chin in opposite directions - which the earlier
+    // 200 and 250 did - put the face on the back of the head halfway through.
     poses: [
-      supine({ spine: 268, head: 268, facing: 200, armNear: [0, 4, 4], armFar: [2, 4, 4], legNear: [4, 2, -10], legFar: [6, 2, -10] }),
-      supine({ spine: 196, head: 200, spineBow: -8, facing: 250, armNear: [16, 6, 4], armFar: [18, 6, 4] })
+      supine({ spine: 268, head: 268, facing: 8, armNear: [0, 4, 4], armFar: [2, 4, 4], legNear: [4, 2, -10], legFar: [6, 2, -10] }),
+      supine({ spine: 196, head: 200, spineBow: -8, facing: -82, armNear: [16, 6, 4], armFar: [18, 6, 4] })
     ]
   },
 
@@ -1263,6 +1298,7 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
     box: SUPINE_BOX,
     tempoMs: 2600,
     loop: "pingpong",
+    hold: 0.5,
     groundY: 162,
     focus: ["legNear"],
     trace: "kneeNear",
@@ -1272,7 +1308,7 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
     // to travel up over the body, not down through the mat.
     poses: [
       supine({}),
-      supine({ legNear: [-118, -74, -10], armNear: [-42, 44, 6], armFar: [-40, 42, 6] })
+      supine({ legNear: [-118, 158, 10], armNear: [-42, 44, 6], armFar: [-40, 42, 6] })
     ]
   },
 
@@ -1475,6 +1511,7 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
   "banded-russian-twist": {
     title: "Russian twist - band around wrists",
     box: SEATED_FRONT_BOX,
+    view: "front",
     tempoMs: 2000,
     loop: "pingpong",
     groundY: 190,
@@ -1518,6 +1555,7 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
   "side-lying-leg-lift": {
     title: "Leg lift",
     box: SIDE_LYING_BOX,
+    view: "lying",
     tempoMs: 2000,
     loop: "pingpong",
     groundY: 152,
@@ -1533,6 +1571,7 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
   "clamshell-openers": {
     title: "Clamshell openers",
     box: SIDE_LYING_BOX,
+    view: "lying",
     tempoMs: 1900,
     loop: "pingpong",
     groundY: 152,
@@ -1545,6 +1584,7 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
   "clamshell-lifts": {
     title: "Clamshell lifts",
     box: SIDE_LYING_BOX,
+    view: "lying",
     tempoMs: 1900,
     loop: "pingpong",
     groundY: 152,
@@ -1558,17 +1598,18 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
   "side-body-crunch": {
     title: "Side-body crunches",
     box: SIDE_LYING_BOX,
+    view: "lying",
     tempoMs: 2100,
     loop: "pingpong",
     groundY: 152,
     focus: ["legNear", "armNear"],
     trace: "kneeNear",
     poses: [
-      sideLying({ armNear: [196, 108, 22], legNear: [6, 2, -14], legFar: [10, 2, -14] }),
+      sideLying({ armNear: [-40, -132, 0], legNear: [6, 2, -14], legFar: [10, 2, -14] }),
       sideLying({
         spine: 172,
         spineBow: -11,
-        armNear: [232, 96, 22],
+        armNear: [-16, -152, 0],
         legNear: [-34, 64, -10],
         legFar: [10, 2, -14]
       })
@@ -1578,6 +1619,7 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
   "side-lying-big-circles": {
     title: "Big leg circles",
     box: SIDE_LYING_BOX,
+    view: "lying",
     tempoMs: 3000,
     loop: "cycle",
     groundY: 152,
@@ -1596,6 +1638,7 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
   "side-lying-small-circles": {
     title: "Small leg circle pulses",
     box: SIDE_LYING_BOX,
+    view: "lying",
     tempoMs: 1400,
     loop: "cycle",
     groundY: 152,
@@ -1615,6 +1658,7 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
   "side-lying-forward-back-kick": {
     title: "Forward and back kick",
     box: SIDE_LYING_BOX,
+    view: "lying",
     tempoMs: 2200,
     loop: "pingpong",
     groundY: 152,
@@ -1629,6 +1673,7 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
   "side-lying-straight-leg-crunch": {
     title: "Straight leg crunches",
     box: SIDE_LYING_BOX,
+    view: "lying",
     tempoMs: 2000,
     loop: "pingpong",
     groundY: 152,
@@ -1636,11 +1681,11 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
     trace: "ankleNear",
     // Straight top leg meeting the top elbow, unlike the bent-knee crunch.
     poses: [
-      sideLying({ armNear: [196, 108, 22], legNear: [6, 2, -14], legFar: [8, 2, -14] }),
+      sideLying({ armNear: [-40, -132, 0], legNear: [6, 2, -14], legFar: [8, 2, -14] }),
       sideLying({
         spine: 172,
         spineBow: -11,
-        armNear: [232, 96, 22],
+        armNear: [-16, -152, 0],
         legNear: [-40, 3, -12],
         legFar: [8, 2, -14]
       })
@@ -1650,6 +1695,7 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
   "bottom-leg-lifts": {
     title: "Bottom leg lifts",
     box: SIDE_LYING_BOX,
+    view: "lying",
     tempoMs: 2000,
     loop: "pingpong",
     groundY: 152,
@@ -1666,6 +1712,7 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
   "bottom-leg-pulses": {
     title: "Bottom leg pulses",
     box: SIDE_LYING_BOX,
+    view: "lying",
     tempoMs: 700,
     loop: "pingpong",
     groundY: 152,
@@ -1680,6 +1727,7 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
   "inner-thigh-circles": {
     title: "Inner thigh circles",
     box: SIDE_LYING_BOX,
+    view: "lying",
     tempoMs: 2400,
     loop: "cycle",
     groundY: 152,
@@ -1699,6 +1747,7 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
   "double-leg-lift": {
     title: "Double-leg lift",
     box: SIDE_LYING_BOX,
+    view: "lying",
     tempoMs: 2400,
     loop: "pingpong",
     groundY: 152,
@@ -1715,6 +1764,7 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
   "side-lying-small-leg-circles": {
     title: "Small leg circles",
     box: SIDE_LYING_BOX,
+    view: "lying",
     tempoMs: 2000,
     loop: "cycle",
     groundY: 152,
@@ -1735,6 +1785,7 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
   "pulse-leg-at-top": {
     title: "Pulse leg at the top",
     box: SIDE_LYING_BOX,
+    view: "lying",
     tempoMs: 650,
     loop: "pingpong",
     groundY: 152,
@@ -1749,6 +1800,7 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
   "side-lying-static-hold": {
     title: "Static hold",
     box: SIDE_LYING_BOX,
+    view: "lying",
     tempoMs: 0,
     loop: "cycle",
     groundY: 152,
@@ -1763,6 +1815,7 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
   "clamshell-kick": {
     title: "Clam shell openers with kick",
     box: SIDE_LYING_BOX,
+    view: "lying",
     tempoMs: 2600,
     loop: "cycle",
     groundY: 152,
@@ -1779,8 +1832,10 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
   "forearm-side-plank": {
     title: "Forearm side plank",
     box: SIDE_LYING_BOX,
+    view: "lying",
     tempoMs: 2600,
     loop: "pingpong",
+    hold: 0.5,
     groundY: 152,
     // The supporting forearm is highlighted rather than the working side: at
     // this angle the body is close to horizontal, and the propped forearm is
@@ -1824,6 +1879,7 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
   "tricep-side-push-up": {
     title: "Tricep side push-up",
     box: SIDE_LYING_BOX,
+    view: "lying",
     tempoMs: 2000,
     loop: "pingpong",
     groundY: 152,
@@ -1895,6 +1951,7 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
   "standing-side-stretch": {
     title: "Standing side-body stretch",
     box: STANDING_REACH_BOX,
+    view: "front",
     tempoMs: 2600,
     loop: "pingpong",
     groundY: 196,
@@ -1987,6 +2044,7 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
   "windshield-wipers": {
     title: "Bent-knee windshield wipers",
     box: OVERHEAD_BOX,
+    view: "overheadUp",
     tempoMs: 2600,
     loop: "pingpong",
     ground: false,
@@ -2052,6 +2110,7 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
   "seated-straddle": {
     title: "Seated Straddle",
     box: SEATED_FRONT_BOX,
+    view: "front",
     tempoMs: 3400,
     loop: "cycle",
     groundY: 196,
@@ -2096,6 +2155,7 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
   "seated-side-twist": {
     title: "Side twist",
     box: SEATED_FRONT_BOX,
+    view: "front",
     tempoMs: 3200,
     loop: "pingpong",
     groundY: 196,
@@ -2135,6 +2195,8 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
     box: SEATED_BOX,
     tempoMs: 3000,
     loop: "pingpong",
+    // A stretch is held at the bottom, not bounced into and out of.
+    hold: 0.45,
     groundY: 162,
     trace: "head",
     poses: [
@@ -2170,6 +2232,7 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
   "squat-to-stand": {
     title: "Squat to stand",
     box: STANDING_BOX,
+    view: "front",
     tempoMs: 2200,
     loop: "pingpong",
     groundY: 196,
@@ -2186,6 +2249,7 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
   "squat-pulse": {
     title: "Squat pulse",
     box: STANDING_BOX,
+    view: "front",
     tempoMs: 700,
     loop: "pingpong",
     groundY: 196,
@@ -2200,6 +2264,7 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
   "squat-add-arms": {
     title: "Squat -> add arms",
     box: STANDING_REACH_BOX,
+    view: "front",
     tempoMs: 2400,
     loop: "pingpong",
     groundY: 196,
@@ -2216,8 +2281,11 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
   "squat-hold": {
     title: "Squat hold",
     box: STANDING_REACH_BOX,
+    view: "front",
     tempoMs: 2600,
     loop: "pingpong",
+    // A hold, not a pulse: it arrives and stays for most of the loop.
+    hold: 0.55,
     groundY: 196,
     trace: "hip",
     // The hold shown as its entry: standing, then low with the arms by the
@@ -2246,7 +2314,7 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
         head: 254,
         armNear: [244, 4, 4],
         armFar: [246, 4, 4],
-        legNear: [30, 4, -20],
+        legNear: [30, 4, 8],
         ikLegFar: [148, 194],
         ikBendFar: -1
       }),
@@ -2256,7 +2324,7 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
         head: 250,
         armNear: [244, 4, 4],
         armFar: [246, 4, 4],
-        legNear: [4, 4, -14],
+        legNear: [4, 4, 8],
         ikLegFar: [148, 194],
         ikBendFar: -1
       })
@@ -2266,6 +2334,7 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
   "squat-to-twist": {
     title: "Squat to twist",
     box: STANDING_BOX,
+    view: "front",
     tempoMs: 2600,
     loop: "pingpong",
     groundY: 196,
@@ -2287,6 +2356,7 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
   "sumo-squat-hand-lifts": {
     title: "Sumo squat and hand lifts",
     box: STANDING_REACH_BOX,
+    view: "front",
     tempoMs: 3000,
     loop: "pingpong",
     groundY: 196,
@@ -2349,8 +2419,8 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
     // Weight into the standing leg, hips square, the other leg reaching
     // straight back. Side-on, because that is where the extension shows.
     poses: [
-      standingSide({ legNear: [86, 4, -80], legFar: [91, 2, -83] }),
-      standingSide({ legNear: [34, 4, -66], spine: 262, legFar: [91, 2, -83] })
+      standingSide({ legNear: [86, 4, 94], legFar: [91, 2, 92] }),
+      standingSide({ legNear: [34, 4, 10], spine: 262, legFar: [91, 2, 92] })
     ]
   },
 
@@ -2363,14 +2433,16 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
     focus: ["legNear"],
     // The leg never comes back down; it just pulses at the top.
     poses: [
-      standingSide({ legNear: [40, 4, -66], spine: 262, legFar: [91, 2, -83] }),
-      standingSide({ legNear: [26, 4, -66], spine: 260, legFar: [91, 2, -83] })
+      standingSide({ legNear: [40, 4, 10], spine: 262, legFar: [91, 2, 92] }),
+      standingSide({ legNear: [26, 4, 10], spine: 260, legFar: [91, 2, 92] })
     ]
   },
 
   "side-to-back-kick": {
     title: "Side to back kick",
-    box: STANDING_BOX,
+    // A touch deeper than the standing box: the hinge drops the head and the
+    // pointed back foot reaches lower than a plain standing pose does.
+    box: "-8 30 320 180",
     tempoMs: 3000,
     loop: "cycle",
     groundY: 196,
@@ -2380,9 +2452,9 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
     // and kick behind. Drawn side-on so the hinge and the kick read; the
     // opening to the side is the half this camera foreshortens.
     poses: [
-      standingSide({ legNear: [72, 6, -70], legFar: [91, 2, -83] }),
-      standingSide({ legNear: [88, 4, -80], legFar: [91, 2, -83] }),
-      standingSide({ legNear: [24, 4, -62], spine: 236, head: 232, spineBow: -5, legFar: [91, 2, -83] })
+      standingSide({ legNear: [72, 6, 26], legFar: [91, 2, 92] }),
+      standingSide({ legNear: [88, 4, 26], legFar: [91, 2, 92] }),
+      standingSide({ legNear: [24, 4, 10], spine: 236, head: 232, spineBow: -5, legFar: [91, 2, 92] })
     ]
   },
 
@@ -2397,8 +2469,8 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
     // Hinge at the hip with the free leg reaching back as a counterweight,
     // then stand and drive the same knee up. The two halves are one movement.
     poses: [
-      standingSide({ legNear: [20, 4, -60], spine: 232, head: 228, armNear: [64, 6, 4], armFar: [66, 6, 4], legFar: [91, 2, -83] }),
-      standingSide({ legNear: [212, -74, -30], spine: 276, head: 276, armNear: [128, 30, 4], armFar: [130, 28, 4], legFar: [91, 2, -83] })
+      standingSide({ legNear: [20, 4, 10], spine: 232, head: 228, armNear: [64, 6, 4], armFar: [66, 6, 4], legFar: [91, 2, 92] }),
+      standingSide({ legNear: [212, -74, -30], spine: 276, head: 276, armNear: [128, 30, 4], armFar: [130, 28, 4], legFar: [91, 2, 92] })
     ]
   },
 
@@ -2412,14 +2484,15 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
     trace: "kneeNear",
     // Tall spine, hands under the knee drawing it to the chest, alternating.
     poses: [
-      standingSide({ legNear: [206, -78, -28], armNear: [124, 34, 6], armFar: [126, 32, 6], legFar: [91, 2, -83] }),
-      standingSide({ legNear: [89, 2, -85], armNear: [96, 6, 4], armFar: [128, 34, 6], legFar: [206, -78, -28] })
+      standingSide({ legNear: [206, -78, -28], armNear: [124, 34, 6], armFar: [126, 32, 6], legFar: [91, 2, 92] }),
+      standingSide({ legNear: [89, 2, 94], armNear: [96, 6, 4], armFar: [128, 34, 6], legFar: [206, -78, -28] })
     ]
   },
 
   "arm-circles": {
     title: "Arm circles",
     box: STANDING_REACH_BOX,
+    view: "front",
     tempoMs: 2600,
     loop: "cycle",
     groundY: 196,
@@ -2438,6 +2511,7 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
   "small-arm-circles": {
     title: "Small arm circles",
     box: STANDING_REACH_BOX,
+    view: "front",
     tempoMs: 1200,
     loop: "cycle",
     groundY: 196,
@@ -2456,6 +2530,7 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
   "shoulder-rolls": {
     title: "Shoulder rolls",
     box: STANDING_BOX,
+    view: "front",
     tempoMs: 2400,
     loop: "cycle",
     groundY: 196,
@@ -2475,6 +2550,7 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
   "hip-circles": {
     title: "Hip circles",
     box: STANDING_BOX,
+    view: "front",
     tempoMs: 2800,
     loop: "cycle",
     groundY: 196,
@@ -2500,6 +2576,7 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
   "static-single-leg-squat": {
     title: "Static single-leg squat",
     box: STANDING_BOX,
+    view: "front",
     tempoMs: 1600,
     loop: "pingpong",
     groundY: 196,
@@ -2515,6 +2592,7 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
   "single-leg-squat-opener": {
     title: "Single leg squat + leg opener",
     box: STANDING_BOX,
+    view: "front",
     tempoMs: 2000,
     loop: "pingpong",
     groundY: 196,
@@ -2530,6 +2608,7 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
   "pulse-leg-openers": {
     title: "Pulse leg openers",
     box: STANDING_BOX,
+    view: "front",
     tempoMs: 800,
     loop: "pingpong",
     groundY: 196,
@@ -2544,6 +2623,7 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
   "full-range-single-leg-squat": {
     title: "Full-range single-leg squat",
     box: STANDING_BOX,
+    view: "front",
     tempoMs: 2400,
     loop: "pingpong",
     groundY: 196,
@@ -2557,6 +2637,7 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
   "side-squat-curtsy": {
     title: "Side squat to curtsy lunge",
     box: STANDING_BOX,
+    view: "front",
     tempoMs: 2800,
     loop: "pingpong",
     groundY: 196,
@@ -2572,6 +2653,7 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
   "curtsy-pulse": {
     title: "Curtsy pulse",
     box: STANDING_BOX,
+    view: "front",
     tempoMs: 800,
     loop: "pingpong",
     groundY: 196,
@@ -2586,6 +2668,7 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
   "standing-punch-outs": {
     title: "Standing punch-outs",
     box: STANDING_BOX,
+    view: "front",
     tempoMs: 900,
     loop: "pingpong",
     groundY: 196,
@@ -2602,6 +2685,7 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
   "band-hold-out": {
     title: "Band hold out",
     box: STANDING_BOX,
+    view: "front",
     tempoMs: 0,
     loop: "cycle",
     groundY: 196,
@@ -2614,6 +2698,7 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
   "band-pulse-out": {
     title: "Band pulse out",
     box: STANDING_BOX,
+    view: "front",
     tempoMs: 700,
     loop: "pingpong",
     groundY: 196,
@@ -2629,6 +2714,7 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
   "serve-the-platter": {
     title: "Serve the platter",
     box: STANDING_BOX,
+    view: "front",
     tempoMs: 1800,
     loop: "pingpong",
     groundY: 196,
@@ -2660,6 +2746,7 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
   "band-outward-extension": {
     title: "Band outward extension (behind back)",
     box: STANDING_BOX,
+    view: "front",
     tempoMs: 1600,
     loop: "pingpong",
     groundY: 196,
@@ -2709,6 +2796,7 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
   "slider-side-lunge": {
     title: "Side lunge sliding out",
     box: STANDING_BOX,
+    view: "front",
     tempoMs: 2200,
     loop: "pingpong",
     groundY: 196,
@@ -2724,6 +2812,7 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
   "slider-squat-side-lunge": {
     title: "Isometric hold squat with side lunge",
     box: STANDING_BOX,
+    view: "front",
     tempoMs: 1800,
     loop: "pingpong",
     groundY: 196,
@@ -2742,6 +2831,7 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
   "banded-biceps-curl": {
     title: "Straight biceps curl",
     box: STANDING_BOX,
+    view: "front",
     tempoMs: 1800,
     loop: "pingpong",
     groundY: 196,

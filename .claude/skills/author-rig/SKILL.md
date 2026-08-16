@@ -53,13 +53,24 @@ The rig is 2D, so the camera is the main authoring decision.
 | Movement | Camera |
 | --- | --- |
 | Sagittal - crunches, bridges, planks, push-ups, lunges | side-on, facing left |
-| Lateral - leg circles, rainbows, cross-body work, kicks to the side | overhead |
+| Lateral - leg circles, cross-body work, kicks to the side | overhead |
 | Symmetric standing - squats, curls, presses | head-on, with `shoulderSpread` / `hipSpread` |
 | Side-lying | front-on, so the top leg's travel is visible |
 
 Choose overhead whenever the travel is lateral: side-on, the movement the
 exercise is named for happens entirely into the screen. Prefer whichever
 actually shows the movement over whichever is more familiar.
+
+Set `view` to say where the camera is, not just which way the body faces - the
+same facing angle means "from the side" on a crunch and "from the front" on a
+side-lying leg lift, and the head is drawn differently for each.
+
+**When no camera works**, the movement is not planar and wants a spatial rig
+instead: `spatial` in place of `poses`, the body in floor coordinates, one
+projection. `rainbow` is the worked example, and `docs/ARTWORK.md` covers when
+to reach for it. Tune it in `node scripts/rig-3d-prototype.mjs`, never by
+reading the numbers. This is a last resort - it has no IK and no torso shape, so
+a movement the flat rig can carry should stay flat.
 
 `shoulderSpread` and `hipSpread` are front-view tools only. On a side or supine
 pose they push the far limb through the floor.

@@ -59,6 +59,19 @@ summary:focus-visible {
   }
 }
 
+/* Kept in the accessibility tree, taken out of the layout. The class picker's
+   heading is one: the tabs and cards below say the same thing visually, so on a
+   phone it was only costing the first screen. */
+.visually-hidden {
+  position: absolute;
+  overflow: hidden;
+  clip-path: inset(50%);
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  white-space: nowrap;
+}
+
 .skip-link {
   position: fixed;
   z-index: 20;
@@ -1233,6 +1246,13 @@ h1 {
 
 .exercise-rig .rig__ground {
   color: #33453a;
+  stroke: currentcolor;
+}
+
+/* The mat's own lines. A step lighter than the mat itself — drawn in the ground
+   colour they were the same tone on the same tone and simply did not appear. */
+.exercise-rig .rig__mat {
+  color: #4a7b59;
   stroke: currentcolor;
 }
 

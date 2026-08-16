@@ -35,6 +35,7 @@ What the rig gives that a sequence of images cannot:
 | --- | --- |
 | `src/rig/skeleton.ts` | Segment lengths, forward kinematics, two-link IK, pose interpolation |
 | `src/rig/frame.ts` | Turns a rig and a phase into role-tagged shapes |
+| `src/rig/spatial.ts` | The spatial rig: floor coordinates and the projection |
 | `src/rig/rigs.ts` | The pose data for each movement |
 | `src/rig/assignments.ts` | Which exercise name maps to which rig |
 | `src/components/ExerciseRig.tsx` | Renders the shapes and drives the loop |
@@ -64,9 +65,10 @@ Conventions that are not machine-checkable but matter:
   floor. Interpolating the angles instead can swing a limb down through the mat
   on its way to the next pose; a target that travels along the ground cannot.
   `thread-leg-side` is the worked example.
-- Choose the camera the movement needs. `straight-leg-sweep-circles` and
-  `rainbow` are drawn from overhead because their paths leave the sagittal plane
-  entirely, and the side-lying family faces the viewer for the same reason.
+- Choose the camera the movement needs. `straight-leg-sweep-circles` is drawn
+  from overhead because its path leaves the sagittal plane entirely, and the
+  side-lying family faces the viewer for the same reason. Where no flat camera
+  works, the movement wants a spatial rig instead.
 - Use `spineBow` for anything spinal. Cat and cow, side-body crunches and the
   kneeling folds are mostly bow and head angle; the limbs barely move.
 - Spread is a front-view tool. On a side view of someone lying down it runs
@@ -91,6 +93,33 @@ long descriptions carry the fine form cues. If tutorial-grade fidelity is ever
 needed for a handful of movements, real filmed video is the answer — not more
 still frames.
 
+## The spatial rig
+
+A second solver, `src/rig/spatial.ts`, for the movements the flat rig genuinely
+cannot carry. Instead of screen angles it holds the body in **floor
+coordinates** - x across the mat, y up, z away from the viewer - and projects
+once, `s = focal / (focal + z)`. Depth then falls out of the arithmetic: a limb
+further away draws smaller and higher up the mat, the mat itself projects to a
+trapezoid, and turning the body is one number rather than a redraw from a new
+camera.
+
+It exists because of the rainbow. The working leg travels from one side of the
+mat to the other; side-on that collapses to a vertical line, and overhead it
+buys the arc at the cost of the body. Neither camera is wrong - the movement
+simply is not planar, and a flat rig has nowhere to say so. Drawn in space, the
+leg is a **rotation about the body's long axis**, and both mat taps fall out of
+one number instead of being placed by hand.
+
+A spatial rig sets `spatial` instead of `poses`; a test pins that every rig has
+exactly one of the two. What it is not is a general 3D engine - there is no
+inverse kinematics, no torso shape, and no depth sorting of the traced arc
+against the body. Reach for it only when the flat rig has actually failed.
+
+Tune with `node scripts/rig-3d-prototype.mjs`, which writes a page with a knob
+per number, then paste the result into `rigs.ts`. Judging these by reading the
+numbers does not work; the prototype went through several rounds that only
+looked wrong once animated.
+
 ## A rig or a picture
 
 The rig is the default, not the rule. One figure drawn the same way everywhere
@@ -101,8 +130,9 @@ the pose matters more than consistency.**
 
 Reach for a picture when:
 
-- **the movement is a rotation**, which the rig can only imply;
-- **the travel is lateral** and even the overhead camera does not save it;
+- **the movement is a rotation**, which the flat rig can only imply;
+- **the travel is lateral** and neither an overhead camera nor a spatial rig
+  saves it;
 - **equipment detail carries the exercise** — how a band is threaded, where a
   slider sits under the foot;
 - **the exercise is new and the rig is not ready.** A picture now is worth more
@@ -162,29 +192,36 @@ different rigs never merge. A test pins the library at zero repeated names.
 
 ## Migration status
 
-**Every movement in the catalog currently has a rig.** `public/exercises/` is
-empty; the only records without a visual are `INTRODUCTION` and
-`Class introduction`, which are spoken preambles rather than movements.
+**Every movement in the catalog has a visual.** All but one are rigs;
+`public/exercises/` holds a single file, `shavasana.jpg`, because the photograph
+reads better than the rig did. The only records without a visual are
+`INTRODUCTION` and `Class introduction`, which are spoken preambles rather than
+movements.
 
 That is where it landed, not a rule going forward. Pictures are a supported
 route again — see [A rig or a picture](#a-rig-or-a-picture) — so this table
 records what is drawn today, and a movement moving to a picture is a decision,
 not a regression.
 
-131 rigs cover 136 movements — the difference is the handful drawn by a shared
-rig, such as the two spellings of the bird dog.
+130 rigs, two of them spatial. Some movements share a rig — the two spellings of
+the bird dog, the left and right namings of the standing squats — so there are
+more exercise names than rigs.
+
+Counted by the family headings in `src/rig/assignments.ts`, which is where the
+grouping actually lives:
 
 | Family | Rigs |
 | --- | --- |
-| Plank, push-up and prone | 12 |
-| Quadruped and kneeling | 21 |
-| Supine core, with and without band | 24 |
-| Seated | 5 |
+| Plank and slider floor | 10 |
+| Prone back extension | 2 |
+| Quadruped and kneeling | 22 |
+| Supine core | 24 |
 | Side-lying | 18 |
 | Bridges | 8 |
 | Cooldown and stretches | 11 |
-| Standing squats and lunges | 17 |
-| Standing upper body and warm-up | 11 |
+| Standing legs, band | 24 |
+| Standing upper body, band | 6 |
+| Standing, band | 1 |
 | HIIT slider legs | 4 |
 
 What the tests pin:
@@ -234,9 +271,10 @@ as lying down. Both of those shipped before this existed.
   reads close to lying down; the highlighted supporting forearm and the gap
   under the hips are what carry it.
 - **The overhead quadruped set** — `quadruped-side-crunch`,
-  `quadruped-cross-body-crunch`, `half-rainbow` and the combined crunch — is
-  drawn from above because the travel is lateral and invisible side-on. It
-  works, but the overhead camera reads less immediately than the side views.
+  `quadruped-cross-body-crunch` and the combined crunch — is drawn from above
+  because the travel is lateral and invisible side-on. It works, but the
+  overhead camera reads less immediately than the side views. The rainbow pair
+  left this set for a spatial rig; the rest are candidates if it proves out.
 - The **standing front view** carries real shoulder and hip width via
   `shoulderSpread` / `hipSpread`; `banded-biceps-curl` was the first user and
   the proportions are worth another pass once more standing movements exist.
@@ -246,8 +284,12 @@ as lying down. Both of those shipped before this existed.
   ever becomes an option.
 - **Shavasana** is deliberately plain. It reads well enough for a pose this
   simple, but it is a candidate for refinement.
-- **`rainbow`** is drawn from overhead so its arc is visible, but the overhead
-  quadruped reads less clearly than the side views. Worth revisiting.
-- **Lateral movement** is the rig's weakest axis. `childs-pose-side-stretch`
-  shows the reach but not which way the hands walk, and the clamshells
-  approximate hip rotation. Both are honest about it in their comments.
+- **`rainbow` and `half-rainbow`** are the spatial rig's only users. The leg is
+  rigid — no IK — so the knee does not soften at the top of the arc, and the
+  traced path is drawn behind the whole figure rather than depth-sorted against
+  it. Neither shows at the size it renders, but both would need doing before a
+  third movement moves across.
+- **Lateral movement** is the flat rig's weakest axis, and the reason the
+  spatial rig exists. `childs-pose-side-stretch` shows the reach but not which
+  way the hands walk, and the clamshells approximate hip rotation. Both are
+  honest about it in their comments, and both are candidates for moving across.

@@ -25,10 +25,25 @@ type RecoveryState =
       initialization: SessionInitialization;
     };
 
+/**
+ * How long a saved session stays resumable.
+ *
+ * A class is a live thing: an instructor who was genuinely interrupted comes
+ * back within minutes, not the next morning. Without a limit the session
+ * survives forever, so every launch opens on "resume this class?" for a class
+ * that ended days ago — including when the instructor only wanted to browse the
+ * exercise library. Expiring it means a stale session simply is not there.
+ */
+const RESUMABLE_FOR_MS = 3 * 60 * 60 * 1_000;
+
 function loadRecoveryState(): RecoveryState {
   const nowEpochMs = Date.now();
   const stored = loadStoredSession();
   if (stored.status === "empty") {
+    return { status: "none" };
+  }
+  if (stored.status === "valid" && nowEpochMs - stored.session.savedAtEpochMs > RESUMABLE_FOR_MS) {
+    clearStoredSession();
     return { status: "none" };
   }
   if (stored.status === "invalid") {

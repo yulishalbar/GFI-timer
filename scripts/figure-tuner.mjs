@@ -129,6 +129,7 @@ const KNOBS = [
   { group: "Body", key: "bustArcs", label: "Chest as arcs on the body", min: 0, max: 1, step: 1, value: 0 },
   { group: "Body", key: "bust", label: "Chest", min: 1, max: 4, step: 0.05, value: 2.6 },
   { group: "Body", key: "bustAt", label: "Chest height on the torso", min: 0.05, max: 0.4, step: 0.01, value: 0.13 },
+  { group: "Body", key: "bustDrop", label: "Chest arc lower", min: 0, max: 0.3, step: 0.01, value: 0.1 },
   { group: "Body", key: "waist", label: "Waist", min: 0.4, max: 1.2, step: 0.02, value: 0.7 },
   { group: "Body", key: "hips", label: "Hips", min: 0.9, max: 1.8, step: 0.02, value: 1.3 },
   { group: "Body", key: "shoulders", label: "Shoulders", min: 0.7, max: 1.5, step: 0.02, value: 1 },
@@ -147,11 +148,56 @@ const KNOBS = [
  * the whole difference.
  */
 const VIEW_DEFAULTS = {
-  profile: {},
-  lying: { hairTilt: 46, headTilt: -14, bustArcs: 1, hairJaw: 2.3, eyeSpread: 0.32 },
-  front: { bustArcs: 1 },
-  overheadUp: { hairJaw: 1.5, hairCrown: 1.35, eyeR: 3.2, bustArcs: 0 },
-  overheadDown: { hairFull: 1, hairJaw: 1.5 }
+  profile: {
+    headR: 11.5, headOval: 1.18, headTilt: 0,
+    hairFull: 0, hairFront: -26, hairBack: 150, hairCrown: 1.26, hairJaw: 1.68,
+    hairInner: 0.92, hairStrands: 6, hairTilt: 0,
+    eyeArcs: 1, eyeR: 2.1, eyeOut: 0.38, eyeUp: 3.6, eyeSpread: 0.64, browLift: 0,
+    noseLen: 3.8, noseBulge: 2.2, mouthW: 0.46, mouthDrop: 6.8, mouthCurve: 2.4, ink: 1.7,
+    bustArcs: 0, bust: 2.95, bustAt: 0.35, bustDrop: 0.14,
+    waist: 0.4, hips: 1.1, shoulders: 0.72,
+    matAlpha: 0.82, matLines: 6, matInset: 0.08
+  },
+  lying: {
+    headR: 11.5, headOval: 1.18, headTilt: -14,
+    hairFull: 0, hairFront: -44, hairBack: 142, hairCrown: 1.02, hairJaw: 1.72,
+    hairInner: 0.92, hairStrands: 0, hairTilt: 46,
+    eyeArcs: 1, eyeR: 1.6, eyeOut: 0.3, eyeUp: 2.6, eyeSpread: 0.32, browLift: 0,
+    noseLen: 3.4, noseBulge: 2.2, mouthW: 0.46, mouthDrop: 5.6, mouthCurve: 3, ink: 1.7,
+    bustArcs: 1, bust: 1.75, bustAt: 0.19, bustDrop: 0.11,
+    waist: 0.62, hips: 1.16, shoulders: 0.9,
+    matAlpha: 0.85, matLines: 7, matInset: 0.08
+  },
+  front: {
+    headR: 11.5, headOval: 1.18, headTilt: 0,
+    hairFull: 0, hairFront: -52, hairBack: 150, hairCrown: 1.14, hairJaw: 1.68,
+    hairInner: 0.92, hairStrands: 0, hairTilt: 0,
+    eyeArcs: 1, eyeR: 2.5, eyeOut: 0.3, eyeUp: 2.6, eyeSpread: 0.38, browLift: 0,
+    noseLen: 3.4, noseBulge: 4, mouthW: 0.52, mouthDrop: 6.4, mouthCurve: 3, ink: 1.6,
+    bustArcs: 0, bust: 1.15, bustAt: 0.11, bustDrop: 0.12,
+    waist: 0.78, hips: 1.06, shoulders: 0.88,
+    matAlpha: 0.85, matLines: 7, matInset: 0.08
+  },
+  overheadUp: {
+    headR: 11.5, headOval: 1.18, headTilt: 0,
+    hairFull: 0, hairFront: -40, hairBack: 150, hairCrown: 1.35, hairJaw: 1.5,
+    hairInner: 0.92, hairStrands: 3, hairTilt: 0,
+    eyeArcs: 1, eyeR: 1.9, eyeOut: 0.3, eyeUp: 2.6, eyeSpread: 0.38, browLift: 0,
+    noseLen: 4, noseBulge: 3.2, mouthW: 0.48, mouthDrop: 6.4, mouthCurve: 3, ink: 1.6,
+    bustArcs: 0, bust: 1.9, bustAt: 0.13, bustDrop: 0.1,
+    waist: 0.7, hips: 1.08, shoulders: 1,
+    matAlpha: 0.72, matLines: 14, matInset: 0.07
+  },
+  overheadDown: {
+    headR: 11.5, headOval: 1.18, headTilt: 0,
+    hairFull: 1, hairFront: 10, hairBack: 150, hairCrown: 1.4, hairJaw: 1.76,
+    hairInner: 0.94, hairStrands: 0, hairTilt: 0,
+    eyeArcs: 1, eyeR: 3, eyeOut: 0.3, eyeUp: 2.6, eyeSpread: 0.38, browLift: 0,
+    noseLen: 4, noseBulge: 3.2, mouthW: 0.48, mouthDrop: 6.4, mouthCurve: 1.6, ink: 1.6,
+    bustArcs: 0, bust: 1.25, bustAt: 0.18, bustDrop: 0.12,
+    waist: 0.7, hips: 1.64, shoulders: 1.46,
+    matAlpha: 0.85, matLines: 14, matInset: 0.08
+  }
 };
 
 const html = `<title>Figure Tuner</title>
@@ -375,26 +421,29 @@ function drawHead(s) {
   const dot = eye;
   const R = k.headR;
 
-  if (twoEyes) {
-    dot(at(-R * k.eyeSpread, -k.eyeUp));
-    dot(at(R * k.eyeSpread, -k.eyeUp));
+  if (profile) {
+    // Two eyes, crowded toward the front of the head. A single eye read as a
+    // stray mark; it is *where* the pair sits, not how many there are, that
+    // says the face is turned side-on.
+    eye(at(R * (k.eyeOut + k.eyeSpread / 2), -k.eyeUp));
+    eye(at(R * (k.eyeOut - k.eyeSpread / 2), -k.eyeUp));
+    if (k.browLift > 0) {
+      stroke(arc(at(R * (k.eyeOut - 0.3), -k.eyeUp - 2.6), at(R * (k.eyeOut + 0.3), -k.eyeUp - 2.6), down, -k.browLift), k.ink * 0.85);
+    }
+    if (k.noseLen > 0) {
+      stroke(arc(at(R * (k.eyeOut + 0.32), -0.6), at(R * (k.eyeOut + 0.4), k.noseLen), right, k.noseBulge));
+      stroke(poly([at(R * (k.eyeOut + 0.4), k.noseLen), at(R * (k.eyeOut + 0.08), k.noseLen + 0.6)], false), k.ink * 0.9);
+    }
+    stroke(arc(at(R * (k.eyeOut - 0.12), k.mouthDrop), at(R * (k.eyeOut + k.mouthW), k.mouthDrop - 0.4), down, k.mouthCurve));
+  } else {
+    eye(at(-R * k.eyeSpread, -k.eyeUp));
+    eye(at(R * k.eyeSpread, -k.eyeUp));
     if (k.browLift > 0) {
       stroke(arc(at(-R * (k.eyeSpread + 0.22), -k.eyeUp - 2.6), at(-R * (k.eyeSpread - 0.22), -k.eyeUp - 2.6), down, -k.browLift), k.ink * 0.85);
       stroke(arc(at(R * (k.eyeSpread - 0.22), -k.eyeUp - 2.6), at(R * (k.eyeSpread + 0.22), -k.eyeUp - 2.6), down, -k.browLift), k.ink * 0.85);
     }
     if (k.noseLen > 0) stroke(arc(at(-R * 0.1, 0.4), at(R * 0.1, k.noseLen * 0.6), right, k.noseBulge * 0.5));
     stroke(arc(at(-R * k.mouthW, k.mouthDrop), at(R * k.mouthW, k.mouthDrop), down, k.mouthCurve));
-  } else {
-    dot(at(R * k.eyeOut, -k.eyeUp));
-    if (k.browLift > 0) {
-      stroke(arc(at(R * (k.eyeOut - 0.24), -k.eyeUp - 2.6), at(R * (k.eyeOut + 0.24), -k.eyeUp - 2.6), down, -k.browLift), k.ink * 0.85);
-    }
-    if (k.noseLen > 0) {
-      // Down the face and out, then a short base back in - the sketch nose.
-      stroke(arc(at(R * (k.eyeOut + 0.05), -0.6), at(R * (k.eyeOut + 0.14), k.noseLen), right, k.noseBulge));
-      stroke(poly([at(R * (k.eyeOut + 0.14), k.noseLen), at(R * (k.eyeOut - 0.18), k.noseLen + 0.6)], false), k.ink * 0.9);
-    }
-    stroke(arc(at(R * (k.eyeOut - 0.12), k.mouthDrop), at(R * (k.eyeOut + k.mouthW), k.mouthDrop - 0.4), down, k.mouthCurve));
   }
   return out.join("");
 }
@@ -434,17 +483,29 @@ function drawTorso(s) {
   // Drawn on the body rather than bulged out of it. Seen from the front that is
   // two arcs; in profile the near one is all you would see.
   if (k.bustArcs) {
-    const c = along(k.bustAt + 0.06);
-    const across = s.spine;
-    const r = sh * 0.62;
-    const one = (sign) => {
-      const centre = p(c, across, sign * sh * 0.44);
-      out +=
-        '<path d="' + arc(p(centre, across, -r * 0.75), p(centre, across, r * 0.75), front, r * 0.95) +
-        '" fill="none" stroke="' + INK + '" stroke-width="' + k.ink + '" stroke-linecap="round" opacity="0.75"/>';
-    };
-    one(-1);
-    if (symmetric) one(1);
+    // Across the body is perpendicular to the spine - the front/back axis.
+    // Offsetting along the spine instead stacked the arcs head-to-toe, which is
+    // why they read as a garment rather than as a chest.
+    const c = along(k.bustAt + k.bustDrop);
+    const line = (from, to, dir, bulge, weight) =>
+      '<path d="' + arc(from, to, dir, bulge) + '" fill="none" stroke="' + INK +
+      '" stroke-width="' + (weight ?? k.ink) + '" stroke-linecap="round" opacity="0.7"/>';
+
+    if (s.view === "lying") {
+      // Lying on your side, it hangs toward the mat - straight down the screen,
+      // not along the body. So the arc spans the spine and bulges at gravity.
+      // Spanning and bulging in the same direction, as this did, flattens the
+      // quadratic into a line.
+      const centre = p(c, front, sh * 0.1);
+      out += line(p(centre, s.spine, -sh * 0.5), p(centre, s.spine, sh * 0.62), 90, sh * 0.85);
+    } else if (symmetric) {
+      // Head-on, a single line under the chest rather than two cups.
+      out += line(p(c, front, -sh * 0.78), p(c, front, sh * 0.78), s.spine + 180, sh * 0.5);
+    } else {
+      // In profile only the near one is on the silhouette side.
+      const centre = p(c, front, sh * 0.3);
+      out += line(p(centre, s.spine, -sh * 0.5), p(centre, s.spine, sh * 0.5), front, sh * 0.62);
+    }
   }
   return out;
 }

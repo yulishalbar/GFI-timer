@@ -168,7 +168,9 @@ test("resets a restored launch scroll position", async ({ page }) => {
   await page.reload();
 
   await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(0);
-  await expect(page.getByRole("heading", { name: "Choose today's class" })).toBeInViewport();
+  // The picker's heading is for screen readers only now, so the visible proof
+  // that the scroll reset is the tab strip at the top of the list.
+  await expect(page.getByRole("button", { name: /^Courses/ })).toBeInViewport();
 });
 
 test("searches and filters the offline course and exercise libraries", async ({ page }) => {
@@ -423,4 +425,39 @@ test("keeps the guide and its cue on a short screen", async ({ page }, testInfo)
   expect(overflow?.scrollable).toMatch(/auto|scroll/);
   expect(await page.evaluate(() => document.documentElement.scrollHeight - window.innerHeight))
     .toBeLessThanOrEqual(0);
+});
+
+/**
+ * A session saved hours ago is not a class you are in the middle of. Without an
+ * expiry the recovery prompt greets every launch forever, including when the
+ * instructor only wanted to look something up in the exercise library.
+ */
+test("does not offer to resume a session saved hours ago", async ({ page }) => {
+  await page.goto("./");
+  await page.evaluate(() => {
+    const fourHoursAgo = Date.now() - 4 * 60 * 60 * 1000;
+    window.localStorage.setItem(
+      "gfi-timer:session:v2",
+      JSON.stringify({
+        version: 2,
+        classId: "mat-pilates-07-31",
+        classVersion: 3,
+        startedAtEpochMs: fourHoursAgo,
+        elapsedMsFloor: 60_000,
+        status: "paused",
+        stepIndex: 4,
+        stepDurationMs: 30_000,
+        remainingMs: 12_000,
+        savedAtEpochMs: fourHoursAgo + 60_000
+      })
+    );
+  });
+  await page.reload();
+
+  await expect(page.getByRole("button", { name: /^Exercises/ })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Resume session" })).toHaveCount(0);
+  // And it is cleared, so it cannot come back on the next launch either.
+  await expect
+    .poll(() => page.evaluate(() => window.localStorage.getItem("gfi-timer:session:v2")))
+    .toBeNull();
 });
