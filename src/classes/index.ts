@@ -31,7 +31,7 @@ export const availableExerciseCatalog = mergeExerciseCatalogs(
 
 export const courseTagsById: Readonly<Record<string, readonly string[]>> = {
   "mat-pilates-band": ["mat-pilates", "mat", "band", "full-body"],
-  "hiit-pilates-sliders": ["hiit-pilates", "mat", "sliders", "full-body"],
+  "hiit-pilates-sliders": ["mat-pilates", "mat", "sliders", "full-body"],
   "mat-pilates-07-31": ["mat-pilates", "mat", "full-body"],
   "mat-pilates-07-24": ["mat-pilates", "mat", "full-body"]
 };

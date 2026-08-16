@@ -38,7 +38,7 @@ export function normalizeSlidersCatalog(input: AdaptedLegacyCourse): AdaptedLega
     const isSideBody = sideBodyPlacements.has(placement);
     if (!isHiitSide && !isSideBody) return;
 
-    const side = placement.id.endsWith("-one") || placement.id.endsWith("-left")
+    const side = placement.id.endsWith("-one") || placement.id.endsWith("-three") || placement.id.endsWith("-left")
       ? "left"
       : "right";
     placement.side = side;
