@@ -6,12 +6,33 @@ import { lerpPose, loopStops, poseAtPhase, project, solveIk, solvePose, type Poi
 const rigEntries = Object.entries(RIGS);
 const SAMPLE_PHASES = [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9];
 
+/**
+ * Rigs authored as pose data. The spatial rigs are solved in floor coordinates
+ * and have no poses at all, so every check written against pose data runs over
+ * this list rather than all of them.
+ */
+type PosedRig = RigDefinition & { poses: NonNullable<RigDefinition["poses"]> };
+const posedEntries = rigEntries.filter(
+  (entry): entry is [string, PosedRig] => entry[1].poses !== undefined
+);
+const spatialEntries = rigEntries.filter(([, rig]) => rig.spatial !== undefined);
+
+function framePoints(rig: RigDefinition, phase: number): Point[] {
+  return buildFrame(rig, phase).flatMap((shape) => {
+    if (shape.kind === "area") return [];
+    if (shape.kind === "line") return [shape.from, shape.to];
+    if (shape.kind === "curve") return [shape.from, shape.control, shape.to];
+    if (shape.kind === "polyline" || shape.kind === "polygon") return [...shape.points];
+    return [shape.at];
+  });
+}
+
 function box(rig: RigDefinition): { minX: number; minY: number; width: number; height: number } {
   const [minX, minY, width, height] = rig.box.split(" ").map(Number) as [number, number, number, number];
   return { minX, minY, width, height };
 }
 
-function jointsAcrossLoop(rig: RigDefinition): Point[] {
+function jointsAcrossLoop(rig: PosedRig): Point[] {
   return SAMPLE_PHASES.flatMap((phase) => Object.values(solvePose(poseAtPhase(rig.poses, rig.loop, phase))));
 }
 
@@ -34,13 +55,13 @@ describe("skeleton", () => {
   });
 
   it("returns the endpoints when interpolating a pose by 0 and 1", () => {
-    const [a, b] = RIGS["slider-mountain-climbers"]!.poses;
+    const [a, b] = RIGS["slider-mountain-climbers"]!.poses!;
     expect(solvePose(lerpPose(a, b!, 0))).toEqual(solvePose(a));
     expect(solvePose(lerpPose(a, b!, 1))).toEqual(solvePose(b!));
   });
 
   it("closes the loop so the guide does not jump when it repeats", () => {
-    rigEntries.forEach(([id, rig]) => {
+    posedEntries.forEach(([id, rig]) => {
       const start = solvePose(poseAtPhase(rig.poses, rig.loop, 0));
       const end = solvePose(poseAtPhase(rig.poses, rig.loop, 0.9999));
       Object.keys(start).forEach((joint) => {
@@ -67,7 +88,7 @@ describe("rig definitions", () => {
     expect(width / height).toBeCloseTo(16 / 9, 2);
   });
 
-  it.each(rigEntries)("%s keeps every joint inside its viewBox", (id, rig) => {
+  it.each(posedEntries)("%s keeps every joint inside its viewBox", (id, rig) => {
     const { minX, minY, width, height } = box(rig);
     jointsAcrossLoop(rig).forEach(([x, y]) => {
       expect(x, `${id} x`).toBeGreaterThanOrEqual(minX);
@@ -106,7 +127,7 @@ describe("rig definitions", () => {
     expect(new Set(keys).size).toBe(keys.length);
   });
 
-  it.each(rigEntries.filter(([, rig]) => rig.tempoMs > 0))("%s actually moves", (id, rig) => {
+  it.each(posedEntries.filter(([, rig]) => rig.tempoMs > 0))("%s actually moves", (id, rig) => {
     const start = solvePose(poseAtPhase(rig.poses, rig.loop, 0));
     const mid = solvePose(poseAtPhase(rig.poses, rig.loop, 0.5));
     const travelled = Object.keys(start).reduce((total, joint) => {
@@ -132,7 +153,9 @@ describe("rig definitions", () => {
   it("does not reuse pose data between two different movements", () => {
     const seen = new Map<string, string>();
     rigEntries.forEach(([id, rig]) => {
-      const signature = JSON.stringify(rig.poses);
+      // Whichever way the rig is authored: two spatial rigs sharing a camera
+      // are only different movements if their sweeps differ.
+      const signature = JSON.stringify(rig.poses ?? rig.spatial);
       const previous = seen.get(signature);
       expect(previous, `"${id}" and "${previous}" are the same movement drawn twice`).toBeUndefined();
       seen.set(signature, id);
@@ -142,7 +165,7 @@ describe("rig definitions", () => {
   it("never rotates a joint the long way round between two poses", () => {
     // Angles interpolate linearly, so writing 8 where 368 is meant sends the
     // head sweeping backwards through the body on its way to the same place.
-    rigEntries.forEach(([id, rig]) => {
+    posedEntries.forEach(([id, rig]) => {
       rig.poses.forEach((pose, index) => {
         const next = rig.poses[index + 1];
         if (!next) return;
@@ -162,7 +185,7 @@ describe("rig definitions", () => {
     // A target named on only one end of a loop is held for the whole loop, so
     // the limb it drives sits still while everything else moves. That reads as
     // a broken guide, and it is silent: nothing throws.
-    rigEntries.forEach(([id, rig]) => {
+    posedEntries.forEach(([id, rig]) => {
       (["ikLegNear", "ikLegFar", "ikArmNear", "ikArmFar"] as const).forEach((target) => {
         const named = rig.poses.filter((pose) => pose[target] !== undefined).length;
         expect(
@@ -178,7 +201,7 @@ describe("rig definitions", () => {
     // folds the knee downward, which reads as a leg bending backwards and can
     // put the knee through the floor. Only rigs that draw a mat are checked:
     // in the overhead views, down the screen is along the mat, not into it.
-    rigEntries.forEach(([id, rig]) => {
+    posedEntries.forEach(([id, rig]) => {
       if (rig.groundY === undefined) return;
       rig.poses.forEach((pose, index) => {
         const joints = solvePose(pose);
@@ -195,6 +218,42 @@ describe("rig definitions", () => {
         });
       });
     });
+  });
+
+  it("is authored either as poses or in space, never both and never neither", () => {
+    rigEntries.forEach(([id, rig]) => {
+      expect(
+        (rig.poses === undefined) !== (rig.spatial === undefined),
+        `${id} must have exactly one of poses and spatial`
+      ).toBe(true);
+    });
+  });
+
+  it.each(spatialEntries)("%s keeps its whole scene inside its viewBox", (id, rig) => {
+    const { minX, minY, width, height } = box(rig);
+    SAMPLE_PHASES.forEach((phase) => {
+      framePoints(rig, phase).forEach(([x, y]) => {
+        expect(x, `${id} x`).toBeGreaterThanOrEqual(minX);
+        expect(x, `${id} x`).toBeLessThanOrEqual(minX + width);
+        expect(y, `${id} y`).toBeGreaterThanOrEqual(minY);
+        expect(y, `${id} y`).toBeLessThanOrEqual(minY + height);
+      });
+    });
+  });
+
+  it.each(spatialEntries)("%s sweeps the working foot across the mat", (id, rig) => {
+    // The movement is named for its two taps. If the sweep collapses, the guide
+    // still animates but stops being this exercise. Measured as the widest gap
+    // between any two positions rather than along one axis: most of a lateral
+    // sweep's travel is in depth, which the projection turns into vertical.
+    const feet = SAMPLE_PHASES.map((phase) => {
+      const leg = buildFrame(rig, phase).find((shape) => shape.key === "leg-work");
+      return leg && leg.kind === "polyline" ? leg.points[leg.points.length - 1] : undefined;
+    }).filter((point): point is Point => point !== undefined);
+    const spread = Math.max(
+      ...feet.flatMap((a) => feet.map((b) => Math.hypot(a[0] - b[0], a[1] - b[1])))
+    );
+    expect(spread, `${id} barely travels`).toBeGreaterThan(80);
   });
 
   it("holds a static pose without a ghost or a path", () => {

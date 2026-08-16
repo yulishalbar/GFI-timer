@@ -1,4 +1,5 @@
 import type { RigDefinition } from "./frame";
+import type { SpatialRig } from "./spatial";
 import type { Chain, Point, Pose } from "./skeleton";
 
 /**
@@ -62,6 +63,33 @@ const QUADRUPED: Pose = {
 };
 
 const quad = (over: Partial<Pose>): Pose => ({ ...QUADRUPED, ...over });
+
+/**
+ * Tabletop seen three quarters from behind, which is how the lateral quadruped
+ * work is actually filmed, solved in floor coordinates rather than as screen
+ * angles.
+ *
+ * The rainbow family is the one place a flat figure genuinely fails: the leg
+ * travels sideways across the mat, which side-on collapses into a vertical line
+ * and overhead collapses the body. Both members share this camera and body, and
+ * differ only in how far the sweep runs, so they read as one movement at two
+ * ranges. Tuned in `scripts/rig-3d-prototype.mjs`.
+ */
+const RAINBOW_SPACE: Omit<SpatialRig, "sweepFrom" | "sweepTo"> = {
+  camera: { focal: 380, horizon: 43, base: 154, lift: 1.15 },
+  mat: { width: 228, near: -46, far: 162, lines: 12 },
+  body: {
+    turn: -22,
+    length: 52,
+    hipHeight: 36,
+    shoulderHeight: 38,
+    thigh: 33,
+    shin: 33,
+    limbWidth: 9.5
+  },
+  legTilt: 82,
+  arc: true
+};
 
 /** Hips high, heels reaching down, head hanging between the arms. */
 const DOWN_DOG: Pose = {
@@ -131,8 +159,8 @@ const STANDING_SIDE: Pose = {
   facing: 180,
   armNear: [92, 4, 4],
   armFar: [94, 4, 4],
-  legNear: [89, 2, -85],
-  legFar: [91, 2, -83]
+  legNear: [89, 2, 94],
+  legFar: [91, 2, 92]
 };
 
 const standingSide = (over: Partial<Pose>): Pose => ({ ...STANDING_SIDE, ...over });
@@ -140,8 +168,8 @@ const standingSide = (over: Partial<Pose>): Pose => ({ ...STANDING_SIDE, ...over
 /** Side-on lunge: both feet planted, so both legs follow targets on the mat. */
 const lunge = (hipY: number, slidingFoot: Point): Partial<Pose> => ({
   hip: [160, hipY],
-  legNear: [0, 0, -112],
-  legFar: [0, 0, -104],
+  legNear: [0, 0, 116],
+  legFar: [0, 0, 112],
   ikLegNear: slidingFoot,
   ikLegFar: [154, 194],
   ikBend: -1,
@@ -182,6 +210,23 @@ const squat = (hipY: number, footNear: Point, footFar: Point, over: Partial<Pose
   ikBendFar: -1,
   ...over
 });
+
+/**
+ * Face down, head left, arms reaching past the head and legs long. The mirror
+ * of SUPINE, and the base for the back-extension family.
+ */
+const PRONE: Pose = {
+  hip: [180, 164],
+  spine: 180,
+  head: 180,
+  facing: 88,
+  armNear: [180, 0, 0],
+  armFar: [182, 0, 0],
+  legNear: [0, 0, 0],
+  legFar: [2, 0, 0]
+};
+
+const prone = (over: Partial<Pose>): Pose => ({ ...PRONE, ...over });
 
 /** On the back, head left, face up. The base for the whole core family. */
 const SUPINE: Pose = {
@@ -246,6 +291,7 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
   "straight-leg-sweep": {
     title: "Straight leg sweep",
     box: OVERHEAD_BOX,
+    view: "overheadDown",
     tempoMs: 2400,
     loop: "pingpong",
     ground: false,
@@ -260,6 +306,7 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
   "straight-leg-sweep-circles": {
     title: "Straight leg sweep circles",
     box: OVERHEAD_BOX,
+    view: "overheadDown",
     tempoMs: 3200,
     loop: "cycle",
     ground: false,
@@ -380,6 +427,159 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
         spine: 188,
         head: 166,
         facing: 118
+      })
+    ]
+  },
+
+  "high-plank-alternating-crunch": {
+    title: "High-plank alternating crunch",
+    box: FLOOR_BOX,
+    tempoMs: 2000,
+    loop: "pingpong",
+    groundY: 170,
+    focus: ["legNear", "legFar"],
+    trace: "kneeNear",
+    // The same scissor as the slider climbers, but slower and driven further:
+    // the knee comes all the way to the chest rather than sliding along the mat,
+    // and there is no disc under the foot.
+    poses: [
+      plank({ legNear: [172, -78, -70], legFar: PLANK_LEG_BACK, spine: 189 }),
+      plank({ legNear: PLANK_LEG_BACK, legFar: [174, -80, -72], spine: 187 })
+    ]
+  },
+
+  "pilates-push-ups": {
+    title: "Pilates push-ups",
+    box: FLOOR_BOX,
+    tempoMs: 2000,
+    loop: "pingpong",
+    groundY: 170,
+    focus: ["armNear", "armFar"],
+    trace: "shoulder",
+    // Hands and toes are pinned, so the body rotates about the feet the way a
+    // push-up does instead of sliding along the mat as the angles interpolate.
+    poses: [
+      plank({
+        ikArmNear: [113, 169],
+        ikArmFar: [115, 169],
+        ikArmBend: 1,
+        ikLegNear: [236, 156],
+        ikLegFar: [238, 158]
+      }),
+      plank({
+        hip: [166, 135],
+        spine: 182,
+        head: 167,
+        // Third value only: the first two are solved from the target. It lays
+        // the hand flat along the mat instead of carrying on downward.
+        armNear: [88, 4, 101],
+        armFar: [85, 6, 103],
+        ikArmNear: [113, 169],
+        ikArmFar: [115, 169],
+        ikArmBend: 1,
+        ikLegNear: [236, 156],
+        ikLegFar: [238, 158]
+      })
+    ]
+  },
+
+  "knee-push-ups": {
+    title: "Knee push-ups",
+    box: FLOOR_BOX,
+    tempoMs: 2000,
+    loop: "pingpong",
+    groundY: 170,
+    focus: ["armNear", "armFar"],
+    trace: "shoulder",
+    // Knees planted and shins lifted, so the body pivots at the knee rather
+    // than at the toes. Hands stay pinned to the mat through the rep.
+    poses: [
+      plank({
+        hip: [176, 138],
+        spine: 190,
+        head: 176,
+        legNear: [45, -65, -20],
+        legFar: [47, -67, -20],
+        // Third value only: the first two are solved from the target. It lays
+        // the hand flat along the mat instead of letting it carry on downward.
+        armNear: [88, 4, 130],
+        armFar: [85, 6, 132],
+        ikArmNear: [117, 170],
+        ikArmFar: [119, 170],
+        ikArmBend: 1
+      }),
+      plank({
+        hip: [168, 151],
+        spine: 190,
+        head: 178,
+        spineBow: -4,
+        legNear: [21, -41, -20],
+        legFar: [23, -43, -20],
+        armNear: [88, 4, 164],
+        armFar: [85, 6, 166],
+        ikArmNear: [117, 170],
+        ikArmFar: [119, 170],
+        ikArmBend: 1
+      })
+    ]
+  },
+
+  /* ---- prone back extension ---- */
+
+  superman: {
+    title: "Superman",
+    box: FLOOR_BOX,
+    tempoMs: 2400,
+    loop: "pingpong",
+    groundY: 170,
+    focus: ["armNear", "legNear"],
+    trace: "handNear",
+    // Arms, chest and legs leave the mat together and the back arches; the bow
+    // is what separates this from simply lifting the limbs.
+    poses: [
+      prone({}),
+      prone({
+        hip: [180, 160],
+        spine: 184,
+        head: 190,
+        spineBow: 10,
+        armNear: [196, 0, 0],
+        armFar: [198, 0, 0],
+        legNear: [-14, 0, 0],
+        legFar: [-12, 0, 0]
+      })
+    ]
+  },
+
+  "superman-flutter": {
+    title: "Superman hold with flutter arms",
+    box: FLOOR_BOX,
+    tempoMs: 700,
+    loop: "pingpong",
+    groundY: 170,
+    focus: ["armNear", "armFar"],
+    trace: "handNear",
+    // The hold never breaks: chest and legs stay up while the arms alternate.
+    poses: [
+      prone({
+        hip: [180, 160],
+        spine: 184,
+        head: 190,
+        spineBow: 10,
+        armNear: [204, 0, 0],
+        armFar: [190, 0, 0],
+        legNear: [-14, 0, 0],
+        legFar: [-12, 0, 0]
+      }),
+      prone({
+        hip: [180, 160],
+        spine: 184,
+        head: 190,
+        spineBow: 10,
+        armNear: [190, 0, 0],
+        armFar: [204, 0, 0],
+        legNear: [-14, 0, 0],
+        legFar: [-12, 0, 0]
       })
     ]
   },
@@ -530,35 +730,29 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
 
   rainbow: {
     title: "Rainbow",
-    box: OVERHEAD_BOX,
-    tempoMs: 2800,
+    // The full projection canvas. A spatial rig's numbers are tuned against
+    // this frame, so cropping it would move the camera rather than zoom it.
+    box: "0 0 320 180",
+    tempoMs: 3000,
     loop: "pingpong",
     ground: false,
-    focus: ["legNear"],
-    trace: "ankleNear",
-    // Seen from above: the toe arcs from one side, out and over, to the other.
-    // The arc is the whole point of the movement and is invisible side-on.
-    poses: [
-      overhead([180 + Math.cos(-32 * (Math.PI / 180)) * 58, 102 + Math.sin(-32 * (Math.PI / 180)) * 58]),
-      overhead([250, 102]),
-      overhead([180 + Math.cos(32 * (Math.PI / 180)) * 58, 102 + Math.sin(32 * (Math.PI / 180)) * 58])
-    ]
+    // The whole movement is the leg travelling across the body from one side of
+    // the mat to the other, which a flat side-on figure can only foreshorten
+    // into a vertical line. Solved in floor space instead, so the arc is the
+    // shape it actually is and both taps land on the mat.
+    spatial: { ...RAINBOW_SPACE, sweepFrom: -124, sweepTo: 124 }
   },
 
   "half-rainbow": {
     title: "Half rainbow",
-    box: OVERHEAD_BOX,
+    box: "0 0 320 180",
     tempoMs: 2200,
     loop: "pingpong",
     ground: false,
-    focus: ["legNear"],
-    trace: "ankleNear",
-    // Half the arc of a rainbow: out to one side and back, rather than tapping
-    // down on both. Same camera, because the arc is still the whole point.
-    poses: [
-      overhead([250, 102]),
-      overhead([180 + Math.cos(34 * (Math.PI / 180)) * 58, 102 + Math.sin(34 * (Math.PI / 180)) * 58])
-    ]
+    // Half the arc: one tap, then up to the top, rather than crossing to the
+    // far side. Same camera and body as the full rainbow, so the pair reads as
+    // one movement at two ranges instead of two different exercises.
+    spatial: { ...RAINBOW_SPACE, sweepFrom: -124, sweepTo: 0 }
   },
 
   "quadruped-glute-lift": {
@@ -577,9 +771,43 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
     ]
   },
 
+  "knee-across-body": {
+    title: "Knee across the body",
+    box: OVERHEAD_BOX,
+    view: "overheadUp",
+    tempoMs: 2600,
+    loop: "pingpong",
+    ground: false,
+    focus: ["legNear"],
+    trace: "kneeNear",
+    // Lying twist seen from above: the knee crossing the midline is the whole
+    // movement and it happens straight into the screen from the side.
+    poses: [
+      {
+        hip: [180, 102],
+        spine: 180,
+        head: 180,
+        armNear: [268, 0, 0],
+        armFar: [92, 0, 0],
+        legNear: [0, 0, 8],
+        legFar: [4, 0, 8]
+      },
+      {
+        hip: [180, 102],
+        spine: 180,
+        head: 180,
+        armNear: [268, 0, 0],
+        armFar: [92, 0, 0],
+        legNear: [58, -58, 8],
+        legFar: [4, 0, 8]
+      }
+    ]
+  },
+
   "quadruped-side-crunch": {
     title: "Side crunch",
     box: OVERHEAD_BOX,
+    view: "overheadDown",
     tempoMs: 2000,
     loop: "pingpong",
     ground: false,
@@ -588,6 +816,63 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
     // Seen from above. The knee draws in toward the elbow on its own side,
     // which is a purely lateral travel and all but invisible side-on.
     poses: [overhead([248, 100]), overhead([152, 76])]
+  },
+
+  "quadruped-cross-body-crunch": {
+    title: "Cross body crunch",
+    box: OVERHEAD_BOX,
+    view: "overheadDown",
+    tempoMs: 2000,
+    loop: "pingpong",
+    ground: false,
+    focus: ["legNear"],
+    trace: "kneeNear",
+    // The mirror of the side crunch: the knee crosses the midline instead of
+    // drawing in on its own side, which only a view from above can show.
+    poses: [overhead([248, 100]), overhead([160, 132])]
+  },
+
+  "quadruped-combined-crunch": {
+    title: "Combine Side crunch + Cross body crunch",
+    box: OVERHEAD_BOX,
+    view: "overheadDown",
+    tempoMs: 3000,
+    loop: "cycle",
+    ground: false,
+    focus: ["legNear"],
+    trace: "kneeNear",
+    // Alternating the two: out, in to its own elbow, out, across the body.
+    poses: [overhead([248, 100]), overhead([152, 76]), overhead([160, 132])]
+  },
+
+  "quadruped-side-crunch-extension": {
+    title: "Side crunch with leg extension",
+    box: OVERHEAD_BOX,
+    view: "overheadDown",
+    tempoMs: 3000,
+    loop: "cycle",
+    ground: false,
+    focus: ["legNear"],
+    trace: "ankleNear",
+    // Crunch in to the elbow, then extend the same leg straight out to the
+    // side before folding back - the extension is the added element.
+    poses: [overhead([248, 100]), overhead([152, 76]), overhead([188, 46])]
+  },
+
+  "bird-dog-crunch": {
+    title: "Bird-dog extension and crunch",
+    box: FLOOR_BOX,
+    tempoMs: 2400,
+    loop: "pingpong",
+    groundY: 170,
+    focus: ["legNear", "armNear"],
+    trace: "kneeNear",
+    // Opposite arm and leg reach away, then elbow and knee meet under the body.
+    // The meeting is the part the plain bird dog does not have.
+    poses: [
+      quad({ armNear: [200, -5, -5], legNear: [5, -5, 15], spine: 194 }),
+      quad({ armNear: [128, 34, 6], legNear: [150, -104, -30], spine: 202, spineBow: -8, head: 166 })
+    ]
   },
 
   "childs-pose": {
@@ -717,6 +1002,53 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
     ]
   },
 
+  "full-range-glute-bridge": {
+    title: "Full-range glute bridge",
+    box: FLOOR_BOX,
+    tempoMs: 2600,
+    loop: "pingpong",
+    groundY: 172,
+    trace: "hip",
+    // The range is the exercise. The hips rest on the mat at the bottom and
+    // finish above the ribs, which is what separates this from the shorter
+    // bridges either side of it in the library.
+    poses: [
+      bridge(168, 184, [222, 172], [224, 172]),
+      bridge(122, 149, [222, 172], [224, 172], { spineScale: 1.09 })
+    ]
+  },
+
+  "bridge-knee-drive": {
+    title: "Bridge with knee drive",
+    box: FLOOR_BOX,
+    tempoMs: 2000,
+    loop: "pingpong",
+    groundY: 172,
+    focus: ["legNear"],
+    trace: "kneeNear",
+    // The hips never lower: only the free knee travels, which is the cue the
+    // class gives and the thing people get wrong.
+    poses: [
+      bridge(130, 158, null, [224, 172], { legNear: [-40, 0, 22] }),
+      bridge(130, 158, null, [224, 172], { legNear: [-100, 130, 20] })
+    ]
+  },
+
+  "bridge-knee-drive-pulse": {
+    title: "Bridge knee-drive pulses",
+    box: FLOOR_BOX,
+    tempoMs: 800,
+    loop: "pingpong",
+    groundY: 172,
+    focus: ["legNear"],
+    // No traced path: a pulse travels too little for one to say anything the
+    // start-pose ghost does not already show.
+    poses: [
+      bridge(130, 158, null, [224, 172], { legNear: [-92, 126, 20] }),
+      bridge(130, 158, null, [224, 172], { legNear: [-114, 134, 20] })
+    ]
+  },
+
   /* ---- supine core ---- */
 
   "crunch-legs-lifted": {
@@ -814,6 +1146,170 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
         ikLegNear: [186 + Math.cos(angle) * reach, 150 + Math.sin(angle) * reach]
       });
     }) as [Pose, ...Pose[]]
+  },
+
+  crunch: {
+    title: "Crunch",
+    box: SUPINE_BOX,
+    tempoMs: 2000,
+    loop: "pingpong",
+    groundY: 162,
+    trace: "head",
+    // Feet planted on targets so they stay put while the ribcage travels. The
+    // third leg value tips the foot up off the shin, which otherwise carries on
+    // through the mat.
+    poses: [
+      supine({ ikLegNear: [232, 162], ikLegFar: [234, 162], ikBend: 1, legNear: [4, 2, -85], legFar: [6, 2, -85], armNear: [12, 5, 3], armFar: [14, 5, 3] }),
+      supine({
+        ...CURLED,
+        ikLegNear: [232, 162],
+        ikLegFar: [234, 162],
+        ikBend: 1,
+        legNear: [4, 2, -85],
+        legFar: [6, 2, -85],
+        armNear: [26, 8, 4],
+        armFar: [28, 8, 4]
+      })
+    ]
+  },
+
+  "criss-cross": {
+    title: "Criss-cross",
+    box: SUPINE_BOX,
+    tempoMs: 1800,
+    loop: "pingpong",
+    groundY: 162,
+    focus: ["legNear", "legFar"],
+    trace: "kneeNear",
+    // Hands stay behind the head and the legs trade places; the rotation itself
+    // is into the screen, so the scissor is what has to carry the movement.
+    // The extended leg is written as 342, not -18: the knee has to unfold
+    // upward past the chest, and the wrapped value swings it down through the
+    // mat on the way.
+    poses: [
+      supine({ ...CURLED, ...HANDS_BEHIND_HEAD, legNear: [248, 142, 12], legFar: [342, 0, -12] }),
+      supine({ ...CURLED, ...HANDS_BEHIND_HEAD, legNear: [342, 0, -12], legFar: [248, 142, 12] })
+    ]
+  },
+
+  scissors: {
+    title: "Scissors",
+    box: SUPINE_BOX,
+    tempoMs: 1800,
+    loop: "pingpong",
+    focus: ["legNear", "legFar"],
+    groundY: 162,
+    trace: "ankleNear",
+    // Drawn as the Pilates scissors proper - both legs straight, one drawn
+    // toward the chest as the other lowers - rather than as the bent-knee
+    // bicycle the class notes describe.
+    poses: [
+      supine({ ...CURLED, legNear: [-104, 0, -10], legFar: [-26, 0, -10], armNear: [-64, 22, 4], armFar: [-20, 16, 4] }),
+      supine({ ...CURLED, legNear: [-26, 0, -10], legFar: [-104, 0, -10], armNear: [-16, 18, 4], armFar: [-58, 20, 4] })
+    ]
+  },
+
+  "toe-taps-alternating": {
+    title: "Toe taps alternating legs",
+    box: SUPINE_BOX,
+    tempoMs: 1600,
+    loop: "pingpong",
+    groundY: 162,
+    focus: ["legNear", "legFar"],
+    trace: "toeNear",
+    // Tabletop held while one foot at a time reaches for the mat.
+    poses: [
+      supine({ legNear: [265, 95, -12], legFar: [267, 93, -12] }),
+      supine({ legNear: [265, 165, -12], legFar: [267, 93, -12] })
+    ]
+  },
+
+  "toe-taps-both": {
+    title: "Toe taps both legs",
+    box: SUPINE_BOX,
+    tempoMs: 1800,
+    loop: "pingpong",
+    groundY: 162,
+    focus: ["legNear", "legFar"],
+    trace: "toeNear",
+    poses: [
+      supine({ legNear: [265, 95, -12], legFar: [267, 93, -12] }),
+      supine({ legNear: [265, 163, -12], legFar: [267, 161, -12] })
+    ]
+  },
+
+  "toe-tap-reverse-crunch": {
+    title: "Toe tap to reverse crunch",
+    box: SUPINE_BOX,
+    tempoMs: 2400,
+    loop: "cycle",
+    groundY: 162,
+    focus: ["legNear", "legFar"],
+    trace: "kneeNear",
+    // Three stops: tabletop, the tap down, then the knees drawn in far enough
+    // that the hips leave the mat. The lift is what makes it a reverse crunch.
+    poses: [
+      supine({ legNear: [265, 95, -12], legFar: [267, 93, -12] }),
+      supine({ legNear: [265, 163, -12], legFar: [267, 161, -12] }),
+      supine({ hip: [186, 140], spine: 184, legNear: [232, 70, -12], legFar: [234, 68, -12] })
+    ]
+  },
+
+  "supine-bird-dog": {
+    title: "Alternating bird dogs",
+    box: SUPINE_BOX,
+    tempoMs: 2200,
+    loop: "pingpong",
+    groundY: 162,
+    focus: ["armNear", "legFar"],
+    trace: "handNear",
+    // On the back with the arms straight up: opposite arm and leg reach away
+    // and return. The mirror of the tabletop bird dog, which is why the class
+    // calls it the same name.
+    poses: [
+      supine({ armNear: [272, 0, 0], armFar: [274, 0, 0], legNear: [265, 95, -12], legFar: [267, 93, -12] }),
+      supine({ armNear: [196, 0, 0], armFar: [274, 0, 0], legNear: [265, 95, -12], legFar: [267, 20, -12] })
+    ]
+  },
+
+  "roll-down-to-mat": {
+    title: "Roll down to the mat",
+    box: SUPINE_BOX,
+    tempoMs: 3000,
+    loop: "pingpong",
+    groundY: 162,
+    trace: "head",
+    // Seated and tall, then down one vertebra at a time. The bow deepening as
+    // the spine lowers is the "one vertebra at a time" part.
+    //
+    // Seated, the face looks out along the legs; lying, it looks at the
+    // ceiling. That is a quarter turn one way, written as 8 to -82 rather than
+    // wrapped, so the chin keeps a constant offset from the face. Values that
+    // rotate the face and the chin in opposite directions - which the earlier
+    // 200 and 250 did - put the face on the back of the head halfway through.
+    poses: [
+      supine({ spine: 268, head: 268, facing: 8, armNear: [0, 4, 4], armFar: [2, 4, 4], legNear: [4, 2, -10], legFar: [6, 2, -10] }),
+      supine({ spine: 196, head: 200, spineBow: -8, facing: -82, armNear: [16, 6, 4], armFar: [18, 6, 4] })
+    ]
+  },
+
+  "knee-to-chest": {
+    title: "Knee to chest stretch",
+    box: SUPINE_BOX,
+    tempoMs: 2600,
+    loop: "pingpong",
+    hold: 0.5,
+    groundY: 162,
+    focus: ["legNear"],
+    trace: "kneeNear",
+    // A hold, drawn as the entry: the leg travels from long on the mat to
+    // hugged in, which is the part worth showing.
+    // Negative rather than wrapped past 180: the knee and the hands both have
+    // to travel up over the body, not down through the mat.
+    poses: [
+      supine({}),
+      supine({ legNear: [-118, 158, 10], armNear: [-42, 44, 6], armFar: [-40, 42, 6] })
+    ]
   },
 
   "roll-ups": {
@@ -1015,6 +1511,7 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
   "banded-russian-twist": {
     title: "Russian twist - band around wrists",
     box: SEATED_FRONT_BOX,
+    view: "front",
     tempoMs: 2000,
     loop: "pingpong",
     groundY: 190,
@@ -1058,6 +1555,7 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
   "side-lying-leg-lift": {
     title: "Leg lift",
     box: SIDE_LYING_BOX,
+    view: "lying",
     tempoMs: 2000,
     loop: "pingpong",
     groundY: 152,
@@ -1073,6 +1571,7 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
   "clamshell-openers": {
     title: "Clamshell openers",
     box: SIDE_LYING_BOX,
+    view: "lying",
     tempoMs: 1900,
     loop: "pingpong",
     groundY: 152,
@@ -1085,6 +1584,7 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
   "clamshell-lifts": {
     title: "Clamshell lifts",
     box: SIDE_LYING_BOX,
+    view: "lying",
     tempoMs: 1900,
     loop: "pingpong",
     groundY: 152,
@@ -1098,17 +1598,18 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
   "side-body-crunch": {
     title: "Side-body crunches",
     box: SIDE_LYING_BOX,
+    view: "lying",
     tempoMs: 2100,
     loop: "pingpong",
     groundY: 152,
     focus: ["legNear", "armNear"],
     trace: "kneeNear",
     poses: [
-      sideLying({ armNear: [196, 108, 22], legNear: [6, 2, -14], legFar: [10, 2, -14] }),
+      sideLying({ armNear: [-40, -132, 0], legNear: [6, 2, -14], legFar: [10, 2, -14] }),
       sideLying({
         spine: 172,
         spineBow: -11,
-        armNear: [232, 96, 22],
+        armNear: [-16, -152, 0],
         legNear: [-34, 64, -10],
         legFar: [10, 2, -14]
       })
@@ -1118,6 +1619,7 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
   "side-lying-big-circles": {
     title: "Big leg circles",
     box: SIDE_LYING_BOX,
+    view: "lying",
     tempoMs: 3000,
     loop: "cycle",
     groundY: 152,
@@ -1136,6 +1638,7 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
   "side-lying-small-circles": {
     title: "Small leg circle pulses",
     box: SIDE_LYING_BOX,
+    view: "lying",
     tempoMs: 1400,
     loop: "cycle",
     groundY: 152,
@@ -1155,6 +1658,7 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
   "side-lying-forward-back-kick": {
     title: "Forward and back kick",
     box: SIDE_LYING_BOX,
+    view: "lying",
     tempoMs: 2200,
     loop: "pingpong",
     groundY: 152,
@@ -1169,6 +1673,7 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
   "side-lying-straight-leg-crunch": {
     title: "Straight leg crunches",
     box: SIDE_LYING_BOX,
+    view: "lying",
     tempoMs: 2000,
     loop: "pingpong",
     groundY: 152,
@@ -1176,13 +1681,197 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
     trace: "ankleNear",
     // Straight top leg meeting the top elbow, unlike the bent-knee crunch.
     poses: [
-      sideLying({ armNear: [196, 108, 22], legNear: [6, 2, -14], legFar: [8, 2, -14] }),
+      sideLying({ armNear: [-40, -132, 0], legNear: [6, 2, -14], legFar: [8, 2, -14] }),
       sideLying({
         spine: 172,
         spineBow: -11,
-        armNear: [232, 96, 22],
+        armNear: [-16, -152, 0],
         legNear: [-40, 3, -12],
         legFar: [8, 2, -14]
+      })
+    ]
+  },
+
+  "bottom-leg-lifts": {
+    title: "Bottom leg lifts",
+    box: SIDE_LYING_BOX,
+    view: "lying",
+    tempoMs: 2000,
+    loop: "pingpong",
+    groundY: 152,
+    focus: ["legFar"],
+    trace: "ankleFar",
+    // The top leg is parked high and the bottom one does the work, which is the
+    // whole difference from the leg lifts earlier in the same circuit.
+    poses: [
+      sideLying({ legNear: [-40, 54, -10], legFar: [8, 2, -14] }),
+      sideLying({ legNear: [-40, 54, -10], legFar: [-14, 2, -14] })
+    ]
+  },
+
+  "bottom-leg-pulses": {
+    title: "Bottom leg pulses",
+    box: SIDE_LYING_BOX,
+    view: "lying",
+    tempoMs: 700,
+    loop: "pingpong",
+    groundY: 152,
+    focus: ["legFar"],
+    // Held up and pulsing, so there is no travel worth tracing.
+    poses: [
+      sideLying({ legNear: [-40, 54, -10], legFar: [-12, 2, -14] }),
+      sideLying({ legNear: [-40, 54, -10], legFar: [-22, 2, -14] })
+    ]
+  },
+
+  "inner-thigh-circles": {
+    title: "Inner thigh circles",
+    box: SIDE_LYING_BOX,
+    view: "lying",
+    tempoMs: 2400,
+    loop: "cycle",
+    groundY: 152,
+    focus: ["legFar"],
+    trace: "ankleFar",
+    // The bottom leg stays lifted and draws the circle; the top leg is parked.
+    poses: [0, 1, 2, 3, 4, 5].map((index) => {
+      const t = (index / 6) * Math.PI * 2;
+      return sideLying({
+        legNear: [-40, 54, -10],
+        ikBendFar: 1,
+        ikLegFar: sideLyingFoot(-12 - 9 * Math.cos(t), 66 + 4 * Math.sin(t))
+      });
+    }) as [Pose, ...Pose[]]
+  },
+
+  "double-leg-lift": {
+    title: "Double-leg lift",
+    box: SIDE_LYING_BOX,
+    view: "lying",
+    tempoMs: 2400,
+    loop: "pingpong",
+    groundY: 152,
+    focus: ["legNear", "legFar"],
+    trace: "ankleNear",
+    // Both legs squeezed together and lifted as one, which is what separates
+    // this from every other lift in the side-lying set.
+    poses: [
+      sideLying({ legNear: [4, 2, -14], legFar: [6, 2, -14] }),
+      sideLying({ legNear: [-20, 2, -14], legFar: [-18, 2, -14] })
+    ]
+  },
+
+  "side-lying-small-leg-circles": {
+    title: "Small leg circles",
+    box: SIDE_LYING_BOX,
+    view: "lying",
+    tempoMs: 2000,
+    loop: "cycle",
+    groundY: 152,
+    focus: ["legNear"],
+    trace: "ankleNear",
+    // Drawn a little wider and slower than the small circle pulses in the
+    // sliders class, which the instructor keeps as a separate movement.
+    poses: [0, 1, 2, 3, 4, 5].map((index) => {
+      const t = (index / 6) * Math.PI * 2;
+      return sideLying({
+        legFar: [8, 2, -14],
+        ikBend: 1,
+        ikLegNear: sideLyingFoot(-18 - 12 * Math.cos(t), 66 + 5 * Math.sin(t))
+      });
+    }) as [Pose, ...Pose[]]
+  },
+
+  "pulse-leg-at-top": {
+    title: "Pulse leg at the top",
+    box: SIDE_LYING_BOX,
+    view: "lying",
+    tempoMs: 650,
+    loop: "pingpong",
+    groundY: 152,
+    focus: ["legNear"],
+    // A pulse at the top of the lift: small, quick, and no path to draw.
+    poses: [
+      sideLying({ legNear: [-24, 2, -14], legFar: [8, 2, -14] }),
+      sideLying({ legNear: [-34, 2, -14], legFar: [8, 2, -14] })
+    ]
+  },
+
+  "side-lying-static-hold": {
+    title: "Static hold",
+    box: SIDE_LYING_BOX,
+    view: "lying",
+    tempoMs: 0,
+    loop: "cycle",
+    groundY: 152,
+    focus: ["legNear"],
+    ghost: false,
+    // Deliberately a still. It sits directly after the leg lifts and the pulses
+    // in the same circuit, so animating the entry would draw the movement
+    // before it a second time; the position held is the whole instruction.
+    poses: [sideLying({ legNear: [-30, 2, -14], legFar: [8, 2, -14] })]
+  },
+
+  "clamshell-kick": {
+    title: "Clam shell openers with kick",
+    box: SIDE_LYING_BOX,
+    view: "lying",
+    tempoMs: 2600,
+    loop: "cycle",
+    groundY: 152,
+    focus: ["legNear"],
+    trace: "ankleNear",
+    // Open the clam, then kick that leg straight out of it and fold back.
+    poses: [
+      sideLying({}),
+      sideLying({ legNear: [-12, 22, 0] }),
+      sideLying({ legNear: [-20, 2, -12] })
+    ]
+  },
+
+  "forearm-side-plank": {
+    title: "Forearm side plank",
+    box: SIDE_LYING_BOX,
+    view: "lying",
+    tempoMs: 2600,
+    loop: "pingpong",
+    hold: 0.5,
+    groundY: 152,
+    // The supporting forearm is highlighted rather than the working side: at
+    // this angle the body is close to horizontal, and the propped forearm is
+    // what tells the reader this is a plank and not lying down.
+    focus: ["armFar"],
+    trace: "hip",
+    // Cued as a hold, drawn as the lift into it: what the instructor has to
+    // correct is a sagging hip, and only the travel shows where it belongs.
+    // The elbow stays under the shoulder throughout, which is why both poses
+    // put the shoulder at the same height and vary the hip instead.
+    poses: [
+      sideLying({
+        hip: [184, 150],
+        spine: 206,
+        head: 206,
+        armFar: [90, 90, 0],
+        armNear: [14, 16, 0],
+        // Toes tipped back off the shin so the foot rests on the mat rather
+        // than carrying on through it.
+        legNear: [18, -40, -26],
+        legFar: [20, -42, -26],
+        ikLegNear: [258, 152],
+        ikLegFar: [260, 152]
+      }),
+      sideLying({
+        // Hip level with the shoulder rather than on the sagging line, so the
+        // gap under the hips - the one tell that this is a plank - is visible.
+        hip: [190, 124],
+        spine: 180,
+        head: 180,
+        armFar: [90, 90, 0],
+        armNear: [16, 18, 0],
+        legNear: [18, -40, -26],
+        legFar: [20, -42, -26],
+        ikLegNear: [258, 152],
+        ikLegFar: [260, 152]
       })
     ]
   },
@@ -1190,6 +1879,7 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
   "tricep-side-push-up": {
     title: "Tricep side push-up",
     box: SIDE_LYING_BOX,
+    view: "lying",
     tempoMs: 2000,
     loop: "pingpong",
     groundY: 152,
@@ -1261,6 +1951,7 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
   "standing-side-stretch": {
     title: "Standing side-body stretch",
     box: STANDING_REACH_BOX,
+    view: "front",
     tempoMs: 2600,
     loop: "pingpong",
     groundY: 196,
@@ -1353,6 +2044,7 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
   "windshield-wipers": {
     title: "Bent-knee windshield wipers",
     box: OVERHEAD_BOX,
+    view: "overheadUp",
     tempoMs: 2600,
     loop: "pingpong",
     ground: false,
@@ -1415,11 +2107,96 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
     ]
   },
 
+  "seated-straddle": {
+    title: "Seated Straddle",
+    box: SEATED_FRONT_BOX,
+    view: "front",
+    tempoMs: 3400,
+    loop: "cycle",
+    groundY: 196,
+    trace: "head",
+    // Head-on, because the wide V of the legs is the position and it is
+    // invisible side-on. The fold over each leg then reads as a lean, and the
+    // class folds right, left, then centre.
+    poses: [
+      standingFront({
+        hip: [150, 162],
+        spine: 268,
+        head: 268,
+        hipSpread: 13,
+        legNear: [166, 0, 6],
+        legFar: [14, 0, -6]
+      }),
+      standingFront({
+        hip: [150, 162],
+        spine: 216,
+        head: 212,
+        spineBow: -8,
+        hipSpread: 13,
+        armNear: [56, 8, 0],
+        armFar: [60, -6, 0],
+        legNear: [166, 0, 6],
+        legFar: [14, 0, -6]
+      }),
+      standingFront({
+        hip: [150, 162],
+        spine: 324,
+        head: 328,
+        spineBow: 8,
+        hipSpread: 13,
+        armNear: [122, -8, 0],
+        armFar: [126, 6, 0],
+        legNear: [166, 0, 6],
+        legFar: [14, 0, -6]
+      })
+    ]
+  },
+
+  "seated-side-twist": {
+    title: "Side twist",
+    box: SEATED_FRONT_BOX,
+    view: "front",
+    tempoMs: 3200,
+    loop: "pingpong",
+    groundY: 196,
+    focus: ["armNear", "armFar"],
+    trace: "handNear",
+    // Cross-legged and turning: the rotation is into the screen, so the hands
+    // trading places - one to the opposite knee, one reaching behind - is what
+    // has to carry it, with the shoulders narrowing as the chest turns.
+    poses: [
+      standingFront({
+        hip: [150, 166],
+        spine: 268,
+        head: 268,
+        hipSpread: 14,
+        shoulderSpread: 15,
+        armNear: [118, 26, 0],
+        armFar: [62, -26, 0],
+        legNear: [162, -152, 6],
+        legFar: [18, 152, -6]
+      }),
+      standingFront({
+        hip: [150, 166],
+        spine: 268,
+        head: 268,
+        hipSpread: 14,
+        shoulderSpread: 6,
+        armNear: [62, 30, 0],
+        armFar: [118, -30, 0],
+        legNear: [162, -152, 6],
+        legFar: [18, 152, -6]
+      })
+    ]
+  },
+
   "seated-forward-fold": {
     title: "Hamstring stretch → seated forward fold",
     box: SEATED_BOX,
     tempoMs: 3000,
     loop: "pingpong",
+    // A stretch is held at the bottom, not bounced into and out of.
+    hold: 0.45,
     groundY: 162,
     trace: "head",
     poses: [
@@ -1452,9 +2229,354 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
 
   /* ---- standing legs, band ---- */
 
+  "squat-to-stand": {
+    title: "Squat to stand",
+    box: STANDING_BOX,
+    view: "front",
+    tempoMs: 2200,
+    loop: "pingpong",
+    groundY: 196,
+    focus: ["legNear", "legFar"],
+    trace: "hip",
+    // Feet planted hip-width and the hips travelling the full range, which is
+    // what separates this from the held and pulsed squats around it.
+    poses: [
+      squat(122, [168, 196], [132, 196]),
+      squat(158, [168, 196], [132, 196], { armNear: [56, 10, 0], armFar: [60, -10, 0] })
+    ]
+  },
+
+  "squat-pulse": {
+    title: "Squat pulse",
+    box: STANDING_BOX,
+    view: "front",
+    tempoMs: 700,
+    loop: "pingpong",
+    groundY: 196,
+    focus: ["legNear", "legFar"],
+    // Small and quick at the bottom; no travel worth tracing.
+    poses: [
+      squat(154, [168, 196], [132, 196], { armNear: [56, 10, 0], armFar: [60, -10, 0] }),
+      squat(164, [168, 196], [132, 196], { armNear: [56, 10, 0], armFar: [60, -10, 0] })
+    ]
+  },
+
+  "squat-add-arms": {
+    title: "Squat -> add arms",
+    box: STANDING_REACH_BOX,
+    view: "front",
+    tempoMs: 2400,
+    loop: "pingpong",
+    groundY: 196,
+    focus: ["armNear", "armFar"],
+    trace: "handNear",
+    // Down into the chair and the arms lift with it, so the guide has to carry
+    // both halves at once.
+    poses: [
+      squat(122, [168, 196], [132, 196], { armNear: [92, 6, 0], armFar: [96, -6, 0] }),
+      squat(158, [168, 196], [132, 196], { armNear: [256, 6, 0], armFar: [260, -6, 0] })
+    ]
+  },
+
+  "squat-hold": {
+    title: "Squat hold",
+    box: STANDING_REACH_BOX,
+    view: "front",
+    tempoMs: 2600,
+    loop: "pingpong",
+    // A hold, not a pulse: it arrives and stays for most of the loop.
+    hold: 0.55,
+    groundY: 196,
+    trace: "hip",
+    // The hold shown as its entry: standing, then low with the arms by the
+    // ears, ribs closed and pelvis tucked.
+    poses: [
+      squat(132, [168, 196], [132, 196], { armNear: [264, 4, 0], armFar: [268, -4, 0] }),
+      squat(160, [168, 196], [132, 196], { armNear: [258, 4, 0], armFar: [262, -4, 0], spineBow: 5 })
+    ]
+  },
+
+  "squat-hold-leg-lift": {
+    title: "Squat hold leg lift",
+    box: STANDING_REACH_BOX,
+    tempoMs: 2000,
+    loop: "pingpong",
+    groundY: 196,
+    focus: ["legNear"],
+    trace: "ankleNear",
+    // Side-on, not head-on like the other squats: a leg pointing behind is
+    // almost entirely foreshortened from the front, and the point of the
+    // exercise is how far back it travels.
+    poses: [
+      standingSide({
+        hip: [160, 146],
+        spine: 254,
+        head: 254,
+        armNear: [244, 4, 4],
+        armFar: [246, 4, 4],
+        legNear: [30, 4, 8],
+        ikLegFar: [148, 194],
+        ikBendFar: -1
+      }),
+      standingSide({
+        hip: [160, 146],
+        spine: 250,
+        head: 250,
+        armNear: [244, 4, 4],
+        armFar: [246, 4, 4],
+        legNear: [4, 4, 8],
+        ikLegFar: [148, 194],
+        ikBendFar: -1
+      })
+    ]
+  },
+
+  "squat-to-twist": {
+    title: "Squat to twist",
+    box: STANDING_BOX,
+    view: "front",
+    tempoMs: 2600,
+    loop: "pingpong",
+    groundY: 196,
+    focus: ["armNear", "armFar"],
+    // No traced path: the hand sweeps a wide arc that reads as a circle drawn
+    // over the figure and says less than the two poses already do.
+    // Down to the squat, then up and round: arms stacked horizontally at
+    // shoulder height and the chest turning, which narrows the shoulders.
+    poses: [
+      squat(158, [168, 196], [132, 196], { armNear: [4, 8, 0], armFar: [8, -8, 0] }),
+      squat(138, [168, 196], [132, 196], {
+        shoulderSpread: 5,
+        armNear: [352, 6, 0],
+        armFar: [356, -6, 0]
+      })
+    ]
+  },
+
+  "sumo-squat-hand-lifts": {
+    title: "Sumo squat and hand lifts",
+    box: STANDING_REACH_BOX,
+    view: "front",
+    tempoMs: 3000,
+    loop: "pingpong",
+    groundY: 196,
+    focus: ["armNear", "armFar"],
+    trace: "handNear",
+    // Wide stance with the toes turned out, arms sweeping across on the way
+    // down and overhead on the way up.
+    poses: [
+      squat(152, [196, 196], [104, 196], {
+        hipSpread: 14,
+        armNear: [40, 14, 0],
+        armFar: [44, -14, 0]
+      }),
+      squat(128, [196, 196], [104, 196], {
+        hipSpread: 14,
+        armNear: [268, 4, 0],
+        armFar: [272, -4, 0]
+      })
+    ]
+  },
+
+  "reverse-lunge": {
+    title: "Reverse lunge",
+    box: STANDING_BOX,
+    tempoMs: 2200,
+    loop: "pingpong",
+    groundY: 196,
+    focus: ["legNear"],
+    trace: "kneeNear",
+    // Side-on: the back knee dropping is the movement, and it is the thing
+    // people let travel forward over the front foot.
+    poses: [
+      standingSide({ ...lunge(122, [176, 194]), ikLegFar: [160, 194] }),
+      standingSide({ ...lunge(150, [212, 194]), ikLegFar: [148, 194] })
+    ]
+  },
+
+  "reverse-lunge-pulse": {
+    title: "Reverse-lunge pulse",
+    box: STANDING_BOX,
+    tempoMs: 700,
+    loop: "pingpong",
+    groundY: 196,
+    focus: ["legNear"],
+    // Held at the bottom of the lunge with the chest lifted.
+    poses: [
+      standingSide({ ...lunge(146, [212, 194]), ikLegFar: [148, 194] }),
+      standingSide({ ...lunge(156, [212, 194]), ikLegFar: [148, 194] })
+    ]
+  },
+
+  "standing-kickback": {
+    title: "Standing kickback",
+    box: STANDING_BOX,
+    tempoMs: 2000,
+    loop: "pingpong",
+    groundY: 196,
+    focus: ["legNear"],
+    trace: "ankleNear",
+    // Weight into the standing leg, hips square, the other leg reaching
+    // straight back. Side-on, because that is where the extension shows.
+    poses: [
+      standingSide({ legNear: [86, 4, 94], legFar: [91, 2, 92] }),
+      standingSide({ legNear: [34, 4, 10], spine: 262, legFar: [91, 2, 92] })
+    ]
+  },
+
+  "kickback-hold-pulse": {
+    title: "Kickback hold and pulse",
+    box: STANDING_BOX,
+    tempoMs: 650,
+    loop: "pingpong",
+    groundY: 196,
+    focus: ["legNear"],
+    // The leg never comes back down; it just pulses at the top.
+    poses: [
+      standingSide({ legNear: [40, 4, 10], spine: 262, legFar: [91, 2, 92] }),
+      standingSide({ legNear: [26, 4, 10], spine: 260, legFar: [91, 2, 92] })
+    ]
+  },
+
+  "side-to-back-kick": {
+    title: "Side to back kick",
+    // A touch deeper than the standing box: the hinge drops the head and the
+    // pointed back foot reaches lower than a plain standing pose does.
+    box: "-8 30 320 180",
+    tempoMs: 3000,
+    loop: "cycle",
+    groundY: 196,
+    focus: ["legNear"],
+    trace: "ankleNear",
+    // Three stops: open to the side, back through centre, then hinge forward
+    // and kick behind. Drawn side-on so the hinge and the kick read; the
+    // opening to the side is the half this camera foreshortens.
+    poses: [
+      standingSide({ legNear: [72, 6, 26], legFar: [91, 2, 92] }),
+      standingSide({ legNear: [88, 4, 26], legFar: [91, 2, 92] }),
+      standingSide({ legNear: [24, 4, 10], spine: 236, head: 232, spineBow: -5, legFar: [91, 2, 92] })
+    ]
+  },
+
+  "single-leg-deadlift-knee-tuck": {
+    title: "Single-leg deadlift (SLDL) to knee tuck",
+    box: STANDING_BOX,
+    tempoMs: 3000,
+    loop: "pingpong",
+    groundY: 196,
+    focus: ["legNear"],
+    trace: "kneeNear",
+    // Hinge at the hip with the free leg reaching back as a counterweight,
+    // then stand and drive the same knee up. The two halves are one movement.
+    poses: [
+      standingSide({ legNear: [20, 4, 10], spine: 232, head: 228, armNear: [64, 6, 4], armFar: [66, 6, 4], legFar: [91, 2, 92] }),
+      standingSide({ legNear: [212, -74, -30], spine: 276, head: 276, armNear: [128, 30, 4], armFar: [130, 28, 4], legFar: [91, 2, 92] })
+    ]
+  },
+
+  "standing-knee-pulls": {
+    title: "Knee pulls alternating legs",
+    box: STANDING_BOX,
+    tempoMs: 2000,
+    loop: "pingpong",
+    groundY: 196,
+    focus: ["legNear", "legFar"],
+    trace: "kneeNear",
+    // Tall spine, hands under the knee drawing it to the chest, alternating.
+    poses: [
+      standingSide({ legNear: [206, -78, -28], armNear: [124, 34, 6], armFar: [126, 32, 6], legFar: [91, 2, 92] }),
+      standingSide({ legNear: [89, 2, 94], armNear: [96, 6, 4], armFar: [128, 34, 6], legFar: [206, -78, -28] })
+    ]
+  },
+
+  "arm-circles": {
+    title: "Arm circles",
+    box: STANDING_REACH_BOX,
+    view: "front",
+    tempoMs: 2600,
+    loop: "cycle",
+    groundY: 196,
+    focus: ["armNear", "armFar"],
+    trace: "handNear",
+    // Head-on, arms straight out to the sides, hands drawing a full circle.
+    poses: [0, 1, 2, 3, 4, 5].map((index) => {
+      const t = (index / 6) * Math.PI * 2;
+      return standingFront({
+        armNear: [4 + 26 * Math.cos(t), 4 + 20 * Math.sin(t), 0],
+        armFar: [176 - 26 * Math.cos(t), -4 - 20 * Math.sin(t), 0]
+      });
+    }) as [Pose, ...Pose[]]
+  },
+
+  "small-arm-circles": {
+    title: "Small arm circles",
+    box: STANDING_REACH_BOX,
+    view: "front",
+    tempoMs: 1200,
+    loop: "cycle",
+    groundY: 196,
+    focus: ["armNear", "armFar"],
+    trace: "handNear",
+    // The same shape held tight and quick, which is the whole difference.
+    poses: [0, 1, 2, 3, 4, 5].map((index) => {
+      const t = (index / 6) * Math.PI * 2;
+      return standingFront({
+        armNear: [2 + 9 * Math.cos(t), 4 + 7 * Math.sin(t), 0],
+        armFar: [178 - 9 * Math.cos(t), -4 - 7 * Math.sin(t), 0]
+      });
+    }) as [Pose, ...Pose[]]
+  },
+
+  "shoulder-rolls": {
+    title: "Shoulder rolls",
+    box: STANDING_BOX,
+    view: "front",
+    tempoMs: 2400,
+    loop: "cycle",
+    groundY: 196,
+    focus: ["armNear", "armFar"],
+    trace: "elbowNear",
+    // Fingertips stay on the shoulders and the elbows draw the circle, which
+    // is what keeps the movement in the shoulder blade rather than the back.
+    poses: [0, 1, 2, 3, 4, 5].map((index) => {
+      const t = (index / 6) * Math.PI * 2;
+      return standingFront({
+        armNear: [24 + 34 * Math.cos(t), 132 + 24 * Math.sin(t), 0],
+        armFar: [156 - 34 * Math.cos(t), -132 - 24 * Math.sin(t), 0]
+      });
+    }) as [Pose, ...Pose[]]
+  },
+
+  "hip-circles": {
+    title: "Hip circles",
+    box: STANDING_BOX,
+    view: "front",
+    tempoMs: 2800,
+    loop: "cycle",
+    groundY: 196,
+    trace: "hip",
+    // Hands on the hips, feet planted: the hips themselves draw the circle, so
+    // the pelvis travels and the feet do not.
+    poses: [0, 1, 2, 3, 4, 5].map((index) => {
+      const t = (index / 6) * Math.PI * 2;
+      return standingFront({
+        hip: [150 + 15 * Math.cos(t), 124 + 7 * Math.sin(t)],
+        spine: 270 - 6 * Math.cos(t),
+        head: 270 - 3 * Math.cos(t),
+        armNear: [40, 96, 0],
+        armFar: [140, -96, 0],
+        ikLegNear: [168, 196],
+        ikLegFar: [132, 196],
+        ikBend: 1,
+        ikBendFar: -1
+      });
+    }) as [Pose, ...Pose[]]
+  },
+
   "static-single-leg-squat": {
     title: "Static single-leg squat",
     box: STANDING_BOX,
+    view: "front",
     tempoMs: 1600,
     loop: "pingpong",
     groundY: 196,
@@ -1470,6 +2592,7 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
   "single-leg-squat-opener": {
     title: "Single leg squat + leg opener",
     box: STANDING_BOX,
+    view: "front",
     tempoMs: 2000,
     loop: "pingpong",
     groundY: 196,
@@ -1485,6 +2608,7 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
   "pulse-leg-openers": {
     title: "Pulse leg openers",
     box: STANDING_BOX,
+    view: "front",
     tempoMs: 800,
     loop: "pingpong",
     groundY: 196,
@@ -1499,6 +2623,7 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
   "full-range-single-leg-squat": {
     title: "Full-range single-leg squat",
     box: STANDING_BOX,
+    view: "front",
     tempoMs: 2400,
     loop: "pingpong",
     groundY: 196,
@@ -1512,6 +2637,7 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
   "side-squat-curtsy": {
     title: "Side squat to curtsy lunge",
     box: STANDING_BOX,
+    view: "front",
     tempoMs: 2800,
     loop: "pingpong",
     groundY: 196,
@@ -1527,6 +2653,7 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
   "curtsy-pulse": {
     title: "Curtsy pulse",
     box: STANDING_BOX,
+    view: "front",
     tempoMs: 800,
     loop: "pingpong",
     groundY: 196,
@@ -1541,6 +2668,7 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
   "standing-punch-outs": {
     title: "Standing punch-outs",
     box: STANDING_BOX,
+    view: "front",
     tempoMs: 900,
     loop: "pingpong",
     groundY: 196,
@@ -1557,6 +2685,7 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
   "band-hold-out": {
     title: "Band hold out",
     box: STANDING_BOX,
+    view: "front",
     tempoMs: 0,
     loop: "cycle",
     groundY: 196,
@@ -1569,6 +2698,7 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
   "band-pulse-out": {
     title: "Band pulse out",
     box: STANDING_BOX,
+    view: "front",
     tempoMs: 700,
     loop: "pingpong",
     groundY: 196,
@@ -1584,6 +2714,7 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
   "serve-the-platter": {
     title: "Serve the platter",
     box: STANDING_BOX,
+    view: "front",
     tempoMs: 1800,
     loop: "pingpong",
     groundY: 196,
@@ -1615,6 +2746,7 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
   "band-outward-extension": {
     title: "Band outward extension (behind back)",
     box: STANDING_BOX,
+    view: "front",
     tempoMs: 1600,
     loop: "pingpong",
     groundY: 196,
@@ -1664,6 +2796,7 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
   "slider-side-lunge": {
     title: "Side lunge sliding out",
     box: STANDING_BOX,
+    view: "front",
     tempoMs: 2200,
     loop: "pingpong",
     groundY: 196,
@@ -1679,6 +2812,7 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
   "slider-squat-side-lunge": {
     title: "Isometric hold squat with side lunge",
     box: STANDING_BOX,
+    view: "front",
     tempoMs: 1800,
     loop: "pingpong",
     groundY: 196,
@@ -1697,6 +2831,7 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
   "banded-biceps-curl": {
     title: "Straight biceps curl",
     box: STANDING_BOX,
+    view: "front",
     tempoMs: 1800,
     loop: "pingpong",
     groundY: 196,
@@ -1734,28 +2869,10 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
     ]
   },
 
-  /* ---- static holds ---- */
-
-  shavasana: {
-    title: "Shavasana",
-    box: "76 104 208 117",
-    tempoMs: 0,
-    loop: "cycle",
-    groundY: 176,
-    ghost: false,
-    poses: [
-      {
-        hip: [176, 162],
-        spine: 180,
-        head: 180,
-        facing: 266,
-        armNear: [18, 4, 8],
-        armFar: [14, 4, 8],
-        legNear: [-2, 3, -22],
-        legFar: [2, 3, 20]
-      }
-    ]
-  }
+  // Shavasana used to live here. It is a photograph now: side-on a body lying
+  // flat is a horizontal line, and the pose - arms fallen away, palms up, feet
+  // dropped open - is invisible from that camera. The picture shows it at a
+  // glance, which is worth more than matching the rest of the library.
 };
 
 export type RigId = keyof typeof RIGS;

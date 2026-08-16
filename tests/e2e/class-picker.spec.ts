@@ -168,7 +168,9 @@ test("resets a restored launch scroll position", async ({ page }) => {
   await page.reload();
 
   await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(0);
-  await expect(page.getByRole("heading", { name: "Choose today's class" })).toBeInViewport();
+  // The picker's heading is for screen readers only now, so the visible proof
+  // that the scroll reset is the tab strip at the top of the list.
+  await expect(page.getByRole("button", { name: /^Courses/ })).toBeInViewport();
 });
 
 test("searches and filters the offline course and exercise libraries", async ({ page }) => {
@@ -221,9 +223,11 @@ test("opens and starts the July 31 class with completed pose guidance", async ({
   await page.getByRole("button", { name: "Expand all pose details" }).click();
   const kneePull = page.locator(".step-row").filter({ hasText: "Knee pulls alternating legs" });
   await expect(kneePull).toContainText("pull one leg towards the chest using hands under knee");
-  await expect(kneePull.getByAltText("Illustration for Knee pulls alternating legs")).toBeVisible();
+  await expectRigAnimates(kneePull.locator("svg.exercise-rig"));
   const shavasana = page.locator(".step-row").filter({ hasText: "Shavasana" });
-  await expect(shavasana.getByLabel("Pose guide for Shavasana")).toBeVisible();
+  // Shavasana is a picture rather than a rig: from the side a body lying flat
+  // is a horizontal line, so this one is drawn from above.
+  await expect(shavasana.getByAltText("Illustration for Shavasana")).toBeVisible();
   // Side moved off the name and onto the placement badge when the class was
   // converted, so the movement is named once and carries a directional badge.
   const deadlift = page
@@ -231,21 +235,16 @@ test("opens and starts the July 31 class with completed pose guidance", async ({
     .filter({ hasText: "Single-leg deadlift (SLDL) to knee tuck" })
     .first();
   await expect(deadlift.getByLabel("Right side")).toBeVisible();
-  const motionFrames = deadlift.locator(".exercise-motion img");
-  await expect(motionFrames).toHaveCount(2);
-  await expect
-    .poll(() =>
-      motionFrames.evaluateAll((images) =>
-        images.every((image) => (image as HTMLImageElement).complete && (image as HTMLImageElement).naturalWidth > 0)
-      )
-    )
-    .toBe(true);
+  // Rigs and pictures mix freely, so the only image on this schedule is the
+  // one movement deliberately drawn as a picture.
+  await expect(page.locator("img")).toHaveCount(1);
+  await expectRigAnimates(deadlift.locator("svg.exercise-rig"));
 
   await page.getByRole("button", { name: "Start class" }).click();
   await expect(page.getByRole("heading", { name: "INTRODUCTION" })).toBeVisible();
   await page.getByRole("button", { name: "Next" }).click();
   await expect(page.getByRole("heading", { name: "Knee pulls alternating legs" })).toBeVisible();
-  await expect(page.locator(".exercise-details img")).toBeVisible();
+  await expectRigAnimates(page.locator(".exercise-details svg.exercise-rig"));
 });
 
 test("opens and starts the catalog-backed sliders course", async ({ page }) => {
@@ -426,4 +425,39 @@ test("keeps the guide and its cue on a short screen", async ({ page }, testInfo)
   expect(overflow?.scrollable).toMatch(/auto|scroll/);
   expect(await page.evaluate(() => document.documentElement.scrollHeight - window.innerHeight))
     .toBeLessThanOrEqual(0);
+});
+
+/**
+ * A session saved hours ago is not a class you are in the middle of. Without an
+ * expiry the recovery prompt greets every launch forever, including when the
+ * instructor only wanted to look something up in the exercise library.
+ */
+test("does not offer to resume a session saved hours ago", async ({ page }) => {
+  await page.goto("./");
+  await page.evaluate(() => {
+    const fourHoursAgo = Date.now() - 4 * 60 * 60 * 1000;
+    window.localStorage.setItem(
+      "gfi-timer:session:v2",
+      JSON.stringify({
+        version: 2,
+        classId: "mat-pilates-07-31",
+        classVersion: 3,
+        startedAtEpochMs: fourHoursAgo,
+        elapsedMsFloor: 60_000,
+        status: "paused",
+        stepIndex: 4,
+        stepDurationMs: 30_000,
+        remainingMs: 12_000,
+        savedAtEpochMs: fourHoursAgo + 60_000
+      })
+    );
+  });
+  await page.reload();
+
+  await expect(page.getByRole("button", { name: /^Exercises/ })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Resume session" })).toHaveCount(0);
+  // And it is cleared, so it cannot come back on the next launch either.
+  await expect
+    .poll(() => page.evaluate(() => window.localStorage.getItem("gfi-timer:session:v2")))
+    .toBeNull();
 });

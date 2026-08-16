@@ -115,13 +115,12 @@ export function ClassPicker({
 
   return (
     <main className="page-shell" id="main-content">
-      <section className="hero" aria-labelledby="class-picker-title">
-        <p className="eyebrow">Instructor console</p>
-        <h1 id="class-picker-title">Choose today&apos;s class</h1>
-        <p className="hero__intro">
-          Find a complete course or review a reusable exercise from the local offline catalog.
-        </p>
-      </section>
+      {/*
+        No hero. The eyebrow, title and intro said nothing the tabs below do not
+        already say, and on a phone they pushed the class list off the first
+        screen. The heading survives for screen readers only.
+      */}
+      <h1 className="visually-hidden">Choose today&apos;s class</h1>
 
       <nav className="library-tabs" aria-label="Library">
         <button type="button" aria-pressed={tab === "courses"} onClick={() => selectTab("courses")}>

@@ -4,90 +4,19 @@ import type { ExerciseDefinition } from "../domain/catalog-definition";
 import type { RuntimeStep } from "../domain/timeline";
 import { RIGS } from "../rig/rigs";
 import { RIG_BY_EXERCISE_NAME } from "../rig/assignments";
+import { IMAGE_PREFERRED } from "./rig-assignments";
 
 const exercises = availableExerciseCatalog.exercises;
 const steps = availableClasses.flatMap((fitnessClass) => fitnessClass.steps).filter((step) => step.kind === "exercise");
 
-/** The movements the rig has been authored for so far. */
+/** The movements drawn from pose data rather than a picture. */
 const migrated = exercises.filter((exercise) => exercise.rig !== undefined);
 
 /**
- * The migration backlog: movements the dated classes brought into the pool that
- * no rig has been authored for yet.
- *
- * This list is a target, not a permission. The assertions below compare against
- * it exactly, so authoring a rig fails the suite until the name is deleted from
- * here - which is how the list can only ever shrink. When it reaches zero the
- * checks collapse back to "every movement is drawn from pose data".
- */
-const AWAITING_RIG = [
-  "Alternating bird dogs",
-  "Arm circles",
-  "Bird-dog extension and crunch",
-  "Bottom leg lifts",
-  "Bottom leg pulses",
-  "Bridge knee-drive pulses",
-  "Bridge with knee drive",
-  "Clam shell openers with kick",
-  "Combine Side crunch + Cross body crunch",
-  "Criss-cross",
-  "Cross body crunch",
-  "Crunch",
-  "Double-leg lift",
-  "Forearm side plank",
-  "Full-range glute bridge",
-  "High-plank alternating crunch",
-  "Hip circles",
-  "Inner thigh circles",
-  "Kickback hold and pulse",
-  "Knee across the body",
-  "Knee pulls alternating legs",
-  "Knee push-ups",
-  "Knee to chest stretch",
-  "Pilates push-ups",
-  "Pulse leg at the top",
-  "Reverse lunge",
-  "Reverse-lunge pulse",
-  "Roll down to the mat",
-  "Scissors",
-  "Seated Straddle",
-  "Shoulder rolls",
-  "Side crunch with leg extension",
-  "Side to back kick",
-  "Side twist",
-  "Single-leg deadlift (SLDL) to knee tuck",
-  "Small arm circles",
-  "Small leg circles",
-  "Squat -> add arms",
-  "Squat hold",
-  "Squat hold leg lift",
-  "Squat pulse",
-  "Squat to stand",
-  "Squat to twist",
-  "Standing kickback",
-  "Static hold",
-  "Sumo squat and hand lifts",
-  "Superman",
-  "Superman hold with flutter arms",
-  "Toe tap to reverse crunch",
-  "Toe taps alternating legs",
-  "Toe taps both legs"
-];
-
-/**
- * Spoken preambles, not movements. There is nothing to draw, so unlike the
- * backlog above these never leave the list.
+ * Spoken preambles, not movements. There is nothing to draw, so these are the
+ * only catalog entries allowed to have no visual at all.
  */
 const NOT_A_MOVEMENT = ["Class introduction", "INTRODUCTION"];
-
-/** The subset of the backlog still explained by a legacy still rather than nothing. */
-const onAnImage = [
-  "Full-range glute bridge",
-  "Knee pulls alternating legs",
-  "Seated Straddle",
-  "Side to back kick",
-  "Toe tap to reverse crunch"
-];
 
 const distinctNames = (records: readonly ExerciseDefinition[]): string[] =>
   [...new Set(records.map((record) => record.name))].sort();
@@ -159,58 +88,46 @@ describe("exercise artwork", () => {
     expect(orphaned, `artwork left behind after a rig replaced it:\n${orphaned.join("\n")}`).toEqual([]);
   });
 
-  it("only stands one movement in for another where a rig is still owed", () => {
-    // A shared still is only honest when the exercises are the same movement,
-    // so every name here is on the backlog and leaves as its rig lands.
-    const namesByStill = new Map<string, Set<string>>();
+  it("never explains one movement with another movement's picture", () => {
+    // This is the real invariant, and the reason the whole rig exists. An
+    // exercise may be a picture; it may not be *someone else's* picture. One
+    // file, one movement - including across the motion frame sets.
+    const namesByAsset = new Map<string, Set<string>>();
     exercises.forEach((exercise) => {
-      if (!exercise.illustration) return;
-      const names = namesByStill.get(exercise.illustration) ?? new Set<string>();
-      names.add(exercise.name);
-      namesByStill.set(exercise.illustration, names);
+      assetPaths(exercise).forEach((path) => {
+        const names = namesByAsset.get(path) ?? new Set<string>();
+        names.add(exercise.name);
+        namesByAsset.set(path, names);
+      });
     });
 
-    const shared = [...namesByStill.values()]
-      .filter((names) => names.size > 1)
-      .flatMap((names) => [...names]);
+    const shared = [...namesByAsset.entries()]
+      .filter(([, names]) => names.size > 1)
+      .map(([path, names]) => `${path} -> ${[...names].join(", ")}`);
 
-    expect(shared.filter((name) => !AWAITING_RIG.includes(name))).toEqual([]);
-  });
-
-  it("has migrated the plank and slider floor movements off their images", () => {
-    const batchOne = [
-      "Straight leg sweep",
-      "Straight leg sweep circles",
-      "Thread the leg and open to the side",
-      "Sliders mountain climbers"
-    ];
-    batchOne.forEach((name) => {
-      const exercise = exercises.find((item) => item.name === name);
-      expect(exercise, `${name} is missing from the catalog`).toBeDefined();
-      expect(exercise?.rig, `${name} fell back to an image`).toBeDefined();
-    });
+    expect(shared, "one picture used for more than one movement").toEqual([]);
   });
 
   it("gives every exercise in the catalog a visual", () => {
+    // A rig, motion frames or a still - any of the three. Which one is an
+    // editorial call per movement, not something the suite should force.
     const withoutMedia = exercises.filter(
       (exercise) => !exercise.rig && !exercise.illustration && !exercise.motionIllustrations
     );
-    // A subset check, not an exact one: a class that illustrates only the first
-    // of three identical placements leaves the same name on both this list and
-    // the image list. The exact pin lives in the backlog test below.
-    const known = new Set([...AWAITING_RIG, ...NOT_A_MOVEMENT]);
-    expect(distinctNames(withoutMedia).filter((name) => !known.has(name))).toEqual([]);
+    expect(distinctNames(withoutMedia)).toEqual([...NOT_A_MOVEMENT].sort());
   });
 
-  it("draws every movement from pose data rather than an image", () => {
-    const onImages = exercises.filter((exercise) => !exercise.rig && exercise.illustration);
-    expect(distinctNames(onImages)).toEqual(onAnImage);
-  });
-
-  it("owes a rig to nothing outside the declared backlog", () => {
-    // The two lists above partition everything the catalog cannot yet draw from
-    // pose data, so a newly imported class cannot slip in unnoticed.
-    const undrawn = exercises.filter((exercise) => !exercise.rig);
-    expect(distinctNames(undrawn)).toEqual([...AWAITING_RIG, ...NOT_A_MOVEMENT].sort());
+  it("keeps a picture only where it was chosen over the rig", () => {
+    // Everything on a picture is either a movement with no rig authored yet or
+    // one deliberately listed in IMAGE_PREFERRED. Nothing lands on a picture by
+    // accident, which is what the assignment step would otherwise allow.
+    const onPictures = exercises.filter((exercise) => !exercise.rig && assetPaths(exercise).length > 0);
+    onPictures.forEach((exercise) => {
+      const hasRig = RIG_BY_EXERCISE_NAME[exercise.name] !== undefined;
+      expect(
+        !hasRig || IMAGE_PREFERRED.has(exercise.name),
+        `"${exercise.name}" has a rig but shows a picture without being listed in IMAGE_PREFERRED`
+      ).toBe(true);
+    });
   });
 });
