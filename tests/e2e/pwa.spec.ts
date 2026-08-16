@@ -47,7 +47,7 @@ test("publishes an installable manifest with standard and maskable icons", async
   await expect(appleTouchIcon).toHaveAttribute("href", /\/GFI-timer\/icons\/apple-touch-icon\.png$/);
 });
 
-test("reloads the cached app and exercise art while offline", async ({ context, page }) => {
+test("reloads the cached app and its exercise guides while offline", async ({ context, page }) => {
   await page.goto("./");
   await page.evaluate(async () => {
     if (!("serviceWorker" in navigator)) {
@@ -67,15 +67,13 @@ test("reloads the cached app and exercise art while offline", async ({ context, 
     const july31Card = page.getByRole("article").filter({ hasText: "Mat Pilates — July 31" });
     await july31Card.getByRole("button", { name: "View class" }).click();
     await page.getByRole("button", { name: "Expand all pose details" }).click();
-    const illustration = page.getByAltText("Illustration for Knee pulls alternating legs");
-    await expect(illustration).toBeVisible();
+    // Guides are solved from pose data in the app bundle rather than fetched,
+    // so offline is now a question of the bundle being cached, not the images.
+    const guide = page.getByLabel("Motion guide for Knee pulls alternating legs");
+    await expect(guide).toBeVisible();
     await expect
-      .poll(() =>
-        illustration.evaluate(
-          (image) => image instanceof HTMLImageElement && image.complete && image.naturalWidth > 0
-        )
-      )
-      .toBe(true);
+      .poll(() => guide.evaluate((element) => element.querySelectorAll("path").length))
+      .toBeGreaterThan(0);
   } finally {
     await context.setOffline(false);
   }

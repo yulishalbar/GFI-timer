@@ -18,6 +18,13 @@ export const RIG_BY_EXERCISE_NAME: Readonly<Record<string, string>> = {
   "High plank hold": "high-plank-hold",
   "High plank shoulder taps, alternating hands": "high-plank-shoulder-taps",
   "High plank opening to a side planks (alternating)": "high-plank-side-plank-open",
+  "High-plank alternating crunch": "high-plank-alternating-crunch",
+  "Pilates push-ups": "pilates-push-ups",
+  "Knee push-ups": "knee-push-ups",
+
+  // Prone back extension
+  Superman: "superman",
+  "Superman hold with flutter arms": "superman-flutter",
 
   // Quadruped and kneeling
   "Tabletop → alternating bird dog → add wrist circles": "bird-dog",
@@ -36,6 +43,12 @@ export const RIG_BY_EXERCISE_NAME: Readonly<Record<string, string>> = {
   "Half rainbow": "half-rainbow",
   "Quadruped Glute Lift": "quadruped-glute-lift",
   "Side crunch": "quadruped-side-crunch",
+  "Cross body crunch": "quadruped-cross-body-crunch",
+  "Combine Side crunch + Cross body crunch": "quadruped-combined-crunch",
+  "Side crunch with leg extension": "quadruped-side-crunch-extension",
+  "Bird-dog extension and crunch": "bird-dog-crunch",
+  "Seated Straddle": "seated-straddle",
+  "Side twist": "seated-side-twist",
   "Child's pose": "childs-pose",
   "Child's pose with side stretches": "childs-pose-side-stretch",
 
@@ -54,18 +67,37 @@ export const RIG_BY_EXERCISE_NAME: Readonly<Record<string, string>> = {
   "Flutter kicks up and down - band around ankles": "banded-flutter-kicks",
   "Roll ups - band around wrists": "banded-roll-ups",
   "Russian twist - band around wrists": "banded-russian-twist",
+  Crunch: "crunch",
+  "Criss-cross": "criss-cross",
+  Scissors: "scissors",
+  "Toe taps alternating legs": "toe-taps-alternating",
+  "Toe taps both legs": "toe-taps-both",
+  "Toe tap to reverse crunch": "toe-tap-reverse-crunch",
+  "Alternating bird dogs": "supine-bird-dog",
+  "Roll down to the mat": "roll-down-to-mat",
+  "Knee to chest stretch": "knee-to-chest",
+  "Knee across the body": "knee-across-body",
 
   // Side-lying
   "Leg lift": "side-lying-leg-lift",
   "Clamshell openers": "clamshell-openers",
   "Clamshell lifts": "clamshell-lifts",
   "Side-body crunches": "side-body-crunch",
+  "Bottom leg lifts": "bottom-leg-lifts",
+  "Bottom leg pulses": "bottom-leg-pulses",
+  "Inner thigh circles": "inner-thigh-circles",
+  "Double-leg lift": "double-leg-lift",
+  "Small leg circles": "side-lying-small-leg-circles",
+  "Pulse leg at the top": "pulse-leg-at-top",
+  "Static hold": "side-lying-static-hold",
+  "Clam shell openers with kick": "clamshell-kick",
 
   "Big leg circles": "side-lying-big-circles",
   "Small leg circle pulses": "side-lying-small-circles",
   "Forward and back kick": "side-lying-forward-back-kick",
   "Straight leg crunches": "side-lying-straight-leg-crunch",
   "Tricep side push-up": "tricep-side-push-up",
+  "Forearm side plank": "forearm-side-plank",
 
   // Cooldown and stretches
   "Standing roll down": "standing-roll-down",
@@ -85,6 +117,9 @@ export const RIG_BY_EXERCISE_NAME: Readonly<Record<string, string>> = {
   "Glute bridge curl": "glute-bridge-curl",
   "Glute bridge pulse": "glute-bridge-pulse",
   "One-leg banded bridge": "one-leg-banded-bridge",
+  "Full-range glute bridge": "full-range-glute-bridge",
+  "Bridge with knee drive": "bridge-knee-drive",
+  "Bridge knee-drive pulses": "bridge-knee-drive-pulse",
   "Bridge with band around thighs": "banded-bridge",
 
   // Standing legs, band. Left and right name themselves differently here, so
@@ -98,6 +133,24 @@ export const RIG_BY_EXERCISE_NAME: Readonly<Record<string, string>> = {
   "Full-range single-leg squat (R), left heel lifted": "full-range-single-leg-squat",
   "Side squat to curtsy lunge": "side-squat-curtsy",
   "Curtsy pulse": "curtsy-pulse",
+  "Squat to stand": "squat-to-stand",
+  "Squat pulse": "squat-pulse",
+  "Squat -> add arms": "squat-add-arms",
+  "Squat hold": "squat-hold",
+  "Squat hold leg lift": "squat-hold-leg-lift",
+  "Squat to twist": "squat-to-twist",
+  "Sumo squat and hand lifts": "sumo-squat-hand-lifts",
+  "Reverse lunge": "reverse-lunge",
+  "Reverse-lunge pulse": "reverse-lunge-pulse",
+  "Standing kickback": "standing-kickback",
+  "Kickback hold and pulse": "kickback-hold-pulse",
+  "Side to back kick": "side-to-back-kick",
+  "Single-leg deadlift (SLDL) to knee tuck": "single-leg-deadlift-knee-tuck",
+  "Knee pulls alternating legs": "standing-knee-pulls",
+  "Arm circles": "arm-circles",
+  "Small arm circles": "small-arm-circles",
+  "Shoulder rolls": "shoulder-rolls",
+  "Hip circles": "hip-circles",
 
   // Standing upper body, band
   "Standing punch-outs": "standing-punch-outs",
@@ -114,10 +167,11 @@ export const RIG_BY_EXERCISE_NAME: Readonly<Record<string, string>> = {
   "Isometric hold squat with side lunge": "slider-squat-side-lunge",
 
   // Standing, band
-  "Straight biceps curl": "banded-biceps-curl",
+  "Straight biceps curl": "banded-biceps-curl"
 
-  // Static holds
-  Shavasana: "shavasana"
+  // Shavasana is deliberately absent: it is a photograph, because side-on a
+  // body lying flat is a horizontal line. See the rig-or-a-picture section of
+  // docs/ARTWORK.md.
 };
 
 export function rigIdForExercise(name: string): string | undefined {

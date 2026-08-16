@@ -221,9 +221,11 @@ test("opens and starts the July 31 class with completed pose guidance", async ({
   await page.getByRole("button", { name: "Expand all pose details" }).click();
   const kneePull = page.locator(".step-row").filter({ hasText: "Knee pulls alternating legs" });
   await expect(kneePull).toContainText("pull one leg towards the chest using hands under knee");
-  await expect(kneePull.getByAltText("Illustration for Knee pulls alternating legs")).toBeVisible();
+  await expectRigAnimates(kneePull.locator("svg.exercise-rig"));
   const shavasana = page.locator(".step-row").filter({ hasText: "Shavasana" });
-  await expect(shavasana.getByLabel("Pose guide for Shavasana")).toBeVisible();
+  // Shavasana is a picture rather than a rig: from the side a body lying flat
+  // is a horizontal line, so this one is drawn from above.
+  await expect(shavasana.getByAltText("Illustration for Shavasana")).toBeVisible();
   // Side moved off the name and onto the placement badge when the class was
   // converted, so the movement is named once and carries a directional badge.
   const deadlift = page
@@ -231,21 +233,16 @@ test("opens and starts the July 31 class with completed pose guidance", async ({
     .filter({ hasText: "Single-leg deadlift (SLDL) to knee tuck" })
     .first();
   await expect(deadlift.getByLabel("Right side")).toBeVisible();
-  const motionFrames = deadlift.locator(".exercise-motion img");
-  await expect(motionFrames).toHaveCount(2);
-  await expect
-    .poll(() =>
-      motionFrames.evaluateAll((images) =>
-        images.every((image) => (image as HTMLImageElement).complete && (image as HTMLImageElement).naturalWidth > 0)
-      )
-    )
-    .toBe(true);
+  // Rigs and pictures mix freely, so the only image on this schedule is the
+  // one movement deliberately drawn as a picture.
+  await expect(page.locator("img")).toHaveCount(1);
+  await expectRigAnimates(deadlift.locator("svg.exercise-rig"));
 
   await page.getByRole("button", { name: "Start class" }).click();
   await expect(page.getByRole("heading", { name: "INTRODUCTION" })).toBeVisible();
   await page.getByRole("button", { name: "Next" }).click();
   await expect(page.getByRole("heading", { name: "Knee pulls alternating legs" })).toBeVisible();
-  await expect(page.locator(".exercise-details img")).toBeVisible();
+  await expectRigAnimates(page.locator(".exercise-details svg.exercise-rig"));
 });
 
 test("opens and starts the catalog-backed sliders course", async ({ page }) => {

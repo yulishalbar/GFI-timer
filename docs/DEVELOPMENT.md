@@ -23,6 +23,15 @@ npm run build        # type-check and production build
 npm run preview      # serve the production build locally
 ```
 
+`npm run build` is the only real type check. The root `tsconfig.json` is
+`"files": []` plus project references, so `npx tsc --noEmit` against it checks
+nothing and exits 0 on code that does not compile — only `tsc -b`, which the
+build runs, walks the referenced projects.
+
+`npm run preview` serves whatever is already in `dist/`. It does not build, and
+a failed build leaves the previous bundle in place, so anything checked by eye
+against the preview is worthless unless the build ran and succeeded first.
+
 ## Development sequence
 
 Build from the domain outward:

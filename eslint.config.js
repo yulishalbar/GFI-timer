@@ -10,7 +10,9 @@ export default tseslint.config(
       "coverage",
       "playwright-report",
       "test-results",
-      "eslint.config.js"
+      "eslint.config.js",
+      // Dev-only tooling, outside the typed project the app is linted against.
+      "scripts"
     ]
   },
   js.configs.recommended,

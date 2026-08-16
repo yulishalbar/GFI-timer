@@ -218,7 +218,7 @@ export const matPilatesBandLegacy = {
         exercise("down-dog-childs-pose-seated", "Downward-facing dog → child's pose → seated", 30, undefined, undefined, "exercises/childs-pose.svg"),
         exercise("windshield-wipers", "Bent-knee windshield wipers", 60),
         exercise("shavasana", "Shavasana", 180,
-          "Lie comfortably on back with arms relaxed at sides. Slow inhale through the nose, slow exhale through the mouth. Allow the body to fully relax and breathing to settle naturally. End: come to seated. Closing words: Thank you for coming today and working out early in the morning, amazing job! Don't forget to wipe down your mat. See you next time!")
+          "Lie comfortably on back with arms relaxed at sides. Slow inhale through the nose, slow exhale through the mouth. Allow the body to fully relax and breathing to settle naturally. End: come to seated. Closing words: Thank you for coming today and working out early in the morning, amazing job! Don't forget to wipe down your mat. See you next time!", undefined, "exercises/shavasana.jpg")
       ]
     }
   ]

@@ -1,0 +1,416 @@
+<title>Figure Tuner</title>
+<style>
+:root { color-scheme: dark; font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; font-synthesis: none; text-rendering: optimizelegibility; --color-bg: #0b0f0c; --color-surface: #121814; --color-surface-raised: #19221c; --color-surface-soft: #202b24; --color-text: #f6f7ef; --color-muted: #9ba89e; --color-border: rgba(235, 244, 237, 0.12); --color-accent: #d7ff62; --color-accent-ink: #18200d; --color-rest: #8fd8ff; --shadow-card: 0 28px 80px rgba(0, 0, 0, 0.25); --radius-sm: 0.75rem; --radius-md: 1.25rem; --radius-lg: 1.75rem; --page-max: 76rem; }
+.exercise-rig { display: block; width: 100%; aspect-ratio: 16 / 9; max-height: none; border-radius: var(--radius-sm); background: var(--color-surface-raised); overflow: hidden; }
+.exercise-rig--mirrored { transform: scaleX(-1); }
+.exercise-rig path, .exercise-rig circle, .exercise-rig ellipse { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.exercise-rig .rig--filled { fill: currentcolor; stroke: currentcolor; }
+.exercise-rig .rig__ground { color: rgb(51, 69, 58); stroke: currentcolor; }
+.exercise-rig .rig__outline { color: var(--color-surface-raised); stroke: currentcolor; }
+.exercise-rig .rig__near { color: var(--color-text); stroke: currentcolor; }
+.exercise-rig .rig__far { color: rgb(102, 118, 108); stroke: currentcolor; }
+.exercise-rig .rig__focus { color: var(--color-accent); stroke: currentcolor; }
+.exercise-rig .rig__equipment { color: var(--color-rest); stroke: currentcolor; }
+.exercise-rig .rig__ghost { color: rgb(61, 77, 67); stroke: currentcolor; }
+.exercise-rig .rig__path { color: var(--color-accent); stroke: currentcolor; opacity: 0.55; }
+:root{--ink:#f2f5f2;--muted:#8a9a8f;--bg:#0b0f0c;--card:#101711;--line:#243026;--accent:#d7ff62;--cool:#8fd8ff}
+*{box-sizing:border-box}
+body{margin:0;padding:0;background:var(--bg);color:var(--ink);
+  font:15px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}
+header{padding:1.2rem clamp(.9rem,3vw,2rem) .9rem;border-bottom:1px solid var(--line)}
+.eyebrow{margin:0 0 .4rem;color:var(--accent);font-size:.66rem;font-weight:800;letter-spacing:.16em;text-transform:uppercase}
+h1{margin:0 0 .4rem;font-size:clamp(1.5rem,4vw,2.2rem);letter-spacing:-.03em;font-weight:800}
+header p{margin:0;color:var(--muted);font-size:.9rem;max-width:44rem}
+.layout{display:grid;grid-template-columns:19rem minmax(0,1fr);gap:0;align-items:start}
+@media (max-width:900px){.layout{grid-template-columns:1fr}}
+.panel{position:sticky;top:0;max-height:100vh;overflow:auto;padding:1rem clamp(.9rem,2vw,1.2rem) 3rem;border-right:1px solid var(--line)}
+@media (max-width:900px){.panel{position:static;max-height:none;border-right:0;border-bottom:1px solid var(--line)}}
+fieldset{margin:0 0 1rem;padding:.7rem .8rem;border:1px solid var(--line);border-radius:10px;background:var(--card)}
+legend{padding:0 .4rem;color:var(--cool);font-size:.66rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase}
+.knob{display:grid;grid-template-columns:1fr auto;gap:.2rem .5rem;margin-bottom:.55rem}
+.knob label{font-size:.78rem;color:var(--muted)}
+.knob output{font-size:.78rem;font-variant-numeric:tabular-nums;color:var(--ink)}
+.knob input{grid-column:1/-1;width:100%;accent-color:var(--accent);margin:0}
+.tabs{display:flex;flex-wrap:wrap;gap:.3rem;margin-bottom:.7rem}
+.tab{padding:.4rem .55rem;font-size:.74rem;font-weight:700}
+.tab.on{background:var(--accent);color:#10160f;border-color:var(--accent)}
+figure.dim{opacity:.6}
+.actions{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1rem}
+button{padding:.55rem .8rem;border:1px solid var(--line);border-radius:8px;background:var(--card);
+  color:var(--ink);font:inherit;font-size:.82rem;font-weight:650;cursor:pointer}
+button:hover{border-color:var(--accent)}
+button.primary{background:var(--accent);color:#10160f;border-color:var(--accent)}
+.grid{display:grid;gap:.8rem;padding:1rem clamp(.9rem,2vw,1.5rem) 3rem;
+  grid-template-columns:repeat(auto-fit,minmax(min(100%,17rem),1fr))}
+figure{margin:0;padding:.5rem;border:1px solid var(--line);border-radius:10px;background:#0c120e}
+figure .exercise-rig{width:100%;aspect-ratio:16/9;display:block}
+figcaption{display:flex;justify-content:space-between;gap:.5rem;margin-top:.4rem;font-size:.72rem}
+figcaption span{color:var(--muted)}
+.small{transform:scale(.42);transform-origin:top left;width:238%}
+#out{width:100%;min-height:8rem;padding:.6rem;border:1px solid var(--line);border-radius:8px;
+  background:#0c120e;color:var(--cool);font:12px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;resize:vertical}
+</style>
+<header>
+  <p class="eyebrow">Figure tuner</p>
+  <h1>Drag until it looks right</h1>
+  <p>Every sample redraws live. The camera rules are fixed — one eye in profile,
+  two level eyes head-on, two tilted eyes lying on the side, and from above a
+  full face if the body is face up but all hair and no face if it is face down.
+  The knobs move everything else. When it looks right, copy the settings.</p>
+</header>
+<div class="layout">
+  <div class="panel">
+    <div class="tabs" id="tabs"></div>
+    <div class="actions">
+      <button class="primary" id="copy">Copy settings</button>
+      <button id="toAll">Apply to all</button>
+      <button id="reset">Reset</button>
+      <button id="shrink">Phone size</button>
+    </div>
+    <div id="knobs"></div>
+    <textarea id="out" readonly></textarea>
+  </div>
+  <div class="grid" id="grid"></div>
+</div>
+<script>
+const SAMPLES = [{"rig":"crunch","phase":0.5,"label":"On the back","view":"profile","box":"64 36 236 132.75","body":"<path class=\"rig__ground\" d=\"M20.0 162.0L280.0 162.0\" stroke-width=\"6\"/><path class=\"rig__outline\" d=\"M129.6 129.5L154.3 142.6\" stroke-width=\"12.7\"/><path class=\"rig__outline\" d=\"M154.3 142.6L175.4 157.9\" stroke-width=\"11.82\"/><path class=\"rig__outline\" d=\"M175.4 157.9L182.3 163.7\" stroke-width=\"9.620000000000001\"/><path class=\"rig__far\" d=\"M129.6 129.5L154.3 142.6\" stroke-width=\"7.699999999999999\"/><path class=\"rig__far\" d=\"M154.3 142.6L175.4 157.9\" stroke-width=\"6.82\"/><path class=\"rig__far\" d=\"M175.4 157.9L182.3 163.7\" stroke-width=\"4.62\"/><circle class=\"rig__far rig--filled\" cx=\"154.34097535289547\" cy=\"142.62399515846482\" r=\"2.3099999999999996\"/><path class=\"rig__outline\" d=\"M186.0 150.0L217.7 131.0\" stroke-width=\"13.8\"/><path class=\"rig__outline\" d=\"M217.7 131.0L234.0 162.0\" stroke-width=\"12.7\"/><path class=\"rig__outline\" d=\"M234.0 162.0L246.9 156.6\" stroke-width=\"10.28\"/><path class=\"rig__far\" d=\"M186.0 150.0L217.7 131.0\" stroke-width=\"8.8\"/><path class=\"rig__far\" d=\"M217.7 131.0L234.0 162.0\" stroke-width=\"7.699999999999999\"/><path class=\"rig__far\" d=\"M234.0 162.0L246.9 156.6\" stroke-width=\"5.279999999999999\"/><circle class=\"rig__far rig--filled\" cx=\"217.74970997016243\" cy=\"131.00116011935023\" r=\"2.64\"/><path class=\"rig__outline\" d=\"M129.6 129.5L112.0 120.1\" stroke-width=\"13.25\"/><path class=\"rig__near\" d=\"M129.6 129.5L112.0 120.1\" stroke-width=\"8.25\"/><path class=\"rig__outline\" d=\"M186.0 150.0L217.3 130.2\" stroke-width=\"16\"/><path class=\"rig__outline\" d=\"M217.3 130.2L232.0 162.0\" stroke-width=\"14.68\"/><path class=\"rig__outline\" d=\"M232.0 162.0L245.2 157.2\" stroke-width=\"11.6\"/><path class=\"rig__near\" d=\"M186.0 150.0L217.3 130.2\" stroke-width=\"11\"/><path class=\"rig__near\" d=\"M217.3 130.2L232.0 162.0\" stroke-width=\"9.68\"/><path class=\"rig__near\" d=\"M232.0 162.0L245.2 157.2\" stroke-width=\"6.6\"/><circle class=\"rig__near rig--filled\" cx=\"217.28417824222052\" cy=\"130.2439834048213\" r=\"3.3\"/><path class=\"rig__outline\" d=\"M129.6 129.5L154.8 141.8\" stroke-width=\"14.02\"/><path class=\"rig__outline\" d=\"M154.8 141.8L176.3 156.3\" stroke-width=\"13.14\"/><path class=\"rig__outline\" d=\"M176.3 156.3L183.4 161.8\" stroke-width=\"10.5\"/><path class=\"rig__near\" d=\"M129.6 129.5L154.8 141.8\" stroke-width=\"9.02\"/><path class=\"rig__near\" d=\"M154.8 141.8L176.3 156.3\" stroke-width=\"8.14\"/><path class=\"rig__near\" d=\"M176.3 156.3L183.4 161.8\" stroke-width=\"5.5\"/><circle class=\"rig__near rig--filled\" cx=\"154.78467604922218\" cy=\"141.75318351055404\" r=\"2.706\"/>","head":[111.95949089566697,120.08936014474205],"shoulder":[129.6184427528455,129.47879140045987],"hip":[186,150],"spine":200,"headAngle":208,"facing":250,"shoulderSpread":0,"hipSpread":0,"spineBow":-10},{"rig":"superman","phase":0.55,"label":"Face down","view":"profile","box":"32 60 256 144","body":"<path class=\"rig__ground\" d=\"M20.0 170.0L280.0 170.0\" stroke-width=\"6\"/><path class=\"rig__outline\" d=\"M120.1 156.0L93.5 147.5\" stroke-width=\"12.7\"/><path class=\"rig__outline\" d=\"M93.5 147.5L68.7 139.6\" stroke-width=\"11.82\"/><path class=\"rig__outline\" d=\"M68.7 139.6L60.1 136.8\" stroke-width=\"9.620000000000001\"/><path class=\"rig__far\" d=\"M120.1 156.0L93.5 147.5\" stroke-width=\"7.699999999999999\"/><path class=\"rig__far\" d=\"M93.5 147.5L68.7 139.6\" stroke-width=\"6.82\"/><path class=\"rig__far\" d=\"M68.7 139.6L60.1 136.8\" stroke-width=\"4.62\"/><circle class=\"rig__far rig--filled\" cx=\"93.4628800041092\" cy=\"147.47457333551685\" r=\"2.3099999999999996\"/><path class=\"rig__outline\" d=\"M180.0 160.1L216.2 152.6\" stroke-width=\"13.8\"/><path class=\"rig__outline\" d=\"M216.2 152.6L250.5 145.5\" stroke-width=\"12.7\"/><path class=\"rig__outline\" d=\"M250.5 145.5L264.2 142.6\" stroke-width=\"10.28\"/><path class=\"rig__far\" d=\"M180.0 160.1L216.2 152.6\" stroke-width=\"8.8\"/><path class=\"rig__far\" d=\"M216.2 152.6L250.5 145.5\" stroke-width=\"7.699999999999999\"/><path class=\"rig__far\" d=\"M250.5 145.5L264.2 142.6\" stroke-width=\"5.279999999999999\"/><circle class=\"rig__far rig--filled\" cx=\"216.2286226992959\" cy=\"152.56422343918726\" r=\"2.64\"/><path class=\"rig__outline\" d=\"M120.1 156.0L100.4 152.6\" stroke-width=\"13.25\"/><path class=\"rig__near\" d=\"M120.1 156.0L100.4 152.6\" stroke-width=\"8.25\"/><path class=\"rig__outline\" d=\"M180.0 160.1L215.9 151.3\" stroke-width=\"16\"/><path class=\"rig__outline\" d=\"M215.9 151.3L249.9 143.0\" stroke-width=\"14.68\"/><path class=\"rig__outline\" d=\"M249.9 143.0L263.5 139.7\" stroke-width=\"11.6\"/><path class=\"rig__focus\" d=\"M180.0 160.1L215.9 151.3\" stroke-width=\"11\"/><path class=\"rig__focus\" d=\"M215.9 151.3L249.9 143.0\" stroke-width=\"9.68\"/><path class=\"rig__focus\" d=\"M249.9 143.0L263.5 139.7\" stroke-width=\"6.6\"/><circle class=\"rig__focus rig--filled\" cx=\"215.9442563819113\" cy=\"151.3044411487684\" r=\"3.3\"/><path class=\"rig__outline\" d=\"M120.1 156.0L93.2 148.4\" stroke-width=\"14.02\"/><path class=\"rig__outline\" d=\"M93.2 148.4L68.1 141.4\" stroke-width=\"13.14\"/><path class=\"rig__outline\" d=\"M68.1 141.4L59.5 139.0\" stroke-width=\"10.5\"/><path class=\"rig__focus\" d=\"M120.1 156.0L93.2 148.4\" stroke-width=\"9.02\"/><path class=\"rig__focus\" d=\"M93.2 148.4L68.1 141.4\" stroke-width=\"8.14\"/><path class=\"rig__focus\" d=\"M68.1 141.4L59.5 139.0\" stroke-width=\"5.5\"/><circle class=\"rig__focus rig--filled\" cx=\"93.1823593615285\" cy=\"148.4107845313183\" r=\"2.706\"/>","head":[100.43221345602562,152.57399737513924],"shoulder":[120.14037142569542,155.9781873584599],"hip":[180,160.08],"spine":183.92,"headAngle":189.8,"facing":88,"shoulderSpread":0,"hipSpread":0,"spineBow":9.799999999999999},{"rig":"cat-cow","phase":0.2,"label":"All fours","view":"profile","box":"32 60 256 144","body":"<path class=\"rig__ground\" d=\"M20.0 170.0L280.0 170.0\" stroke-width=\"6\"/><path class=\"rig__outline\" d=\"M120.0 114.2L119.0 142.2\" stroke-width=\"12.7\"/><path class=\"rig__outline\" d=\"M119.0 142.2L118.1 168.2\" stroke-width=\"11.82\"/><path class=\"rig__outline\" d=\"M118.1 168.2L109.1 168.2\" stroke-width=\"9.620000000000001\"/><path class=\"rig__far\" d=\"M120.0 114.2L119.0 142.2\" stroke-width=\"7.699999999999999\"/><path class=\"rig__far\" d=\"M119.0 142.2L118.1 168.2\" stroke-width=\"6.82\"/><path class=\"rig__far\" d=\"M118.1 168.2L109.1 168.2\" stroke-width=\"4.62\"/><circle class=\"rig__far rig--filled\" cx=\"119.04008426577886\" cy=\"142.22317215355395\" r=\"2.3099999999999996\"/><path class=\"rig__outline\" d=\"M180.0 131.4L178.7 168.4\" stroke-width=\"13.8\"/><path class=\"rig__outline\" d=\"M178.7 168.4L213.7 168.4\" stroke-width=\"12.7\"/><path class=\"rig__outline\" d=\"M213.7 168.4L227.7 168.4\" stroke-width=\"10.28\"/><path class=\"rig__far\" d=\"M180.0 131.4L178.7 168.4\" stroke-width=\"8.8\"/><path class=\"rig__far\" d=\"M178.7 168.4L213.7 168.4\" stroke-width=\"7.699999999999999\"/><path class=\"rig__far\" d=\"M213.7 168.4L227.7 168.4\" stroke-width=\"5.279999999999999\"/><circle class=\"rig__far rig--filled\" cx=\"178.70871862200747\" cy=\"168.41746059970654\" r=\"2.64\"/><path class=\"rig__outline\" d=\"M120.0 114.2L100.6 109.3\" stroke-width=\"13.25\"/><path class=\"rig__near\" d=\"M120.0 114.2L100.6 109.3\" stroke-width=\"8.25\"/><path class=\"rig__outline\" d=\"M180.0 131.4L180.0 168.4\" stroke-width=\"16\"/><path class=\"rig__outline\" d=\"M180.0 168.4L215.0 168.4\" stroke-width=\"14.68\"/><path class=\"rig__outline\" d=\"M215.0 168.4L229.0 168.4\" stroke-width=\"11.6\"/><path class=\"rig__near\" d=\"M180.0 131.4L180.0 168.4\" stroke-width=\"11\"/><path class=\"rig__near\" d=\"M180.0 168.4L215.0 168.4\" stroke-width=\"9.68\"/><path class=\"rig__near\" d=\"M215.0 168.4L229.0 168.4\" stroke-width=\"6.6\"/><circle class=\"rig__near rig--filled\" cx=\"180\" cy=\"168.44\" r=\"3.3\"/><path class=\"rig__outline\" d=\"M120.0 114.2L120.0 142.2\" stroke-width=\"14.02\"/><path class=\"rig__outline\" d=\"M120.0 142.2L120.0 168.2\" stroke-width=\"13.14\"/><path class=\"rig__outline\" d=\"M120.0 168.2L111.0 168.2\" stroke-width=\"10.5\"/><path class=\"rig__near\" d=\"M120.0 114.2L120.0 142.2\" stroke-width=\"9.02\"/><path class=\"rig__near\" d=\"M120.0 142.2L120.0 168.2\" stroke-width=\"8.14\"/><path class=\"rig__near\" d=\"M120.0 168.2L111.0 168.2\" stroke-width=\"5.5\"/><circle class=\"rig__near rig--filled\" cx=\"120.01727017344889\" cy=\"142.24022899701924\" r=\"2.706\"/>","head":[100.6317930374772,109.3205464655221],"shoulder":[120.01727017344889,114.24022899701926],"hip":[180,131.44],"spine":196,"headAngle":194.24,"facing":140,"shoulderSpread":0,"hipSpread":0,"spineBow":3.6800000000000033},{"rig":"side-lying-leg-lift","phase":0.55,"label":"On the side","view":"lying","box":"48 62 240 135","body":"<path class=\"rig__ground\" d=\"M20.0 152.0L280.0 152.0\" stroke-width=\"6\"/><path class=\"rig__outline\" d=\"M126.0 132.0L98.1 130.0\" stroke-width=\"12.7\"/><path class=\"rig__outline\" d=\"M98.1 130.0L72.2 127.3\" stroke-width=\"11.82\"/><path class=\"rig__outline\" d=\"M72.2 127.3L63.3 126.1\" stroke-width=\"9.620000000000001\"/><path class=\"rig__far\" d=\"M126.0 132.0L98.1 130.0\" stroke-width=\"7.699999999999999\"/><path class=\"rig__far\" d=\"M98.1 130.0L72.2 127.3\" stroke-width=\"6.82\"/><path class=\"rig__far\" d=\"M72.2 127.3L63.3 126.1\" stroke-width=\"4.62\"/><circle class=\"rig__far rig--filled\" cx=\"98.06820659272492\" cy=\"130.0468187351645\" r=\"2.3099999999999996\"/><path class=\"rig__outline\" d=\"M186.0 132.0L222.6 137.1\" stroke-width=\"13.8\"/><path class=\"rig__outline\" d=\"M222.6 137.1L257.1 143.2\" stroke-width=\"12.7\"/><path class=\"rig__outline\" d=\"M257.1 143.2L271.1 142.3\" stroke-width=\"10.28\"/><path class=\"rig__far\" d=\"M186.0 132.0L222.6 137.1\" stroke-width=\"8.8\"/><path class=\"rig__far\" d=\"M222.6 137.1L257.1 143.2\" stroke-width=\"7.699999999999999\"/><path class=\"rig__far\" d=\"M257.1 143.2L271.1 142.3\" stroke-width=\"5.279999999999999\"/><circle class=\"rig__far rig--filled\" cx=\"222.6399185434381\" cy=\"137.1494047355224\" r=\"2.64\"/><path class=\"rig__outline\" d=\"M126.0 132.0L106.0 132.0\" stroke-width=\"13.25\"/><path class=\"rig__near\" d=\"M126.0 132.0L106.0 132.0\" stroke-width=\"8.25\"/><path class=\"rig__outline\" d=\"M186.0 132.0L219.4 116.1\" stroke-width=\"16\"/><path class=\"rig__outline\" d=\"M219.4 116.1L251.5 102.2\" stroke-width=\"14.68\"/><path class=\"rig__outline\" d=\"M251.5 102.2L262.7 93.7\" stroke-width=\"11.6\"/><path class=\"rig__focus\" d=\"M186.0 132.0L219.4 116.1\" stroke-width=\"11\"/><path class=\"rig__focus\" d=\"M219.4 116.1L251.5 102.2\" stroke-width=\"9.68\"/><path class=\"rig__focus\" d=\"M251.5 102.2L262.7 93.7\" stroke-width=\"6.6\"/><circle class=\"rig__focus rig--filled\" cx=\"219.42340583594213\" cy=\"116.1294000640836\" r=\"3.3\"/><path class=\"rig__outline\" d=\"M126.0 132.0L153.6 136.9\" stroke-width=\"14.02\"/><path class=\"rig__outline\" d=\"M153.6 136.9L178.8 143.2\" stroke-width=\"13.14\"/><path class=\"rig__outline\" d=\"M178.8 143.2L187.4 145.9\" stroke-width=\"10.5\"/><path class=\"rig__near\" d=\"M126.0 132.0L153.6 136.9\" stroke-width=\"9.02\"/><path class=\"rig__near\" d=\"M153.6 136.9L178.8 143.2\" stroke-width=\"8.14\"/><path class=\"rig__near\" d=\"M178.8 143.2L187.4 145.9\" stroke-width=\"5.5\"/><circle class=\"rig__near rig--filled\" cx=\"153.5746170843418\" cy=\"136.86214897467406\" r=\"2.706\"/>","head":[106,132],"shoulder":[126,132],"hip":[186,132],"spine":180,"headAngle":180,"facing":178,"shoulderSpread":0,"hipSpread":0,"spineBow":0},{"rig":"squat-to-stand","phase":0.55,"label":"Standing","view":"front","box":"-8 26 320 180","body":"<path class=\"rig__ground\" d=\"M20.0 196.0L280.0 196.0\" stroke-width=\"6\"/><path class=\"rig__outline\" d=\"M135.0 97.3L148.7 121.7\" stroke-width=\"12.7\"/><path class=\"rig__outline\" d=\"M148.7 121.7L165.2 141.8\" stroke-width=\"11.82\"/><path class=\"rig__outline\" d=\"M165.2 141.8L170.9 148.8\" stroke-width=\"9.620000000000001\"/><path class=\"rig__far\" d=\"M135.0 97.3L148.7 121.7\" stroke-width=\"7.699999999999999\"/><path class=\"rig__far\" d=\"M148.7 121.7L165.2 141.8\" stroke-width=\"6.82\"/><path class=\"rig__far\" d=\"M165.2 141.8L170.9 148.8\" stroke-width=\"4.62\"/><circle class=\"rig__far rig--filled\" cx=\"148.72827153752792\" cy=\"121.68357679914772\" r=\"2.3099999999999996\"/><path class=\"rig__outline\" d=\"M139.0 157.3L105.5 173.1\" stroke-width=\"13.8\"/><path class=\"rig__outline\" d=\"M105.5 173.1L132.0 196.0\" stroke-width=\"12.7\"/><path class=\"rig__outline\" d=\"M132.0 196.0L118.9 201.0\" stroke-width=\"10.28\"/><path class=\"rig__focus\" d=\"M139.0 157.3L105.5 173.1\" stroke-width=\"8.8\"/><path class=\"rig__focus\" d=\"M105.5 173.1L132.0 196.0\" stroke-width=\"7.699999999999999\"/><path class=\"rig__focus\" d=\"M132.0 196.0L118.9 201.0\" stroke-width=\"5.279999999999999\"/><circle class=\"rig__focus rig--filled\" cx=\"105.54510051697393\" cy=\"173.08410391577524\" r=\"2.64\"/><path class=\"rig__outline\" d=\"M150.0 97.3L150.0 77.3\" stroke-width=\"13.25\"/><path class=\"rig__near\" d=\"M150.0 97.3L150.0 77.3\" stroke-width=\"8.25\"/><path class=\"rig__outline\" d=\"M161.0 157.3L194.5 173.1\" stroke-width=\"16\"/><path class=\"rig__outline\" d=\"M194.5 173.1L168.0 196.0\" stroke-width=\"14.68\"/><path class=\"rig__outline\" d=\"M168.0 196.0L181.1 201.0\" stroke-width=\"11.6\"/><path class=\"rig__focus\" d=\"M161.0 157.3L194.5 173.1\" stroke-width=\"11\"/><path class=\"rig__focus\" d=\"M194.5 173.1L168.0 196.0\" stroke-width=\"9.68\"/><path class=\"rig__focus\" d=\"M168.0 196.0L181.1 201.0\" stroke-width=\"6.6\"/><circle class=\"rig__focus rig--filled\" cx=\"194.45489948302605\" cy=\"173.08410391577524\" r=\"3.3\"/><path class=\"rig__outline\" d=\"M165.0 97.3L180.4 120.7\" stroke-width=\"14.02\"/><path class=\"rig__outline\" d=\"M180.4 120.7L190.8 144.5\" stroke-width=\"13.14\"/><path class=\"rig__outline\" d=\"M190.8 144.5L194.3 152.8\" stroke-width=\"10.5\"/><path class=\"rig__near\" d=\"M165.0 97.3L180.4 120.7\" stroke-width=\"9.02\"/><path class=\"rig__near\" d=\"M180.4 120.7L190.8 144.5\" stroke-width=\"8.14\"/><path class=\"rig__near\" d=\"M190.8 144.5L194.3 152.8\" stroke-width=\"5.5\"/><circle class=\"rig__near rig--filled\" cx=\"180.3971376222955\" cy=\"120.66649509952468\" r=\"2.706\"/>","head":[150,77.28],"shoulder":[150,97.28],"hip":[150,157.28],"spine":270,"headAngle":270,"shoulderSpread":15,"hipSpread":11,"spineBow":0},{"rig":"knee-across-body","phase":0.35,"label":"On the back, from above","view":"overheadUp","mat":true,"box":"32 30 256 144","body":"<path class=\"rig__outline\" d=\"M120.0 102.0L119.0 130.0\" stroke-width=\"12.7\"/><path class=\"rig__outline\" d=\"M119.0 130.0L118.1 156.0\" stroke-width=\"11.82\"/><path class=\"rig__outline\" d=\"M118.1 156.0L117.8 165.0\" stroke-width=\"9.620000000000001\"/><path class=\"rig__far\" d=\"M120.0 102.0L119.0 130.0\" stroke-width=\"7.699999999999999\"/><path class=\"rig__far\" d=\"M119.0 130.0L118.1 156.0\" stroke-width=\"6.82\"/><path class=\"rig__far\" d=\"M118.1 156.0L117.8 165.0\" stroke-width=\"4.62\"/><circle class=\"rig__far rig--filled\" cx=\"119.02281409232997\" cy=\"129.9829431565347\" r=\"2.3099999999999996\"/><path class=\"rig__outline\" d=\"M180.0 102.0L216.9 104.6\" stroke-width=\"13.8\"/><path class=\"rig__outline\" d=\"M216.9 104.6L251.8 107.0\" stroke-width=\"12.7\"/><path class=\"rig__outline\" d=\"M251.8 107.0L265.5 109.9\" stroke-width=\"10.28\"/><path class=\"rig__far\" d=\"M180.0 102.0L216.9 104.6\" stroke-width=\"8.8\"/><path class=\"rig__far\" d=\"M216.9 104.6L251.8 107.0\" stroke-width=\"7.699999999999999\"/><path class=\"rig__far\" d=\"M251.8 107.0L265.5 109.9\" stroke-width=\"5.279999999999999\"/><circle class=\"rig__far rig--filled\" cx=\"216.90986985961348\" cy=\"104.58098952853264\" r=\"2.64\"/><path class=\"rig__outline\" d=\"M120.0 102.0L100.0 102.0\" stroke-width=\"13.25\"/><path class=\"rig__near\" d=\"M120.0 102.0L100.0 102.0\" stroke-width=\"8.25\"/><path class=\"rig__outline\" d=\"M180.0 102.0L205.0 129.3\" stroke-width=\"16\"/><path class=\"rig__outline\" d=\"M205.0 129.3L240.0 129.3\" stroke-width=\"14.68\"/><path class=\"rig__outline\" d=\"M240.0 129.3L253.8 131.3\" stroke-width=\"11.6\"/><path class=\"rig__focus\" d=\"M180.0 102.0L205.0 129.3\" stroke-width=\"11\"/><path class=\"rig__focus\" d=\"M205.0 129.3L240.0 129.3\" stroke-width=\"9.68\"/><path class=\"rig__focus\" d=\"M240.0 129.3L253.8 131.3\" stroke-width=\"6.6\"/><circle class=\"rig__focus rig--filled\" cx=\"204.96825720515045\" cy=\"129.30542312687083\" r=\"3.3\"/><path class=\"rig__outline\" d=\"M120.0 102.0L119.0 74.0\" stroke-width=\"14.02\"/><path class=\"rig__outline\" d=\"M119.0 74.0L118.1 48.0\" stroke-width=\"13.14\"/><path class=\"rig__outline\" d=\"M118.1 48.0L117.8 39.0\" stroke-width=\"10.5\"/><path class=\"rig__near\" d=\"M120.0 102.0L119.0 74.0\" stroke-width=\"9.02\"/><path class=\"rig__near\" d=\"M119.0 74.0L118.1 48.0\" stroke-width=\"8.14\"/><path class=\"rig__near\" d=\"M118.1 48.0L117.8 39.0\" stroke-width=\"5.5\"/><circle class=\"rig__near rig--filled\" cx=\"119.02281409232998\" cy=\"74.01705684346533\" r=\"2.706\"/>","head":[100,102.00000000000001],"shoulder":[120,102.00000000000001],"hip":[180,102],"spine":180,"headAngle":180,"shoulderSpread":0,"hipSpread":0,"spineBow":0},{"rig":"straight-leg-sweep","phase":0.5,"label":"Face down, from above","view":"overheadDown","mat":true,"box":"32 30 256 144","body":"<path class=\"rig__outline\" d=\"M120.0 102.0L114.7 116.5\" stroke-width=\"12.7\"/><path class=\"rig__outline\" d=\"M114.7 116.5L111.0 130.3\" stroke-width=\"11.82\"/><path class=\"rig__outline\" d=\"M111.0 130.3L110.2 135.2\" stroke-width=\"9.620000000000001\"/><path class=\"rig__far\" d=\"M120.0 102.0L114.7 116.5\" stroke-width=\"7.699999999999999\"/><path class=\"rig__far\" d=\"M114.7 116.5L111.0 130.3\" stroke-width=\"6.82\"/><path class=\"rig__far\" d=\"M111.0 130.3L110.2 135.2\" stroke-width=\"4.62\"/><circle class=\"rig__far rig--filled\" cx=\"114.7328897927847\" cy=\"116.471266360103\" r=\"2.3099999999999996\"/><path class=\"rig__outline\" d=\"M180.0 102.0L216.2 109.7\" stroke-width=\"13.8\"/><path class=\"rig__outline\" d=\"M216.2 109.7L250.9 114.6\" stroke-width=\"12.7\"/><path class=\"rig__outline\" d=\"M250.9 114.6L264.5 117.5\" stroke-width=\"10.28\"/><path class=\"rig__far\" d=\"M180.0 102.0L216.2 109.7\" stroke-width=\"8.8\"/><path class=\"rig__far\" d=\"M216.2 109.7L250.9 114.6\" stroke-width=\"7.699999999999999\"/><path class=\"rig__far\" d=\"M250.9 114.6L264.5 117.5\" stroke-width=\"5.279999999999999\"/><circle class=\"rig__far rig--filled\" cx=\"216.1914612271508\" cy=\"109.6927325602571\" r=\"2.64\"/><path class=\"rig__outline\" d=\"M120.0 102.0L100.0 102.0\" stroke-width=\"13.25\"/><path class=\"rig__near\" d=\"M120.0 102.0L100.0 102.0\" stroke-width=\"8.25\"/><path class=\"rig__outline\" d=\"M180.0 102.0L211.4 82.5\" stroke-width=\"16\"/><path class=\"rig__outline\" d=\"M211.4 82.5L229.5 52.5\" stroke-width=\"14.68\"/><path class=\"rig__outline\" d=\"M229.5 52.5L238.3 41.6\" stroke-width=\"11.6\"/><path class=\"rig__focus\" d=\"M180.0 102.0L211.4 82.5\" stroke-width=\"11\"/><path class=\"rig__focus\" d=\"M211.4 82.5L229.5 52.5\" stroke-width=\"9.68\"/><path class=\"rig__focus\" d=\"M229.5 52.5L238.3 41.6\" stroke-width=\"6.6\"/><circle class=\"rig__focus rig--filled\" cx=\"211.42778315749342\" cy=\"82.47323770294794\" r=\"3.3\"/><path class=\"rig__outline\" d=\"M120.0 102.0L114.7 87.5\" stroke-width=\"14.02\"/><path class=\"rig__outline\" d=\"M114.7 87.5L111.0 73.7\" stroke-width=\"13.14\"/><path class=\"rig__outline\" d=\"M111.0 73.7L110.2 68.8\" stroke-width=\"10.5\"/><path class=\"rig__near\" d=\"M120.0 102.0L114.7 87.5\" stroke-width=\"9.02\"/><path class=\"rig__near\" d=\"M114.7 87.5L111.0 73.7\" stroke-width=\"8.14\"/><path class=\"rig__near\" d=\"M111.0 73.7L110.2 68.8\" stroke-width=\"5.5\"/><circle class=\"rig__near rig--filled\" cx=\"114.7328897927847\" cy=\"87.52873363989703\" r=\"2.706\"/><ellipse class=\"rig__equipment rig--filled\" cx=\"229.5\" cy=\"56.49999999999998\" rx=\"13\" ry=\"4.5\"/>","head":[100,102.00000000000001],"shoulder":[120,102.00000000000001],"hip":[180,102],"spine":180,"headAngle":180,"shoulderSpread":0,"hipSpread":0,"spineBow":0}];
+const KNOBS = [{"group":"Head","key":"headR","label":"Radius","min":8,"max":20,"step":0.5,"value":11.5},{"group":"Head","key":"headOval","label":"Oval (long down the face)","min":0.8,"max":1.6,"step":0.02,"value":1.18},{"group":"Head","key":"headTilt","label":"Head tilt","min":-60,"max":60,"step":2,"value":0},{"group":"Hair","key":"hairFull","label":"Fill the whole head (back of head)","min":0,"max":1,"step":1,"value":0},{"group":"Hair","key":"hairFront","label":"Starts behind the brow","min":-100,"max":10,"step":2,"value":-40},{"group":"Hair","key":"hairBack","label":"Ends below the jaw","min":40,"max":150,"step":2,"value":100},{"group":"Hair","key":"hairCrown","label":"Thickness at the crown","min":1,"max":1.8,"step":0.02,"value":1.22},{"group":"Hair","key":"hairJaw","label":"Thickness at the jaw","min":1,"max":3,"step":0.04,"value":1.86},{"group":"Hair","key":"hairInner","label":"Inner edge","min":0.6,"max":1,"step":0.02,"value":0.92},{"group":"Hair","key":"hairStrands","label":"Strand lines","min":0,"max":6,"step":1,"value":3},{"group":"Hair","key":"hairTilt","label":"Hangs toward the mat","min":-90,"max":90,"step":2,"value":0},{"group":"Face","key":"eyeArcs","label":"Eyes as arcs, not dots","min":0,"max":1,"step":1,"value":1},{"group":"Face","key":"eyeR","label":"Eye size","min":0.8,"max":6,"step":0.1,"value":3},{"group":"Face","key":"eyeOut","label":"Eye toward the face","min":0,"max":0.9,"step":0.02,"value":0.3},{"group":"Face","key":"eyeUp","label":"Eye above the nose","min":0,"max":9,"step":0.2,"value":2.6},{"group":"Face","key":"eyeSpread","label":"Eye spacing (two-eye views)","min":0.1,"max":0.8,"step":0.02,"value":0.38},{"group":"Face","key":"browLift","label":"Brow (0 = none)","min":0,"max":4,"step":0.2,"value":0},{"group":"Face","key":"noseLen","label":"Nose length","min":0,"max":9,"step":0.2,"value":4},{"group":"Face","key":"noseBulge","label":"Nose bulge","min":0,"max":6,"step":0.2,"value":3.2},{"group":"Face","key":"mouthW","label":"Mouth width","min":0.1,"max":1,"step":0.02,"value":0.48},{"group":"Face","key":"mouthDrop","label":"Mouth down the face","min":2,"max":14,"step":0.4,"value":6.4},{"group":"Face","key":"mouthCurve","label":"Mouth curve","min":-3,"max":3,"step":0.2,"value":1.6},{"group":"Face","key":"ink","label":"Mark weight","min":0.6,"max":3.5,"step":0.1,"value":1.6},{"group":"Body","key":"bustArcs","label":"Chest as arcs on the body","min":0,"max":1,"step":1,"value":0},{"group":"Body","key":"bust","label":"Chest","min":1,"max":4,"step":0.05,"value":2.6},{"group":"Body","key":"bustAt","label":"Chest height on the torso","min":0.05,"max":0.4,"step":0.01,"value":0.13},{"group":"Body","key":"waist","label":"Waist","min":0.4,"max":1.2,"step":0.02,"value":0.7},{"group":"Body","key":"hips","label":"Hips","min":0.9,"max":1.8,"step":0.02,"value":1.3},{"group":"Body","key":"shoulders","label":"Shoulders","min":0.7,"max":1.5,"step":0.02,"value":1},{"group":"Mat","key":"matAlpha","label":"Mat contrast","min":0,"max":1,"step":0.02,"value":0.85},{"group":"Mat","key":"matLines","label":"Mat lines","min":0,"max":14,"step":1,"value":7},{"group":"Mat","key":"matInset","label":"Mat size","min":0,"max":0.3,"step":0.01,"value":0.08}];
+const VIEW_DEFAULTS = {"profile":{},"lying":{"hairTilt":46,"headTilt":-14,"bustArcs":1,"hairJaw":2.3,"eyeSpread":0.32},"front":{"bustArcs":1},"overheadUp":{"hairJaw":1.5,"hairCrown":1.35,"eyeR":3.2,"bustArcs":0},"overheadDown":{"hairFull":1,"hairJaw":1.5}};
+const VIEWS = ["profile", "lying", "front", "overheadUp", "overheadDown"];
+const VIEW_LABELS = {
+  profile: "Profile", lying: "On the side", front: "Facing you",
+  overheadUp: "Above, face up", overheadDown: "Above, face down"
+};
+const D = Math.PI / 180;
+const INK = "#0b0f0c";
+
+/** One set of numbers per camera. */
+const settings = {};
+const freshView = (view) => {
+  const base = Object.fromEntries(KNOBS.map((k) => [k.key, k.value]));
+  return Object.assign(base, VIEW_DEFAULTS[view] || {});
+};
+VIEWS.forEach((v) => { settings[v] = freshView(v); });
+let active = "profile";
+
+const project = (p, deg, len) => [p[0] + Math.cos(deg * D) * len, p[1] + Math.sin(deg * D) * len];
+const fmt = ([x, y]) => x.toFixed(1) + " " + y.toFixed(1);
+const poly = (pts, close = true) =>
+  pts.map((p, i) => (i ? "L" : "M") + fmt(p)).join("") + (close ? "Z" : "");
+const arc = (a, b, dir, bulge) => {
+  const mid = [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2];
+  return "M" + fmt(a) + "Q" + fmt(project(mid, dir, bulge)) + " " + fmt(b);
+};
+
+/** Chin side of the facing line, as the shipping painter picks it. */
+function chinAngle(s, facing) {
+  const to = [s.shoulder[0] - s.head[0], s.shoulder[1] - s.head[1]];
+  const cross = Math.cos(facing * D) * to[1] - Math.sin(facing * D) * to[0];
+  return facing + (cross >= 0 ? 90 : -90);
+}
+
+function headFrame(s, tilt) {
+  if (s.view === "profile" && s.facing !== undefined) {
+    const down = chinAngle(s, s.facing) + tilt;
+    return { right: s.facing + tilt, down, profile: true };
+  }
+  const down = s.headAngle + 180 + tilt;
+  return { right: down - 90, down, profile: false };
+}
+
+function drawHead(s) {
+  const k = settings[s.view];
+  const { right, down, profile } = headFrame(s, k.headTilt);
+  // The head is an oval, longer down the face than across it.
+  const at = (x, y) => project(project(s.head, right, x), down, y * k.headOval);
+  const rim = (deg, scale) =>
+    at(k.headR * scale * Math.cos(deg * D), k.headR * scale * Math.sin(deg * D));
+  const out = [];
+  const face = s.view !== "overheadDown";
+  const twoEyes = !profile;
+  const headEllipse = (r, cls) =>
+    '<ellipse class="' + cls + '" cx="' + s.head[0] + '" cy="' + s.head[1] +
+    '" rx="' + r + '" ry="' + r * k.headOval +
+    '" transform="rotate(' + (down - 90) + " " + s.head[0] + " " + s.head[1] + ')"/>';
+
+  // Face down from above you see the back of a head: hair all the way across,
+  // no face at all. Nothing a drawing can do says "turned away" more plainly.
+  if (k.hairFull) {
+    out.push(headEllipse(k.headR + 2.5, "rig__outline"));
+    out.push(headEllipse(k.headR * k.hairCrown, "rig__far rig--filled"));
+    for (let i = 1; i <= k.hairStrands; i += 1) {
+      const a = -90 + (180 * i) / (k.hairStrands + 1);
+      out.push(
+        '<path d="' + poly([rim(a, 0.1), rim(a, k.hairCrown * 0.94)], false) +
+          '" fill="none" stroke="' + INK + '" stroke-width="0.9" opacity="0.32" stroke-linecap="round"/>'
+      );
+    }
+    return out.join("");
+  }
+
+  // --- hair ---------------------------------------------------------------
+  // A carré: from behind the brow, over the crown, squared off below the jaw.
+  // Head-on it is the same sweep mirrored, so it frames both sides.
+  const steps = 9;
+  const sweepAngles = [];
+  if (profile) {
+    for (let i = 0; i < steps; i += 1) {
+      sweepAngles.push(k.hairFront - ((k.hairFront - (k.hairBack - 360)) * i) / (steps - 1));
+    }
+  } else {
+    // Symmetric: one jaw end, up over the crown, down to the mirrored end.
+    const a0 = k.hairBack;
+    const a1 = 360 + (180 - k.hairBack);
+    for (let i = 0; i < steps; i += 1) {
+      sweepAngles.push(a0 + ((a1 - a0) * i) / (steps - 1));
+    }
+  }
+  const ramp = (i) => {
+    const t = i / (steps - 1);
+    // Thin at the crown, thick at the jaw ends.
+    const edge = Math.abs(t - 0.5) * 2;
+    return k.hairCrown + (k.hairJaw - k.hairCrown) * (profile ? t : edge);
+  };
+  // Lying on your side, gravity pulls the hair across the body toward the mat.
+  // From above it splays evenly. That is the one thing separating two cameras
+  // that are otherwise both "a body seen from the front, lying along the page".
+  const drape = (p, i) => {
+    if (!k.hairTilt) return p;
+    const t = i / (steps - 1);
+    return project(p, 90, Math.sin(t * Math.PI) * (k.hairTilt / 90) * k.headR * 0.9);
+  };
+  const hairOuter = sweepAngles.map((a, i) => drape(rim(a, ramp(i)), i));
+  const hairInner = [...sweepAngles].reverse().map((a, i) => rim(a, k.hairInner));
+  const hair = [...hairOuter, ...hairInner];
+
+  out.push('<path class="rig__outline" d="' + poly(hair) + '" stroke-width="5"/>');
+  out.push('<path class="rig__far rig--filled" d="' + poly(hair) + '"/>');
+  out.push(
+    '<ellipse class="rig__outline" cx="' + s.head[0] + '" cy="' + s.head[1] +
+      '" rx="' + (k.headR + 2.5) + '" ry="' + (k.headR * k.headOval + 2.5) +
+      '" transform="rotate(' + (down - 90) + ' ' + s.head[0] + ' ' + s.head[1] + ')"/>'
+  );
+  out.push(
+    '<ellipse class="rig__near rig--filled" cx="' + s.head[0] + '" cy="' + s.head[1] +
+      '" rx="' + k.headR + '" ry="' + k.headR * k.headOval +
+      '" transform="rotate(' + (down - 90) + ' ' + s.head[0] + ' ' + s.head[1] + ')"/>'
+  );
+  out.push('<path class="rig__far rig--filled" d="' + poly(hair) + '"/>');
+
+  // Strand lines across the hair mass, as in a sketch.
+  for (let i = 1; i <= k.hairStrands; i += 1) {
+    const t = i / (k.hairStrands + 1);
+    const idx = Math.round(t * (steps - 1));
+    const a = sweepAngles[idx];
+    out.push(
+      '<path d="' + poly([rim(a, k.hairInner + 0.04), rim(a, ramp(idx) - 0.05)], false) +
+        '" fill="none" stroke="' + INK + '" stroke-width="0.8" opacity="0.35" stroke-linecap="round"/>'
+    );
+  }
+
+  if (!face) return out.join("");
+
+  // --- face ---------------------------------------------------------------
+  const stroke = (d, w) =>
+    out.push('<path d="' + d + '" fill="none" stroke="' + INK + '" stroke-width="' + (w || k.ink) +
+      '" stroke-linecap="round"/>');
+  // Either a solid circle at the full eye size, or an almond: two arcs meeting
+  // at the corners, one bowing up and one down. A single arc read as a stray
+  // mark - it needs the pair to close into an eye.
+  const eye = (p) => {
+    if (!k.eyeArcs) {
+      out.push('<circle cx="' + p[0].toFixed(1) + '" cy="' + p[1].toFixed(1) + '" r="' + k.eyeR + '" fill="' + INK + '"/>');
+      return;
+    }
+    const half = k.eyeR * 0.95;
+    const a = project(p, right, -half);
+    const b = project(p, right, half);
+    stroke(arc(a, b, down, -k.eyeR * 0.62), k.ink);
+    stroke(arc(a, b, down, k.eyeR * 0.62), k.ink);
+  };
+  const dot = eye;
+  const R = k.headR;
+
+  if (twoEyes) {
+    dot(at(-R * k.eyeSpread, -k.eyeUp));
+    dot(at(R * k.eyeSpread, -k.eyeUp));
+    if (k.browLift > 0) {
+      stroke(arc(at(-R * (k.eyeSpread + 0.22), -k.eyeUp - 2.6), at(-R * (k.eyeSpread - 0.22), -k.eyeUp - 2.6), down, -k.browLift), k.ink * 0.85);
+      stroke(arc(at(R * (k.eyeSpread - 0.22), -k.eyeUp - 2.6), at(R * (k.eyeSpread + 0.22), -k.eyeUp - 2.6), down, -k.browLift), k.ink * 0.85);
+    }
+    if (k.noseLen > 0) stroke(arc(at(-R * 0.1, 0.4), at(R * 0.1, k.noseLen * 0.6), right, k.noseBulge * 0.5));
+    stroke(arc(at(-R * k.mouthW, k.mouthDrop), at(R * k.mouthW, k.mouthDrop), down, k.mouthCurve));
+  } else {
+    dot(at(R * k.eyeOut, -k.eyeUp));
+    if (k.browLift > 0) {
+      stroke(arc(at(R * (k.eyeOut - 0.24), -k.eyeUp - 2.6), at(R * (k.eyeOut + 0.24), -k.eyeUp - 2.6), down, -k.browLift), k.ink * 0.85);
+    }
+    if (k.noseLen > 0) {
+      // Down the face and out, then a short base back in - the sketch nose.
+      stroke(arc(at(R * (k.eyeOut + 0.05), -0.6), at(R * (k.eyeOut + 0.14), k.noseLen), right, k.noseBulge));
+      stroke(poly([at(R * (k.eyeOut + 0.14), k.noseLen), at(R * (k.eyeOut - 0.18), k.noseLen + 0.6)], false), k.ink * 0.9);
+    }
+    stroke(arc(at(R * (k.eyeOut - 0.12), k.mouthDrop), at(R * (k.eyeOut + k.mouthW), k.mouthDrop - 0.4), down, k.mouthCurve));
+  }
+  return out.join("");
+}
+
+function drawTorso(s) {
+  const k = settings[s.view];
+  const minHalf = (11 * 1.55) / 2;
+  const symmetric = s.view !== "profile";
+  const norm = (d) => ((d % 360) + 360) % 360;
+  const gap = (a, b) => Math.abs(((norm(a - b) + 180) % 360) - 180);
+  const front =
+    s.facing === undefined || symmetric
+      ? s.spine + 90
+      : gap(s.spine - 90, s.facing) < gap(s.spine + 90, s.facing) ? s.spine - 90 : s.spine + 90;
+  const back = front === s.spine - 90 ? s.spine + 90 : s.spine - 90;
+  const sh = Math.max(s.shoulderSpread, minHalf) * k.shoulders;
+  const hp = Math.max(s.hipSpread, minHalf) * k.hips;
+  const waist = minHalf * k.waist;
+  const bust = sh * k.bust;
+  const along = (t) => [s.shoulder[0] + (s.hip[0] - s.shoulder[0]) * t, s.shoulder[1] + (s.hip[1] - s.shoulder[1]) * t];
+  const p = (from, deg, len) => project(from, deg, len);
+  const edge = (dir) =>
+    "Q" + fmt(p(along(k.bustAt), dir, bust)) + " " + fmt(p(along(0.44), dir, sh * 0.72)) +
+    "Q" + fmt(p(p(along(0.62), dir, waist), back, s.spineBow)) + " " + fmt(p(s.hip, dir, hp));
+  const d =
+    "M" + fmt(p(s.shoulder, back, sh)) + "L" + fmt(p(s.shoulder, front, sh * 0.94)) +
+    edge(front) + "L" + fmt(p(s.hip, back, hp)) +
+    (symmetric
+      ? "Q" + fmt(p(p(along(0.62), back, waist), back, s.spineBow)) + " " + fmt(p(along(0.44), back, sh * 0.72)) +
+        "Q" + fmt(p(along(k.bustAt), back, bust)) + " " + fmt(p(s.shoulder, back, sh))
+      : "Q" + fmt(p(p(along(0.5), back, sh), back, s.spineBow)) + " " + fmt(p(s.shoulder, back, sh))) +
+    "Z";
+  let out =
+    '<path class="rig__outline" d="' + d + '" stroke-width="9.4"/>' +
+    '<path class="rig__near rig--filled" d="' + d + '" stroke-width="4.4"/>';
+
+  // Drawn on the body rather than bulged out of it. Seen from the front that is
+  // two arcs; in profile the near one is all you would see.
+  if (k.bustArcs) {
+    const c = along(k.bustAt + 0.06);
+    const across = s.spine;
+    const r = sh * 0.62;
+    const one = (sign) => {
+      const centre = p(c, across, sign * sh * 0.44);
+      out +=
+        '<path d="' + arc(p(centre, across, -r * 0.75), p(centre, across, r * 0.75), front, r * 0.95) +
+        '" fill="none" stroke="' + INK + '" stroke-width="' + k.ink + '" stroke-linecap="round" opacity="0.75"/>';
+    };
+    one(-1);
+    if (symmetric) one(1);
+  }
+  return out;
+}
+
+function drawMat(s) {
+  if (!s.mat) return "";
+  const k = settings[s.view];
+  const [bx, by, bw, bh] = s.box.split(" ").map(Number);
+  const x = bx + bw * k.matInset;
+  const y = by + bh * (k.matInset + 0.12);
+  const w = bw * (1 - k.matInset * 2);
+  const h = bh * (1 - (k.matInset + 0.12) * 2);
+  let out =
+    '<rect x="' + x + '" y="' + y + '" width="' + w + '" height="' + h +
+    '" rx="9" fill="#2c3a30" opacity="' + k.matAlpha + '"/>' +
+    '<rect x="' + x + '" y="' + y + '" width="' + w + '" height="' + h +
+    '" rx="9" fill="none" stroke="#4a7b59" stroke-width="1.6" opacity="' + k.matAlpha + '"/>';
+  for (let i = 1; i <= k.matLines; i += 1) {
+    const lx = x + (w * i) / (k.matLines + 1);
+    out += '<path d="M' + lx.toFixed(1) + " " + (y + 5).toFixed(1) + "L" + lx.toFixed(1) + " " + (y + h - 5).toFixed(1) +
+      '" stroke="#4a7b59" stroke-width="1" opacity="' + k.matAlpha * 0.55 + '"/>';
+  }
+  return out;
+}
+
+const grid = document.getElementById("grid");
+grid.innerHTML = SAMPLES.map(
+  (s, i) =>
+    '<figure id="fig' + i + '"><svg class="exercise-rig" id="svg' + i + '" viewBox="' + s.box + '"></svg>' +
+    "<figcaption><b>" + s.label + "</b><span>" + VIEW_LABELS[s.view] + "</span></figcaption></figure>"
+).join("");
+
+function render() {
+  SAMPLES.forEach((s, i) => {
+    document.getElementById("svg" + i).innerHTML = drawMat(s) + s.body + drawTorso(s) + drawHead(s);
+    document.getElementById("fig" + i).classList.toggle("dim", s.view !== active);
+  });
+  document.getElementById("out").value = JSON.stringify(settings, null, 2);
+}
+
+const panel = document.getElementById("knobs");
+const groups = [...new Set(KNOBS.map((k) => k.group))];
+document.getElementById("tabs").innerHTML = VIEWS.map(
+  (v) => '<button class="tab" data-view="' + v + '">' + VIEW_LABELS[v] + "</button>"
+).join("");
+
+panel.innerHTML = groups
+  .map(
+    (g) =>
+      "<fieldset><legend>" + g + "</legend>" +
+      KNOBS.filter((k) => k.group === g)
+        .map(
+          (k) =>
+            '<div class="knob"><label for="' + k.key + '">' + k.label + "</label>" +
+            '<output id="o' + k.key + '"></output>' +
+            '<input type="range" id="' + k.key + '" min="' + k.min + '" max="' + k.max +
+            '" step="' + k.step + '"></div>'
+        )
+        .join("") +
+      "</fieldset>"
+  )
+  .join("");
+
+function syncInputs() {
+  KNOBS.forEach((k) => {
+    const value = settings[active][k.key];
+    document.getElementById(k.key).value = value;
+    document.getElementById("o" + k.key).textContent = value;
+  });
+  document.querySelectorAll(".tab").forEach((tab) => {
+    tab.classList.toggle("on", tab.dataset.view === active);
+  });
+}
+
+KNOBS.forEach((k) => {
+  const input = document.getElementById(k.key);
+  input.addEventListener("input", () => {
+    settings[active][k.key] = Number(input.value);
+    document.getElementById("o" + k.key).textContent = input.value;
+    render();
+  });
+});
+
+document.getElementById("tabs").addEventListener("click", (event) => {
+  const tab = event.target.closest(".tab");
+  if (!tab) return;
+  active = tab.dataset.view;
+  syncInputs();
+  render();
+});
+
+document.getElementById("toAll").addEventListener("click", () => {
+  VIEWS.forEach((v) => { if (v !== active) settings[v] = { ...settings[active], ...VIEW_DEFAULTS[v] }; });
+  render();
+});
+
+document.getElementById("reset").addEventListener("click", () => {
+  VIEWS.forEach((v) => { settings[v] = freshView(v); });
+  syncInputs();
+  render();
+});
+document.getElementById("copy").addEventListener("click", () => {
+  const out = document.getElementById("out");
+  out.select();
+  navigator.clipboard?.writeText(out.value);
+});
+document.getElementById("shrink").addEventListener("click", () => {
+  grid.classList.toggle("small");
+});
+
+syncInputs();
+render();
+</script>

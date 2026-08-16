@@ -91,11 +91,54 @@ long descriptions carry the fine form cues. If tutorial-grade fidelity is ever
 needed for a handful of movements, real filmed video is the answer — not more
 still frames.
 
+## A rig or a picture
+
+The rig is the default, not the rule. One figure drawn the same way everywhere
+is easier to read across a class, and it is the only way to show motion honestly
+— but it is a 2D stick figure, and where it cannot carry a movement, a picture
+the instructor understands beats a consistent one they do not. **Understanding
+the pose matters more than consistency.**
+
+Reach for a picture when:
+
+- **the movement is a rotation**, which the rig can only imply;
+- **the travel is lateral** and even the overhead camera does not save it;
+- **equipment detail carries the exercise** — how a band is threaded, where a
+  slider sits under the foot;
+- **the exercise is new and the rig is not ready.** A picture now is worth more
+  than a guide in three weeks. Swapping it for a rig later costs one line.
+
+Both routes are first-class. An exercise with no rig assigned and an
+`illustration` or `motionIllustrations` shows the picture automatically. To show
+a picture for a movement that *does* have a rig, add its name to
+`IMAGE_PREFERRED` in `src/catalog/rig-assignments.ts` — that list exists so the
+choice is deliberate and reviewable rather than an accident of ordering, and a
+test enforces it.
+
+The one thing that is never allowed: **one picture explaining more than one
+movement**. That is the failure the rig was built to end, and it is pinned.
+
+### What a picture should look like
+
+**Whatever reads best.** There is no palette or style requirement, and matching
+the rigs is not worth a worse picture — a photograph that shows the pose beats a
+stylised drawing that half-shows it. `Shavasana` is a photograph, and it is the
+clearest guide in the library.
+
+The only things that actually matter:
+
+- **it shows the pose**, unambiguously, at the size it renders on a phone;
+- **it is the movement's own picture**, not one borrowed from a neighbour;
+- it holds up on a dark background, since that is what sits behind it.
+
+Matching the app's colours is a nice-to-have and nothing more. The rig exists to
+make a *consistent* guide cheap, not to make an inconsistent one forbidden.
+
 ## Resolution order
 
 `ExerciseMedia` resolves `rig`, then `motionIllustrations`, then `illustration`.
-An exercise that has not been migrated keeps exactly the artwork it has today,
-so the catalog moves across in batches without any step losing its visual.
+An exercise with no rig keeps exactly the artwork it has, so pictures and rigs
+mix freely across a class without any step losing its visual.
 
 `compileClass` resolves a rig from the movement's name unless the entry names
 one itself. The repository holds several parallel representations of the same
@@ -119,47 +162,45 @@ different rigs never merge. A test pins the library at zero repeated names.
 
 ## Migration status
 
-**The catalog is fully migrated.** 74 rigs cover 89 of 90 records; the
-ninetieth is the non-exercise `INTRODUCTION` entry, which is a spoken preamble
-with nothing to draw.
+**Every movement in the catalog currently has a rig.** `public/exercises/` is
+empty; the only records without a visual are `INTRODUCTION` and
+`Class introduction`, which are spoken preambles rather than movements.
+
+That is where it landed, not a rule going forward. Pictures are a supported
+route again — see [A rig or a picture](#a-rig-or-a-picture) — so this table
+records what is drawn today, and a movement moving to a picture is a decision,
+not a regression.
+
+131 rigs cover 136 movements — the difference is the handful drawn by a shared
+rig, such as the two spellings of the bird dog.
 
 | Family | Rigs |
 | --- | --- |
-| Plank and slider floor | 4 |
-| Quadruped and kneeling | 13 |
-| Supine core, with and without band | 14 |
-| Seated, sliders | 2 |
-| Side-lying | 9 |
-| Bridges | 5 |
-| Cooldown and stretches | 10 |
-| Standing legs, band | 6 |
-| Standing upper body, band | 7 |
+| Plank, push-up and prone | 12 |
+| Quadruped and kneeling | 21 |
+| Supine core, with and without band | 24 |
+| Seated | 5 |
+| Side-lying | 18 |
+| Bridges | 8 |
+| Cooldown and stretches | 11 |
+| Standing squats and lunges | 17 |
+| Standing upper body and warm-up | 11 |
 | HIIT slider legs | 4 |
 
-Three properties the tests pin rather than merely cap:
+What the tests pin:
 
-- every exercise has a visual,
-- every one is drawn from pose data, not an image,
-- no exercise is drawn with another exercise's artwork.
+- every exercise has a visual — a rig, motion frames or a still;
+- **no picture explains more than one movement**, which is the whole point;
+- a movement that has a rig but shows a picture is listed in `IMAGE_PREFERRED`,
+  so the choice is deliberate;
+- every referenced file is on disk, and no file is left behind unreferenced.
 
-### The backlog
+Which of the three a movement uses is an editorial call, and deliberately not
+something the suite forces.
 
-Converting the dated July 24 and July 31 classes brought their movements into
-the shared pool. Roughly a third of them merged into movements that were already
-rigged; the rest are genuinely new and no rig has been authored for them yet, so
-all three properties above are currently stated against an explicit backlog
-rather than against zero.
-
-`AWAITING_RIG` in `src/catalog/artwork.test.ts` is that backlog, and it is a
-target rather than a permission: the assertions compare against it exactly, so
-authoring a rig fails the suite until the name is deleted from the list. It can
-only shrink. When it reaches zero the checks collapse back to the three
-unconditional properties.
-
-The six that shared a still — `quadruped-leg-series.svg` and `high-plank.svg`
-each stood in for three different movements — were the first batch drawn, and
-both files are gone. Five movements still show a still of their own, which is
-honest if incomplete; no drawing explains a movement it is not.
+There was a migration backlog here — `AWAITING_RIG` in
+`src/catalog/artwork.test.ts` — while the movements the dated classes introduced
+were being drawn. It reached zero, and the assertions are unconditional again.
 
 ### Authoring traps the tests now catch
 
@@ -177,8 +218,25 @@ each has a test rather than a note:
   target for the whole loop, so the limb it drives never moves while everything
   around it does. A target is named on every pose or on none.
 
+### Reviewing a batch
+
+`node scripts/rig-contact-sheet.mjs [id-fragment ...]` renders rigs to one PNG
+grid, injected into the running app so the figures use the app's own styles and
+the sheet shows what actually ships. Every rig authored should be looked at
+there. The tests confirm the figure is inside its frame, on the mat and moving;
+they cannot tell you the elbow points the wrong way or that a side plank reads
+as lying down. Both of those shipped before this existed.
+
 ### Known refinements
 
+- **`forearm-side-plank`** is the weakest of the side-lying set. A real side
+  plank is only about twelve degrees off the mat, so at this camera the body
+  reads close to lying down; the highlighted supporting forearm and the gap
+  under the hips are what carry it.
+- **The overhead quadruped set** — `quadruped-side-crunch`,
+  `quadruped-cross-body-crunch`, `half-rainbow` and the combined crunch — is
+  drawn from above because the travel is lateral and invisible side-on. It
+  works, but the overhead camera reads less immediately than the side views.
 - The **standing front view** carries real shoulder and hip width via
   `shoulderSpread` / `hipSpread`; `banded-biceps-curl` was the first user and
   the proportions are worth another pass once more standing movements exist.
