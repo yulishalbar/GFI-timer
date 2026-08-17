@@ -22,6 +22,18 @@ function ShapeNode({ shape }: { shape: Shape }): React.ReactElement {
       return <circle className={`${className} rig--filled`} cx={shape.at[0]} cy={shape.at[1]} r={shape.radius} />;
     case "disc":
       return <ellipse className={`${className} rig--filled`} cx={shape.at[0]} cy={shape.at[1]} rx={shape.rx} ry={shape.ry} />;
+    case "ring":
+      return (
+        <ellipse
+          className={className}
+          cx={shape.at[0]}
+          cy={shape.at[1]}
+          rx={shape.rx}
+          ry={shape.ry}
+          strokeWidth={shape.width}
+          transform={`rotate(${shape.angle.toFixed(1)} ${format(shape.at)})`}
+        />
+      );
     case "polyline":
       return (
         <path

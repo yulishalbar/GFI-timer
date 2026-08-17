@@ -10,6 +10,7 @@ export const builtInTags = [
   { id: "hiit-pilates", label: "HIIT Pilates", category: "modality" },
   { id: "mat", label: "Mat", category: "equipment" },
   { id: "band", label: "Band", category: "equipment" },
+  { id: "ring", label: "Ring", category: "equipment" },
   { id: "sliders", label: "Sliders", category: "equipment" },
   { id: "standing", label: "Standing", category: "movement-type" },
   { id: "seated", label: "Seated", category: "movement-type" },

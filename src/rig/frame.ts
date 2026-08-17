@@ -31,6 +31,7 @@ export type Shape =
   | { kind: "line"; key: string; role: ShapeRole; from: Point; to: Point; width: number }
   | { kind: "dot"; key: string; role: ShapeRole; at: Point; radius: number }
   | { kind: "disc"; key: string; role: ShapeRole; at: Point; rx: number; ry: number }
+  | { kind: "ring"; key: string; role: ShapeRole; at: Point; rx: number; ry: number; angle: number; width: number }
   | { kind: "polyline"; key: string; role: ShapeRole; points: readonly Point[]; width: number; dashed?: boolean }
   | { kind: "polygon"; key: string; role: ShapeRole; points: readonly Point[]; width: number }
   | { kind: "area"; key: string; role: ShapeRole; d: string; width: number }
@@ -144,7 +145,8 @@ const isOverhead = (view: RigView): boolean => view === "overheadUp" || view ===
 
 export type Equipment =
   | { type: "disc"; at: JointId }
-  | { type: "band"; from: JointId; to: JointId; sag?: number };
+  | { type: "band"; from: JointId; to: JointId; sag?: number }
+  | { type: "ring"; from: JointId; to: JointId };
 
 export interface RigDefinition {
   /** Human-readable movement name, used for the accessible label. */
@@ -620,6 +622,21 @@ function pushEquipment(out: Shape[], joints: Joints, rig: RigDefinition): void {
     }
     const from = joints[item.from];
     const to = joints[item.to];
+    if (item.type === "ring") {
+      const dx = to[0] - from[0];
+      const dy = to[1] - from[1];
+      out.push({
+        kind: "ring",
+        key: `equipment-${index}`,
+        role: "equipment",
+        at: [(from[0] + to[0]) / 2, (from[1] + to[1]) / 2],
+        rx: 9,
+        ry: Math.max(5, Math.hypot(dx, dy) / 2),
+        angle: Math.atan2(dy, dx) * (180 / Math.PI) - 90,
+        width: 5
+      });
+      return;
+    }
     out.push({
       kind: "curve",
       key: `equipment-${index}`,

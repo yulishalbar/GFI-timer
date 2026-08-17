@@ -314,4 +314,16 @@ describe("rig definitions", () => {
     expect(roles).toContain("ghost");
     expect(roles).toContain("path");
   });
+
+  it("anchors the collarbone ring and compresses it under the pressing palm", () => {
+    const rig = RIGS["ring-collarbone-press"]!;
+    const openRing = buildFrame(rig, 0).find((shape) => shape.kind === "ring" && shape.role === "equipment");
+    const pressedRing = buildFrame(rig, 0.5).find((shape) => shape.kind === "ring" && shape.role === "equipment");
+
+    expect(openRing?.kind).toBe("ring");
+    expect(pressedRing?.kind).toBe("ring");
+    if (openRing?.kind !== "ring" || pressedRing?.kind !== "ring") return;
+    expect(pressedRing.ry).toBeLessThan(openRing.ry);
+    expect(Math.abs(pressedRing.at[0] - openRing.at[0])).toBeLessThan(10);
+  });
 });

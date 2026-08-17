@@ -3023,6 +3023,25 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
     ]
   },
 
+  "ring-collarbone-press": {
+    title: "Ring press at collarbone",
+    box: STANDING_BOX,
+    view: "front",
+    tempoMs: 1500,
+    loop: "pingpong",
+    groundY: 196,
+    focus: ["armNear"],
+    trace: "handNear",
+    equipment: [{ type: "ring", from: "shoulderNear", to: "handNear" }],
+    // One pad stays planted at the collarbone/shoulder. The palm on the upper
+    // pad presses almost straight down, visibly shortening the ring rather than
+    // curling it up from the hip like the old borrowed biceps-curl guide.
+    poses: [
+      standingFront({ armNear: [88, -138, 0], armFar: [92, -4, 0] }),
+      standingFront({ armNear: [88, -170, 0], armFar: [92, -4, 0] })
+    ]
+  },
+
   // Shavasana used to live here. It is a photograph now: side-on a body lying
   // flat is a horizontal line, and the pose - arms fallen away, palms up, feet
   // dropped open - is invisible from that camera. The picture shows it at a

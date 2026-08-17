@@ -150,13 +150,13 @@ Initial exercise tag categories:
   shoulders, arms, full body.
 - **Modality:** classic mat Pilates, HIIT Pilates, yoga, mobility, strength,
   balance, stretch.
-- **Equipment:** none, mat, band, sliders, weights.
+- **Equipment:** none, mat, band, ring, sliders, weights.
 - **Movement type:** standing, seated, supine, prone, side-lying, quadruped,
   plank, static hold, dynamic.
 
 Initial course tag categories:
 
-- **Equipment:** mat, band, sliders, weights, no equipment.
+- **Equipment:** mat, band, ring, sliders, weights, no equipment.
 - **Modality:** mat Pilates, HIIT Pilates, yoga, mobility, strength.
 - **Focus:** core, lower body, upper body, glutes, full body.
 - **Duration band:** under 30, 30–45, 45–60, 60+ minutes. This can be derived

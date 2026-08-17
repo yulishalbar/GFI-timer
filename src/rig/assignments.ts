@@ -167,7 +167,51 @@ export const RIG_BY_EXERCISE_NAME: Readonly<Record<string, string>> = {
   "Isometric hold squat with side lunge": "slider-squat-side-lunge",
 
   // Standing, band
-  "Straight biceps curl": "banded-biceps-curl"
+  "Straight biceps curl": "banded-biceps-curl",
+
+  // Pilates ring. The shared skeleton carries the body path; the written cue
+  // remains authoritative for where and how the ring is pressed.
+  Butterfly: "seated-straddle",
+  "Faster side body twist + ring squeeze": "seated-side-twist",
+  "Straight leg forward fold - Reach right and left": "seated-forward-fold",
+  "One-leg roll-up with ring, with single arms stretching back": "roll-ups",
+  "Ring chest press": "band-hold-out",
+  "Ring chest press + oblique twist": "banded-russian-twist",
+  "Kneeling Squat + Ring Press": "squat-add-arms",
+  "in-and-out press": "band-pulse-out",
+  "Biceps press": "ring-collarbone-press",
+  "Prone leg lifts": "superman",
+  "Prone back lift": "superman",
+  superman: "superman",
+  "Prone Chest Lift with Pilates Ring": "superman",
+  "Tabletop leg-lifts": "quadruped-glute-lift",
+  "Tabletop leg lift + crunch leg in": "bird-dog-crunch",
+  "Tabletop leg lift pulse up and down": "quadruped-leg-pulse",
+  "Bridge with ring Around Thighs": "banded-bridge",
+  "Bridge with ring Around Thighs + Pulse": "glute-bridge-pulse",
+  "90/90 lunge w shoulder press": "reverse-lunge",
+  "single-leg Warrior III row transitioning into a single leg lunge with ring shoulder press": "single-leg-deadlift-knee-tuck",
+  "Arabesque lunge with shoulder press + knee drive": "single-leg-deadlift-knee-tuck",
+  "Sumo Squat + standing upright row": "sumo-squat-hand-lifts",
+  "Side Plank + Ring Press": "forearm-side-plank",
+  "Side Plank + side crunch lifted leg in": "side-body-crunch",
+  "Side Plank + bring leg to front": "side-lying-forward-back-kick",
+  "Side Plank + Leg up and down": "side-lying-leg-lift",
+  "Side reach to v up": "side-lying-straight-leg-crunch",
+  "Ring press + both leg lift": "double-leg-lift",
+  "Crunch w ring in between thighs": "crunch",
+  "Crunch pulse": "crunch",
+  "Table top crunch with lifted legs": "crunch-legs-lifted",
+  "Cocoons placing ring on shins and then holding ring": "slider-in-outs",
+  "Leg extensions (ring around calves)": "banded-leg-lowers",
+  "In and out (ring around calves)": "slider-in-outs",
+  "Russian twist": "banded-russian-twist",
+  "Boat pose": "reverse-plank-l-sit",
+  "Single leg hug knees to chest": "knee-to-chest",
+  "Windshield wipers": "windshield-wipers",
+  "Reclining twist": "knee-across-body",
+  "Knee to chest": "knee-to-chest",
+  "Reclining tree pose": "figure-four-twist"
 
   // Shavasana is deliberately absent: it is a photograph, because side-on a
   // body lying flat is a horizontal line. See the rig-or-a-picture section of

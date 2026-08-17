@@ -4,6 +4,7 @@ import { matPilates0724, matPilates0724Catalog } from "./mat-pilates-07-24";
 import { matPilates0731, matPilates0731Catalog } from "./mat-pilates-07-31";
 import { hiitPilatesSliders, hiitPilatesSlidersCatalog } from "./hiit-pilates-sliders";
 import { matPilatesBand, matPilatesBandCatalog } from "./mat-pilates-band";
+import { matPilatesRing, matPilatesRingCatalog } from "./mat-pilates-ring";
 import { mergeExerciseCatalogs } from "../catalog/merge-catalogs";
 
 /**
@@ -15,6 +16,7 @@ import { mergeExerciseCatalogs } from "../catalog/merge-catalogs";
  */
 const classDefinitions: readonly unknown[] = [
   matPilatesBand,
+  matPilatesRing,
   hiitPilatesSliders,
   matPilates0731,
   matPilates0724
@@ -25,12 +27,14 @@ export const availableClasses: readonly CompiledClass[] = classDefinitions.map(c
 export const availableExerciseCatalog = mergeExerciseCatalogs(
   hiitPilatesSlidersCatalog.catalog,
   matPilatesBandCatalog.catalog,
+  matPilatesRingCatalog.catalog,
   matPilates0731Catalog.catalog,
   matPilates0724Catalog.catalog
 );
 
 export const courseTagsById: Readonly<Record<string, readonly string[]>> = {
   "mat-pilates-band": ["mat-pilates", "mat", "band", "full-body"],
+  "mat-pilates-ring": ["mat-pilates", "mat", "ring", "full-body"],
   "hiit-pilates-sliders": ["mat-pilates", "mat", "sliders", "full-body"],
   "mat-pilates-07-31": ["mat-pilates", "mat", "full-body"],
   "mat-pilates-07-24": ["mat-pilates", "mat", "full-body"]
