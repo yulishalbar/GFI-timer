@@ -7,7 +7,7 @@ import { resolveCourseDefinition } from "../domain/resolve-course";
 export const matPilates0724Legacy = {
   schemaVersion: 1,
   id: "mat-pilates-07-24-v1",
-  version: 2,
+  version: 3,
   title: "Mat Pilates — July 24 V1",
   description:
     "A full-body mat class with warmup, core, glutes, lower body, side body, and cooldown. Mat required.",
@@ -62,7 +62,7 @@ export const matPilates0724Legacy = {
           type: "exercise",
           id: "thread-needle-right",
           name: "Thread the needle — right",
-          durationSeconds: 90,
+          durationSeconds: 30,
           shortDescription: "Lower the knees and return to neutral tabletop.",
           longDescription:
             "Inhale the right arm toward the ceiling. Exhale to thread it under the left shoulder and lower the head. Add three wrist circles in each direction, then repeat the twist without wrist circles."
@@ -71,11 +71,12 @@ export const matPilates0724Legacy = {
           type: "exercise",
           id: "thread-needle-left",
           name: "Thread the needle — left",
-          durationSeconds: 90,
+          durationSeconds: 30,
           shortDescription: "Finish seated back on the heels, then come to a seated position.",
           longDescription:
             "Inhale the left arm toward the ceiling. Exhale to thread it under the right shoulder and lower the head. Add three wrist circles in each direction, then repeat the twist without wrist circles."
-        }
+        },
+        { type: "rest", id: "rest-after-warmup", name: "REST", durationSeconds: 60, shortDescription: "Take water and prepare for the core circuit." }
       ]
     },
     {
@@ -136,7 +137,7 @@ export const matPilates0724Legacy = {
           type: "exercise",
           id: "roll-ups",
           name: "Roll-ups",
-          durationSeconds: 40,
+          durationSeconds: 60,
           shortDescription: "Finish seated and take water.",
           longDescription:
             "Exhale to roll up and reach toward the toes. Scoop the abdominals into a C-curve to roll back down with control. Regression: bend the knees and anchor the feet."
@@ -209,11 +210,17 @@ export const matPilates0724Legacy = {
       items: [
         { type: "rest", id: "side-body-setup", name: "REST", durationSeconds: 60, shortDescription: "Cue the full circuit. Start lying on the right side; there are no breaks until the next rest." },
         { type: "exercise", id: "leg-lift-left", name: "Leg lift (L)", durationSeconds: 40, shortDescription: "Bottom leg bent or straight; top leg long.", longDescription: "Exhale, lift the top leg with control, lower slowly and keep hips stacked. Regression: reduce the range or keep the bottom knee bent.", illustration: "exercises/side-lying-leg-series.svg" },
+        { type: "rest", id: "rest-after-leg-lift-left", name: "REST", durationSeconds: 10 },
         { type: "exercise", id: "big-leg-circles-left", name: "Big leg circles (L)", durationSeconds: 40, shortDescription: "Reverse direction after 20 seconds.", longDescription: "Draw large controlled circles while keeping the hips stable. Regression: keep a soft bend in the knee. Progression: increase circle size or use a slower tempo." },
+        { type: "rest", id: "rest-after-big-leg-circles-left", name: "REST", durationSeconds: 10 },
         { type: "exercise", id: "forward-back-kick-left", name: "Forward and back kick (L)", durationSeconds: 40, shortDescription: "Stay on the side with the top leg lifted.", longDescription: "Flex the foot, exhale and kick the leg forward twice; inhale, point the foot and extend it all the way back." },
+        { type: "rest", id: "rest-after-forward-back-kick-left", name: "REST", durationSeconds: 10 },
         { type: "exercise", id: "small-leg-circles-left", name: "Small leg circle pulses (L)", durationSeconds: 40, shortDescription: "Reverse direction after 20 seconds.", longDescription: "Draw small tight circles, 20 seconds in each direction, maintaining constant tension." },
+        { type: "rest", id: "rest-after-small-leg-circles-left", name: "REST", durationSeconds: 10 },
         { type: "exercise", id: "straight-leg-crunch-left", name: "Straight leg crunches (L)", durationSeconds: 40, shortDescription: "Come onto the forearm and plant the bent top foot.", longDescription: "Keep the lower leg straight. Exhale to lift it toward the chest and crunch the opposite elbow toward it. Inhale to lower and repeat." },
+        { type: "rest", id: "rest-after-straight-leg-crunch-left", name: "REST", durationSeconds: 10 },
         { type: "exercise", id: "tricep-push-up-left", name: "Tricep side push-up (L)", durationSeconds: 40, shortDescription: "Top hand comes to the mat; the lower forearm crosses the belly.", longDescription: "Exhale to push away from the mat using the triceps; inhale to lower. Regression: rest at the bottom." },
+        { type: "rest", id: "rest-after-tricep-push-up-left", name: "REST", durationSeconds: 10 },
         { type: "exercise", id: "side-plank-left", name: "Forearm side plank (L)", durationSeconds: 40, shortDescription: "Forearm under shoulder; legs stacked or staggered.", longDescription: "Lift the hips and hold a strong line from head to feet. Regression: knee side plank. Progression: side plank on the hand." },
         { type: "rest", id: "rest-before-bottom-leg-right", name: "REST", durationSeconds: 20 },
         { type: "exercise", id: "bottom-leg-lifts-right", name: "Bottom leg lifts (R)", durationSeconds: 40, shortDescription: "Keep the bottom leg straight.", longDescription: "Exhale and lift the bottom leg toward the ceiling. Inhale and lower with control without fully resting." },
@@ -245,7 +252,8 @@ export const matPilates0724Legacy = {
         { type: "exercise", id: "figure-four-right", name: "Figure four and spinal twist — right", durationSeconds: 120, shortDescription: "Cross the right ankle over the left knee.", longDescription: "Draw the supporting leg in for a glute stretch, then lower the legs left into a twist while keeping the shoulders relaxed." },
         { type: "exercise", id: "figure-four-left", name: "Figure four and spinal twist — left", durationSeconds: 120, shortDescription: "Cross the left ankle over the right knee.", longDescription: "Draw the supporting leg in for a glute stretch, then lower the legs right into a twist while keeping the shoulders relaxed." },
         { type: "exercise", id: "overhead-arm-stretch", name: "Overhead arm stretch", durationSeconds: 30, shortDescription: "Reach through fingers and toes, then soften the shoulders." },
-        { type: "exercise", id: "shavasana", name: "Shavasana", durationSeconds: 180, shortDescription: "Finish seated and thank the class.", longDescription: "Rest comfortably on the back. Breathe slowly through the nose and out through the mouth, allowing the body to relax.", illustration: "exercises/shavasana.jpg" }
+        { type: "exercise", id: "shavasana", name: "Shavasana", durationSeconds: 180, shortDescription: "Finish seated and thank the class.", longDescription: "Rest comfortably on the back. Breathe slowly through the nose and out through the mouth, allowing the body to relax.", illustration: "exercises/shavasana.jpg" },
+        { type: "exercise", id: "final-childs-pose", name: "Child's pose", durationSeconds: 30, illustration: "exercises/childs-pose.svg", shortDescription: "Bring the knees wide and lower the hips toward the heels.", longDescription: "Reach the arms forward and rest the forehead toward the mat. Breathe slowly and let the back and shoulders soften." }
       ]
     }
   ]
@@ -262,7 +270,7 @@ export const matPilates0724Catalog = {
   course: {
     ...adapted0724.course,
     id: "mat-pilates-07-24",
-    version: 3,
+    version: 4,
     title: "Mat Pilates — July 24"
   }
 };

@@ -14,21 +14,21 @@ describe("compileClass", () => {
   it("expands phases and repeated rounds in authored order", () => {
     const compiled = compileClass(matPilates0724);
 
-    expect(compiled.steps).toHaveLength(92);
-    expect(compiled.totalDurationMs).toBe(3_630_000);
+    expect(compiled.steps).toHaveLength(100);
+    expect(compiled.totalDurationMs).toBe(3_680_000);
     expect(compiled.phases).toEqual([
       { id: "introduction", name: "Introduction", index: 1, stepCount: 1, durationMs: 120_000 },
-      { id: "warmup", name: "Warm-Up", index: 2, stepCount: 5, durationMs: 300_000 },
-      { id: "core-circuit", name: "Circuit 1 — Core", index: 3, stepCount: 11, durationMs: 290_000 },
+      { id: "warmup", name: "Warm-Up", index: 2, stepCount: 6, durationMs: 240_000 },
+      { id: "core-circuit", name: "Circuit 1 — Core", index: 3, stepCount: 11, durationMs: 310_000 },
       { id: "glutes-circuit", name: "Circuit 2 — Glutes", index: 4, stepCount: 10, durationMs: 400_000 },
       { id: "posterior-core-circuit", name: "Circuit 3 — Core, Glutes, and Back", index: 5, stepCount: 14, durationMs: 400_000 },
       { id: "lower-body-circuit", name: "Circuit 4 — Lower Body", index: 6, stepCount: 18, durationMs: 490_000 },
-      { id: "side-body-circuit", name: "Circuit 5 — Side Body", index: 7, stepCount: 26, durationMs: 1_000_000 },
-      { id: "cooldown", name: "Cooldown", index: 8, stepCount: 7, durationMs: 630_000 }
+      { id: "side-body-circuit", name: "Circuit 5 — Side Body", index: 7, stepCount: 32, durationMs: 1_060_000 },
+      { id: "cooldown", name: "Cooldown", index: 8, stepCount: 8, durationMs: 660_000 }
     ]);
 
     expect(compiled.steps[0]?.name).toBe("Class introduction");
-    expect(compiled.steps.at(-1)?.name).toBe("Shavasana");
+    expect(compiled.steps.at(-1)?.name).toBe("Child's pose");
     expect(compiled.steps.filter((step) => step.kind === "rest").every((step) => step.name === "REST"))
       .toBe(true);
   });
