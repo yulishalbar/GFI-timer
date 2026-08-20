@@ -7,7 +7,7 @@ import { resolveCourseDefinition } from "../domain/resolve-course";
 export const matPilates0731Legacy = {
   schemaVersion: 1,
   id: "mat-pilates-07-31-v1",
-  version: 2,
+  version: 3,
   title: "Mat Pilates — July 31 V1",
   description:
     "60 MIN MAT PILATES- WARM UP, CORE, ARMS, GLUTES, LOWER BODY, & COOL DOWN. Equipment: mat. Focus on the mind and body connection, stretch the total body, and work the upper body, core, and legs.",
@@ -476,12 +476,14 @@ function quadrupedSide(side: Side): FitnessClassDefinition["phases"][number]["it
     quadrupedBreak(`after-combined-crunch-${side}`),
     {
       type: "exercise",
-      id: `side-crunch-extension-${side}`,
-      name: `Side crunch with leg extension (${label})`,
+      id: `donkey-kick-${side}`,
+      name: `Donkey kick (${label})`,
       durationSeconds: 40,
-      longDescription: `Crunch ${side} leg towards the ${side} elbow, extend leg straight to the side, then extend back out and repeat`
+      shortDescription: `Keep the ${side} knee bent at 90 degrees and the hips square to the mat.`,
+      longDescription: `Press the sole of the ${side} foot toward the ceiling using the ${side} glute, then lower the knee with control and repeat.`,
+      illustration: "exercises/quadruped-leg-series.svg"
     },
-    quadrupedBreak(`after-side-crunch-extension-${side}`),
+    quadrupedBreak(`after-donkey-kick-${side}`),
     {
       type: "exercise",
       id: `half-rainbow-${side}`,
@@ -651,7 +653,7 @@ export const matPilates0731Catalog = {
   course: {
     ...adapted0731.course,
     id: "mat-pilates-07-31",
-    version: 3,
+    version: 4,
     title: "Mat Pilates — July 31"
   }
 };

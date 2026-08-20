@@ -45,7 +45,6 @@ export const RIG_BY_EXERCISE_NAME: Readonly<Record<string, string>> = {
   "Side crunch": "quadruped-side-crunch",
   "Cross body crunch": "quadruped-cross-body-crunch",
   "Combine Side crunch + Cross body crunch": "quadruped-combined-crunch",
-  "Side crunch with leg extension": "quadruped-side-crunch-extension",
   "Bird-dog extension and crunch": "bird-dog-crunch",
   "Seated Straddle": "seated-straddle",
   "Side twist": "seated-side-twist",

@@ -94,6 +94,15 @@ describe("compileClass", () => {
     expect(compiled.steps.filter((step) => step.kind === "rest").every((step) => step.name === "REST"))
       .toBe(true);
     expect(compiled.steps.some((step) => step.name === "Alternating bird dogs")).toBe(true);
+    expect(compiled.steps.filter((step) => step.name.startsWith("Donkey kick")).map((step) => ({
+      name: step.name,
+      side: step.exerciseReference?.side
+    }))).toEqual([
+      { name: "Donkey kick", side: "left" },
+      { name: "Donkey kick", side: "right" }
+    ]);
+    expect(compiled.steps.some((step) => step.name.startsWith("Side crunch with leg extension")))
+      .toBe(false);
     expect(compiled.steps.at(-1)?.name).toBe("Shavasana");
   });
 

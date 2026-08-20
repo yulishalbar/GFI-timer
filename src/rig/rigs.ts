@@ -988,28 +988,6 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
     }
   },
 
-  "quadruped-side-crunch-extension": {
-    title: "Side crunch with leg extension",
-    box: "0 0 320 180",
-    tempoMs: 3000,
-    loop: "cycle",
-    ground: false,
-    // Crunch in to the elbow, then extend the same leg straight out to the side
-    // before folding back - the extension is the added element, and it is the
-    // knee straightening rather than a separate position.
-    spatial: {
-      ...QUADRUPED_SPACE,
-      body: { ...QUADRUPED_SPACE.body, turn: 30 },
-      trace: "foot",
-      fold: "down",
-      leg: [
-        { tilt: 26, sweep: 0 },
-        { tilt: 142, sweep: -88, knee: 112 },
-        { tilt: 90, sweep: -90 }
-      ]
-    }
-  },
-
   "bird-dog-crunch": {
     title: "Bird-dog extension and crunch",
     box: FLOOR_BOX,

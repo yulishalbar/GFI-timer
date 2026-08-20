@@ -384,7 +384,7 @@ test("keeps real elapsed time running after scheduled completion until stopped",
       JSON.stringify({
         version: 2,
         classId: "mat-pilates-07-31",
-        classVersion: 3,
+        classVersion: 4,
         startedAtEpochMs: now - 5_000,
         elapsedMsFloor: 4_000,
         status: "running",
@@ -463,7 +463,7 @@ test("does not offer to resume a session saved hours ago", async ({ page }) => {
       JSON.stringify({
         version: 2,
         classId: "mat-pilates-07-31",
-        classVersion: 3,
+        classVersion: 4,
         startedAtEpochMs: fourHoursAgo,
         elapsedMsFloor: 60_000,
         status: "paused",
