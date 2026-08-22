@@ -66,15 +66,14 @@ const tabletopSide = (side: "L" | "R"): ExerciseEntry[] => [
     "Opposite hand presses the ring. Extend the straight back leg and pulse up and down.")
 ];
 
-const standingSide = (side: "L" | "R"): ExerciseEntry[] => [
-  exercise(`lunge-shoulder-press-${side.toLowerCase()}`, `90/90 lunge w shoulder press (${side})`, 30,
-    "Stay in a low lunge and shoulder press ring arm with the opposite arm."),
-  exercise(`warrior-row-lunge-press-${side.toLowerCase()}`, `single-leg Warrior III row transitioning into a single leg lunge with ring shoulder press (${side})`, 30,
-    "Modification: lower leg in between transitions. Hinge into Warrior III with arms reaching down. Exhale row the ring to your ribs. Inhale extend the arms back down. Drive the back leg forward to knee lift at hip height. Exhale press the ring overhead while balancing on one leg. Lower the ring back to shoulder height and hinge directly back into Warrior III — without letting the lifted foot touch the floor."),
-  exercise(`arabesque-lunge-press-${side.toLowerCase()}`, `Arabesque lunge with shoulder press + knee drive (${side})`, 30,
-    "Modification: stay in lunge and shoulder press. Lower into the lunge with control. Exhale as you bring the back knee forward to hip height (knee drive) while maintaining balance. Press the ring overhead as you drive through the front heel. Return directly back into arabesque without letting the foot fully rest."),
-  exercise(`sumo-squat-upright-row-${side.toLowerCase()}`, `Sumo Squat + standing upright row (${side})`, 30,
-    "Stand with feet wider than hips, toes slightly turned out. Lower into a deep sumo squat, chest lifted, knees tracking over toes. As you stand tall, pull the ring upward toward chest height, elbows lifting wide for an upright row. Lower the ring with control as you squat back down.")
+const standingRound = (side: "L" | "R"): ExerciseEntry[] => [
+  exercise(`squat-${side.toLowerCase()}-round`, "Squat", 30),
+  exercise(`squat-add-arms-${side.toLowerCase()}-round`, "Squat -> add arms", 30),
+  exercise(`squat-hold-${side.toLowerCase()}-round`, "Squat hold", 30),
+  exercise(`lunge-ring-front-${side.toLowerCase()}`, `Lunge with ring in front (${side})`, 30,
+    "Hold the ring in front of the chest while lowering into the lunge."),
+  exercise(`high-runners-lunge-${side.toLowerCase()}`, `High runner's lunge (${side})`, 30,
+    "Hold a high runner's lunge with the front knee bent and the back leg long.")
 ];
 
 const sideBody = (side: "L" | "R"): ExerciseEntry[] => [
@@ -95,7 +94,7 @@ const sideBody = (side: "L" | "R"): ExerciseEntry[] => [
 export const matPilatesRingLegacy = {
   schemaVersion: 1,
   id: "mat-pilates-ring-v1",
-  version: 1,
+  version: 2,
   title: "Mat Pilates Ring Class V1",
   description: "A 60-minute full-body Mat Pilates class using a Pilates ring, with core, arms, glutes, legs, side body, back work, and cooldown.",
   phases: [
@@ -113,12 +112,14 @@ export const matPilatesRingLegacy = {
           "Sit tall with soles of the feet together, knees open wide. Hold ankles or shins. Gently press knees toward the floor while lengthening through the spine. Option to add small pulses or remain still."),
         exercise("side-twist", "Side twist", 60,
           "Sit with legs crossed. Twist towards the left side, grabbing left knee with right hand and left hand towards the back. Switch sides after 30 sec."),
-        exercise("fast-side-twist-ring-squeeze", "Faster side body twist + ring squeeze", 30,
-          "Sit with legs bent. Exhale to twist to the right while squeezing the ring, inhale and release coming back to center."),
+        exercise("overhead-reach-palms-inside-ring", "Overhead reach with palms inside ring", 30,
+          "Reach the ring overhead with the palms pressing into the inside pads of the ring."),
         exercise("straight-leg-forward-fold", "Straight leg forward fold - Reach right and left", 30,
           "Straighten legs. Sit with both legs extended straight in front. Flex feet and sit tall. Inhale lengthen spine. Exhale hinge forward from hips, reaching toward shins, ankles, or feet. Keep chest lifted and avoid rounding excessively."),
-        exercise("one-leg-roll-up-ring", "One-leg roll-up with ring, with single arms stretching back", 60,
-          "Place ring over lifted right leg. Inhale prepare. Exhale to roll down with control. Inhale at the bottom. Exhale roll up toward the lifted leg, reaching the ring forward. At the top, extend one arm back behind you to open the chest. Return arm forward. Switch legs halfway."),
+        exercise("one-leg-roll-up-ring-left", "One-leg roll-up with ring, with single arms stretching back (L)", 60,
+          "Place ring over lifted left leg. Inhale prepare. Exhale to roll down with control. Inhale at the bottom. Exhale roll up toward the lifted leg, reaching the ring forward. At the top, extend one arm back behind you to open the chest. Return arm forward."),
+        exercise("one-leg-roll-up-ring-right", "One-leg roll-up with ring, with single arms stretching back (R)", 60,
+          "Place ring over lifted right leg. Inhale prepare. Exhale to roll down with control. Inhale at the bottom. Exhale roll up toward the lifted leg, reaching the ring forward. At the top, extend one arm back behind you to open the chest. Return arm forward."),
         rest("warmup-end", 60, "Rest before beginning standing circuit.")
       ]
     },
@@ -134,7 +135,7 @@ export const matPilatesRingLegacy = {
           "Lie face down on your mat with your arms extended forward, holding the pads of the ring on the floor. Inhale to prepare, then exhale as you press down lightly on the ring and lift your head, chest, and arms a few inches off the mat. Keep your lower ribs and pubic bone anchored to the floor. Inhale to lower back down with control."),
         exercise("superman", "superman", 30,
           "Combining prone Back lift and prone leg lifts."),
-        exercise("prone-chest-lift-ring", "Prone Chest Lift with Pilates Ring", 30,
+        exercise("prone-chest-lift-ring", "Lifted chest ring press", 30,
           "Lie face down with legs extended long behind you and arms reaching overhead, holding the Pilates ring. Engage your core and glutes. Keeping the arms long, gently lift your head, chest, and arms off the mat by extending through the upper back. Reach the ring forward as you lift rather than pulling the shoulders toward the ears. Keep the pelvis and legs grounded. Slowly lower the chest and arms back toward the mat with control, then repeat.")
       ]
     },
@@ -148,7 +149,12 @@ export const matPilatesRingLegacy = {
         exercise("bridge-ring-thighs", "Bridge with ring Around Thighs", 30,
           "Ring around outer thighs. Exhale lift into bridge. Press knees outward against ring."),
         exercise("bridge-ring-thighs-pulse", "Bridge with ring Around Thighs + Pulse", 30,
-          "Add pulses and half-lowers.")
+          "Add pulses and half-lowers."),
+        rest("bridge-ring-position-change", 10, "Move the ring between the thighs."),
+        exercise("bridge-ring-between-thighs-press", "Bridge with ring between thighs press in", 30,
+          "Hold the bridge and press the thighs inward against the ring, then release with control."),
+        exercise("bridge-ring-between-thighs-hold", "Bridge with ring between thighs hold", 30,
+          "Hold the bridge and maintain an inward press against the ring.")
       ]
     },
     {
@@ -156,9 +162,9 @@ export const matPilatesRingLegacy = {
       name: "Circuit #4: legs focused X 2 (switch sides)",
       items: [
         rest("legs-setup", 60, "Come to standing. Describe the next movements."),
-        ...withBreaks("legs-left", 10, standingSide("L")),
+        ...withBreaks("legs-left", 10, standingRound("L")),
         rest("legs-side-switch", 10, "Switch sides."),
-        ...withBreaks("legs-right", 10, standingSide("R"))
+        ...withBreaks("legs-right", 10, standingRound("R"))
       ]
     },
     {
@@ -231,7 +237,7 @@ export const matPilatesRingCatalog = {
   course: {
     ...adaptedRingCourse.course,
     id: "mat-pilates-ring",
-    version: 1,
+    version: 2,
     title: "Mat Pilates Ring Class"
   }
 };
