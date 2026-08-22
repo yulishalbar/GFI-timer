@@ -174,7 +174,7 @@ export const RIG_BY_EXERCISE_NAME: Readonly<Record<string, string>> = {
   "Overhead reach with palms inside ring": "standing-side-stretch",
   "Straight leg forward fold - Reach right and left": "seated-forward-fold",
   "One-leg roll-up with ring, with single arms stretching back": "roll-ups",
-  "Ring chest press": "band-hold-out",
+  "Ring chest press on knees": "band-hold-out",
   "Ring chest press + oblique twist": "banded-russian-twist",
   "Kneeling Squat + Ring Press": "squat-add-arms",
   "in-and-out press": "band-pulse-out",

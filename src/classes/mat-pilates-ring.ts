@@ -35,7 +35,7 @@ function withBreaks(prefix: string, seconds: number, moves: readonly ExerciseEnt
 }
 
 const upperBodyMoves = [
-  exercise("ring-chest-press-one", "Ring chest press", 40,
+  exercise("ring-chest-press-one", "Ring chest press on knees", 40,
     "Kneel tall holding ring at chest. Exhale squeeze ring. Inhale release."),
   exercise("ring-chest-press-twist-one", "Ring chest press + oblique twist", 40,
     "Add torso twists while squeezing."),
@@ -45,7 +45,7 @@ const upperBodyMoves = [
     "Still in a kneeling position, squeeze ring out (3 times until all the way out) and back (3 times until all the way in)."),
   exercise("biceps-press-left", "Biceps press (L)", 40,
     "Place one pad of the ring on top of the shoulder or collarbone area using the palm to press straight down against the resistance."),
-  exercise("ring-chest-press-two", "Ring chest press", 40,
+  exercise("ring-chest-press-two", "Ring chest press on knees", 40,
     "Kneel tall holding ring at chest. Exhale squeeze ring. Inhale release."),
   exercise("ring-chest-press-twist-two", "Ring chest press + oblique twist", 40,
     "Add torso twists while squeezing."),
@@ -94,7 +94,7 @@ const sideBody = (side: "L" | "R"): ExerciseEntry[] => [
 export const matPilatesRingLegacy = {
   schemaVersion: 1,
   id: "mat-pilates-ring-v1",
-  version: 2,
+  version: 3,
   title: "Mat Pilates Ring Class V1",
   description: "A 60-minute full-body Mat Pilates class using a Pilates ring, with core, arms, glutes, legs, side body, back work, and cooldown.",
   phases: [
@@ -195,7 +195,7 @@ export const matPilatesRingLegacy = {
           exercise("in-out-ring-calves", "In and out (ring around calves)", 40),
           exercise("russian-twist-ring", "Russian twist", 40,
             "Hold ring and squeeze."),
-          exercise("boat-pose-ring", "Boat pose", 40,
+          exercise("boat-pose-ring", "Boat pose", 30,
             "Hold ring and squeeze.")
         ])
       ]
@@ -237,7 +237,7 @@ export const matPilatesRingCatalog = {
   course: {
     ...adaptedRingCourse.course,
     id: "mat-pilates-ring",
-    version: 2,
+    version: 3,
     title: "Mat Pilates Ring Class"
   }
 };

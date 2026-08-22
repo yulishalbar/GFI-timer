@@ -130,7 +130,7 @@ describe("compileClass", () => {
     const compiled = compileClass(matPilatesRing);
 
     expect(compiled.steps).toHaveLength(115);
-    expect(compiled.totalDurationMs).toBe(3_810_000);
+    expect(compiled.totalDurationMs).toBe(3_800_000);
     expect(compiled.phases).toEqual([
       { id: "introduction", name: "INTRODUCTION", index: 1, stepCount: 1, durationMs: 120_000 },
       { id: "warmup", name: "Warm-Up", index: 2, stepCount: 7, durationMs: 330_000 },
@@ -138,7 +138,7 @@ describe("compileClass", () => {
       { id: "core-glutes", name: "Circuit #3: Core + Glutes", index: 4, stepCount: 12, durationMs: 430_000 },
       { id: "legs-focused", name: "Circuit #4: legs focused X 2 (switch sides)", index: 5, stepCount: 20, durationMs: 450_000 },
       { id: "side-body", name: "Circuit #2: Side body", index: 6, stepCount: 24, durationMs: 720_000 },
-      { id: "mat-core", name: "Circuit #5: Mat Pilates core", index: 7, stepCount: 16, durationMs: 450_000 },
+      { id: "mat-core", name: "Circuit #5: Mat Pilates core", index: 7, stepCount: 16, durationMs: 440_000 },
       { id: "cooldown", name: "Cooldown", index: 8, stepCount: 11, durationMs: 670_000 }
     ]);
     expect(compiled.steps.filter((step) => step.kind === "rest").every((step) => step.name === "REST"))

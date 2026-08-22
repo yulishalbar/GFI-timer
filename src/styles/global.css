@@ -1342,13 +1342,20 @@ h1 {
   text-transform: uppercase;
 }
 
-.next-step__circuit ul {
+.next-step__circuit ul,
+.next-step__circuit ol {
   display: flex;
   flex-wrap: wrap;
   gap: 0.35rem 0.85rem;
   margin: 0.5rem 0 0;
   padding: 0;
   list-style-position: inside;
+}
+
+.next-step__circuit p {
+  margin: 0.35rem 0 0;
+  color: var(--color-muted);
+  font-size: 0.72rem;
 }
 
 .next-step__circuit li {

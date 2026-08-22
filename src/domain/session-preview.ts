@@ -3,6 +3,10 @@ import type { RuntimeStep } from "./timeline";
 export interface SessionPreview {
   primary?: RuntimeStep;
   circuitExerciseNames: string[];
+  circuitOverview?: {
+    exerciseNames: string[];
+    breakDurationsMs: number[];
+  };
 }
 
 /**
@@ -45,6 +49,8 @@ export function getSessionPreview(
   }
 
   const circuitExerciseNames: string[] = [];
+  const overviewExerciseNames: string[] = [];
+  const overviewBreakDurations = new Set<number>();
   if (currentStep?.kind === "rest") {
     const seenSourceIds = new Set<string>();
     for (let index = nextExerciseIndex; index < steps.length; index += 1) {
@@ -56,11 +62,24 @@ export function getSessionPreview(
         seenSourceIds.add(step.sourceId);
         circuitExerciseNames.push(step.name);
       }
+      if (step.kind === "exercise") {
+        overviewExerciseNames.push(step.name);
+      } else {
+        overviewBreakDurations.add(step.durationMs);
+      }
     }
   }
 
   return {
     primary,
-    circuitExerciseNames
+    circuitExerciseNames,
+    ...(currentStep.durationMs === 60_000
+      ? {
+          circuitOverview: {
+            exerciseNames: overviewExerciseNames,
+            breakDurationsMs: [...overviewBreakDurations].sort((a, b) => a - b)
+          }
+        }
+      : {})
   };
 }

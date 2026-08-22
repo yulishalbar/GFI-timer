@@ -45,6 +45,31 @@ describe("getSessionPreview", () => {
     const preview = getSessionPreview(timeline.steps, 1);
     expect(preview.primary?.name).toBe("Second");
     expect(preview.circuitExerciseNames).toEqual(["Second", "Third"]);
+    expect(preview.circuitOverview).toBeUndefined();
+  });
+
+  it("gives one-minute circuit rests a numbered-order overview with break timing", () => {
+    const overviewTimeline = compileClass({
+      schemaVersion: 1,
+      id: "overview-test",
+      version: 1,
+      title: "Overview test",
+      phases: [{
+        id: "circuit",
+        name: "Circuit",
+        items: [
+          { type: "rest", id: "setup", name: "REST", durationSeconds: 60 },
+          { type: "exercise", id: "first", name: "First", durationSeconds: 30 },
+          { type: "rest", id: "break", name: "REST", durationSeconds: 10 },
+          { type: "exercise", id: "second", name: "Second", durationSeconds: 30 }
+        ]
+      }]
+    });
+
+    expect(getSessionPreview(overviewTimeline.steps, 0).circuitOverview).toEqual({
+      exerciseNames: ["First", "Second"],
+      breakDurationsMs: [10_000]
+    });
   });
 });
 
