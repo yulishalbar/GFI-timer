@@ -359,14 +359,14 @@ test("opens and starts the ring class", async ({ page }) => {
   const classCard = page.getByRole("article").filter({
     has: page.getByRole("heading", { name: "Mat Pilates Ring Class", exact: true })
   });
-  await expect(classCard).toContainText("60 min");
+  await expect(classCard).toContainText("63.3 min");
   await expect(classCard).toContainText("8 phases");
-  await expect(classCard).toContainText("107 steps");
+  await expect(classCard).toContainText("115 steps");
   await expect(classCard).toContainText("Ring");
   await classCard.getByRole("button", { name: "View class" }).click();
 
   await expect(page.getByRole("heading", { name: "Mat Pilates Ring Class" })).toBeVisible();
-  await expect(page.getByLabel("60 min total")).toContainText("1:00:00");
+  await expect(page.getByLabel("63.3 min total")).toContainText("1:03:20");
   await expect(page.getByRole("heading", { name: "Circuit #5: Mat Pilates core" })).toBeVisible();
   await page.getByRole("button", { name: "Expand all pose details" }).click();
   const collarbonePress = page.locator(".step-row").filter({ hasText: "Biceps press" }).first();

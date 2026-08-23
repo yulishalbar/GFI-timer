@@ -96,7 +96,7 @@ export const matPilatesRingLegacy = {
   id: "mat-pilates-ring-v1",
   version: 3,
   title: "Mat Pilates Ring Class V1",
-  description: "A 60-minute full-body Mat Pilates class using a Pilates ring, with core, arms, glutes, legs, side body, back work, and cooldown.",
+  description: "A 63-minute full-body Mat Pilates class using a Pilates ring, with core, arms, glutes, legs, side body, back work, and cooldown.",
   phases: [
     {
       id: "introduction",
