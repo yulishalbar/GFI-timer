@@ -625,13 +625,29 @@ function pushEquipment(out: Shape[], joints: Joints, rig: RigDefinition): void {
     if (item.type === "ring") {
       const dx = to[0] - from[0];
       const dy = to[1] - from[1];
+      const currentDiameter = Math.hypot(dx, dy);
+      const naturalDiameter = Math.max(...posesOf(rig).map((pose) => {
+        const poseJoints = solvePose(pose);
+        const poseFrom = poseJoints[item.from];
+        const poseTo = poseJoints[item.to];
+        return Math.hypot(poseTo[0] - poseFrom[0], poseTo[1] - poseFrom[1]);
+      }));
+
+      // A Pilates magic circle keeps its circular silhouette at rest. Pressing
+      // the pads flexes the spring steel only slightly into an oval; it does not
+      // collapse into the long, narrow ellipse produced by using a fixed 9px
+      // cross-axis. Keep the unpressed axis at the rig's natural radius and cap
+      // the visible squeeze at 15% so even deliberately exaggerated hand travel
+      // still reads as a firm ring.
+      const naturalRadius = naturalDiameter / 2;
+      const pressedRadius = Math.max(naturalRadius * 0.85, Math.min(naturalRadius, currentDiameter / 2));
       out.push({
         kind: "ring",
         key: `equipment-${index}`,
         role: "equipment",
         at: [(from[0] + to[0]) / 2, (from[1] + to[1]) / 2],
-        rx: 9,
-        ry: Math.max(5, Math.hypot(dx, dy) / 2),
+        rx: naturalRadius,
+        ry: pressedRadius,
         angle: Math.atan2(dy, dx) * (180 / Math.PI) - 90,
         width: 5
       });

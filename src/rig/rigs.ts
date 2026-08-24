@@ -1,6 +1,6 @@
 import type { RigDefinition } from "./frame";
 import type { SpatialLeg, SpatialRig } from "./spatial";
-import type { Chain, Point, Pose } from "./skeleton";
+import type { Chain, JointId, Point, Pose } from "./skeleton";
 
 /**
  * Pose data for the catalog. An exercise is roughly forty numbers, so these
@@ -354,7 +354,7 @@ const bridge = (
   ...over
 });
 
-export const RIGS: Readonly<Record<string, RigDefinition>> = {
+const BASE_RIGS: Readonly<Record<string, RigDefinition>> = {
   /* ---- plank and slider floor ---- */
 
   "straight-leg-sweep": {
@@ -3024,6 +3024,48 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
   // flat is a horizontal line, and the pose - arms fallen away, palms up, feet
   // dropped open - is invisible from that camera. The picture shows it at a
   // glance, which is worth more than matching the rest of the library.
+};
+
+function ringVariant(baseId: string, from: JointId, to: JointId): RigDefinition {
+  const base = BASE_RIGS[baseId];
+  if (!base) throw new Error(`Cannot add a ring to unknown rig "${baseId}"`);
+  return { ...base, equipment: [{ type: "ring", from, to }] };
+}
+
+/**
+ * Ring-course variants keep the reusable body motion while replacing borrowed
+ * band/no-equipment visuals with the Pilates circle used by that placement.
+ * They are separate ids so a squat in another course does not suddenly acquire
+ * Ring-class equipment.
+ */
+export const RIGS: Readonly<Record<string, RigDefinition>> = {
+  ...BASE_RIGS,
+  "ring-standing-side-stretch": ringVariant("standing-side-stretch", "wristNear", "wristFar"),
+  "ring-roll-ups": ringVariant("roll-ups", "wristNear", "wristFar"),
+  "ring-band-hold-out": ringVariant("band-hold-out", "wristNear", "wristFar"),
+  "ring-banded-russian-twist": ringVariant("banded-russian-twist", "wristNear", "wristFar"),
+  "ring-squat-add-arms": ringVariant("squat-add-arms", "wristNear", "wristFar"),
+  "ring-superman": ringVariant("superman", "wristNear", "wristFar"),
+  "ring-quadruped-glute-lift": ringVariant("quadruped-glute-lift", "wristNear", "wristFar"),
+  "ring-bird-dog-crunch": ringVariant("bird-dog-crunch", "wristNear", "wristFar"),
+  "ring-quadruped-leg-pulse": ringVariant("quadruped-leg-pulse", "wristNear", "wristFar"),
+  "ring-banded-bridge": ringVariant("banded-bridge", "kneeNear", "kneeFar"),
+  "ring-glute-bridge-pulse": ringVariant("glute-bridge-pulse", "kneeNear", "kneeFar"),
+  "ring-squat-to-stand": ringVariant("squat-to-stand", "wristNear", "wristFar"),
+  "ring-squat-hold": ringVariant("squat-hold", "wristNear", "wristFar"),
+  "ring-reverse-lunge": ringVariant("reverse-lunge", "wristNear", "wristFar"),
+  "ring-forearm-side-plank": ringVariant("forearm-side-plank", "shoulderNear", "handNear"),
+  "ring-side-body-crunch": ringVariant("side-body-crunch", "shoulderNear", "handNear"),
+  "ring-side-lying-forward-back-kick": ringVariant("side-lying-forward-back-kick", "shoulderNear", "handNear"),
+  "ring-side-lying-leg-lift": ringVariant("side-lying-leg-lift", "shoulderNear", "handNear"),
+  "ring-side-lying-straight-leg-crunch": ringVariant("side-lying-straight-leg-crunch", "shoulderNear", "handNear"),
+  "ring-double-leg-lift": ringVariant("double-leg-lift", "shoulderNear", "handNear"),
+  "ring-crunch": ringVariant("crunch", "kneeNear", "kneeFar"),
+  "ring-crunch-legs-lifted": ringVariant("crunch-legs-lifted", "ankleNear", "ankleFar"),
+  "ring-slider-in-outs-hands": ringVariant("slider-in-outs", "wristNear", "wristFar"),
+  "ring-banded-leg-lowers": ringVariant("banded-leg-lowers", "ankleNear", "ankleFar"),
+  "ring-slider-in-outs-calves": ringVariant("slider-in-outs", "ankleNear", "ankleFar"),
+  "ring-reverse-plank-l-sit": ringVariant("reverse-plank-l-sit", "wristNear", "wristFar")
 };
 
 export type RigId = keyof typeof RIGS;

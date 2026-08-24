@@ -3,6 +3,7 @@ import { availableClasses, availableExerciseCatalog } from "../classes";
 import type { ExerciseDefinition } from "../domain/catalog-definition";
 import type { RuntimeStep } from "../domain/timeline";
 import { RIGS } from "../rig/rigs";
+import { buildFrame } from "../rig/frame";
 import { RIG_BY_EXERCISE_NAME } from "../rig/assignments";
 import { IMAGE_PREFERRED } from "./rig-assignments";
 
@@ -45,6 +46,33 @@ describe("exercise artwork", () => {
     migrated.forEach((exercise) => {
       expect(exercise.illustration, `${exercise.name} still carries a legacy still`).toBeUndefined();
       expect(exercise.motionIllustrations, `${exercise.name} still carries legacy frames`).toBeUndefined();
+    });
+  });
+
+  it("shows a Pilates ring in every Ring-class movement that uses one", () => {
+    const ringClass = availableClasses.find((fitnessClass) => fitnessClass.definition.id === "mat-pilates-ring");
+    expect(ringClass).toBeDefined();
+
+    const equipmentFreeIds = new Set([
+      "butterfly",
+      "side-twist",
+      "straight-leg-forward-fold"
+    ]);
+    const ringMovements = ringClass?.steps.filter((step) =>
+      step.kind === "exercise"
+      && step.phase.id !== "introduction"
+      && step.phase.id !== "cooldown"
+      && !equipmentFreeIds.has(step.sourceId)
+    ) ?? [];
+
+    ringMovements.forEach((step) => {
+      const rig = step.rig ? RIGS[step.rig] : undefined;
+      expect(rig, `${step.name} has no Ring-class rig`).toBeDefined();
+      if (!rig) return;
+      expect(
+        buildFrame(rig, 0.25).some((shape) => shape.kind === "ring" && shape.role === "equipment"),
+        `${step.name} does not show its Pilates ring`
+      ).toBe(true);
     });
   });
 

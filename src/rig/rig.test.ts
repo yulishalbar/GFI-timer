@@ -155,7 +155,7 @@ describe("rig definitions", () => {
     rigEntries.forEach(([id, rig]) => {
       // Whichever way the rig is authored: two spatial rigs sharing a camera
       // are only different movements if their sweeps differ.
-      const signature = JSON.stringify(rig.poses ?? rig.spatial);
+      const signature = JSON.stringify({ motion: rig.poses ?? rig.spatial, equipment: rig.equipment });
       const previous = seen.get(signature);
       expect(previous, `"${id}" and "${previous}" are the same movement drawn twice`).toBeUndefined();
       seen.set(signature, id);
@@ -323,7 +323,10 @@ describe("rig definitions", () => {
     expect(openRing?.kind).toBe("ring");
     expect(pressedRing?.kind).toBe("ring");
     if (openRing?.kind !== "ring" || pressedRing?.kind !== "ring") return;
+    expect(openRing.rx).toBeCloseTo(openRing.ry);
+    expect(pressedRing.rx).toBeCloseTo(openRing.rx);
     expect(pressedRing.ry).toBeLessThan(openRing.ry);
+    expect(pressedRing.ry / pressedRing.rx).toBeGreaterThanOrEqual(0.85);
     expect(Math.abs(pressedRing.at[0] - openRing.at[0])).toBeLessThan(10);
   });
 });

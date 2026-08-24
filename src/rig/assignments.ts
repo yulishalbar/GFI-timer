@@ -177,7 +177,6 @@ export const RIG_BY_EXERCISE_NAME: Readonly<Record<string, string>> = {
   "Ring chest press on knees": "band-hold-out",
   "Ring chest press + oblique twist": "banded-russian-twist",
   "Kneeling Squat + Ring Press": "squat-add-arms",
-  "in-and-out press": "band-pulse-out",
   "Biceps press": "ring-collarbone-press",
   "Prone leg lifts": "superman",
   "Prone back lift": "superman",

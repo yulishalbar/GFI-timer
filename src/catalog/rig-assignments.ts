@@ -25,6 +25,9 @@ export const IMAGE_PREFERRED: ReadonlySet<string> = new Set<string>([]);
 export function applyRigAssignments(catalog: ExerciseCatalog): void {
   catalog.exercises.forEach((exercise) => {
     if (IMAGE_PREFERRED.has(exercise.name)) return;
+    // A course may intentionally reuse a body pose with different equipment.
+    // That authored override is more specific than the global name mapping.
+    if (exercise.rig !== undefined) return;
     const rig = rigIdForExercise(exercise.name);
     if (!rig || !RIGS[rig]) return;
     exercise.rig = rig;

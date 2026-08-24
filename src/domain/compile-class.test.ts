@@ -129,20 +129,31 @@ describe("compileClass", () => {
   it("compiles the updated ring class with stable totals", () => {
     const compiled = compileClass(matPilatesRing);
 
-    expect(compiled.steps).toHaveLength(115);
-    expect(compiled.totalDurationMs).toBe(3_800_000);
+    expect(compiled.steps).toHaveLength(81);
+    expect(compiled.totalDurationMs).toBe(3_600_000);
     expect(compiled.phases).toEqual([
       { id: "introduction", name: "INTRODUCTION", index: 1, stepCount: 1, durationMs: 120_000 },
       { id: "warmup", name: "Warm-Up", index: 2, stepCount: 7, durationMs: 330_000 },
-      { id: "abs-arms-back", name: "Circuit #1: ABS + ARMS CIRCUIT + back", index: 3, stepCount: 24, durationMs: 640_000 },
-      { id: "core-glutes", name: "Circuit #3: Core + Glutes", index: 4, stepCount: 12, durationMs: 430_000 },
-      { id: "legs-focused", name: "Circuit #4: legs focused X 2 (switch sides)", index: 5, stepCount: 20, durationMs: 450_000 },
-      { id: "side-body", name: "Circuit #2: Side body", index: 6, stepCount: 24, durationMs: 720_000 },
-      { id: "mat-core", name: "Circuit #5: Mat Pilates core", index: 7, stepCount: 16, durationMs: 440_000 },
+      { id: "abs-arms-back", name: "Circuit #1: ABS + ARMS CIRCUIT + back", index: 3, stepCount: 13, durationMs: 510_000 },
+      { id: "core-glutes", name: "Circuit #3: Core + Glutes", index: 4, stepCount: 14, durationMs: 565_000 },
+      { id: "legs-focused", name: "Circuit #4: legs focused X 2 (switch sides)", index: 5, stepCount: 12, durationMs: 370_000 },
+      { id: "side-body", name: "Circuit #2: Side body", index: 6, stepCount: 14, durationMs: 630_000 },
+      { id: "mat-core", name: "Circuit #5: Mat Pilates core", index: 7, stepCount: 9, durationMs: 405_000 },
       { id: "cooldown", name: "Cooldown", index: 8, stepCount: 11, durationMs: 670_000 }
     ]);
     expect(compiled.steps.filter((step) => step.kind === "rest").every((step) => step.name === "REST"))
       .toBe(true);
+    expect(compiled.steps.some((step) => step.sourceId.startsWith("in-out-press-"))).toBe(false);
+    expect(compiled.steps.filter((step) => step.name === "Squat -> add arms with ring")).toHaveLength(2);
+    expect(compiled.steps.filter((step) => step.name === "Squat pulse with ring")).toHaveLength(2);
+    const thighSqueezeIndex = compiled.steps.findIndex((step) => step.sourceId === "ring-between-thighs-squeeze");
+    expect(compiled.steps[thighSqueezeIndex + 1]?.sourceId).toBe("bridge-ring-between-thighs-press");
+    const bridgeIndex = compiled.steps.findIndex((step) => step.sourceId === "bridge-ring-thighs");
+    expect(compiled.steps[bridgeIndex - 1]).toMatchObject({
+      sourceId: "tabletop-to-bridge",
+      kind: "rest",
+      durationMs: 30_000
+    });
     expect(compiled.steps.at(-1)?.name).toBe("Shavasana");
   });
 
