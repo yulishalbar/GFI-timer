@@ -74,6 +74,13 @@ const exercise = (
   };
 };
 
+function withBreaks(prefix: string, seconds: number, moves: readonly ExerciseEntry[]): ClassEntry[] {
+  return moves.flatMap((move, index) => [
+    move,
+    ...(index < moves.length - 1 ? [rest(`${prefix}-rest-${index + 1}`, seconds)] : [])
+  ]);
+}
+
 const upperBodyMoves = [
   exercise("ring-chest-press-one", "Ring chest press on knees", 45,
     "Kneel tall holding ring at chest. Exhale squeeze ring. Inhale release."),
@@ -113,24 +120,24 @@ const standingRound = (side: "L" | "R"): ExerciseEntry[] => [
 ];
 
 const sideBody = (side: "L" | "R"): ExerciseEntry[] => [
-  exercise(`side-plank-ring-press-${side.toLowerCase()}`, `Side Plank + Ring Press (${side})`, 45,
+  exercise(`side-plank-ring-press-${side.toLowerCase()}`, `Side Plank + Ring Press (${side})`, 30,
     "Forearm side plank. Top leg stacks over the bottom leg. Top hand presses ring. Lower and lift hips. Add knee pulls or leg kicks. Finish with pulses."),
-  exercise(`side-plank-crunch-${side.toLowerCase()}`, `Side Plank + side crunch lifted leg in (${side})`, 45,
+  exercise(`side-plank-crunch-${side.toLowerCase()}`, `Side Plank + side crunch lifted leg in (${side})`, 30,
     "Forearm side plank. Top hand presses ring. Crunch top leg in and out while still pressing on the ring."),
-  exercise(`side-plank-leg-front-${side.toLowerCase()}`, `Side Plank + bring leg to front (${side})`, 45,
+  exercise(`side-plank-leg-front-${side.toLowerCase()}`, `Side Plank + bring leg to front (${side})`, 30,
     "Forearm side plank. Top hand presses ring. Exhale to bring the top straight leg to be perpendicular to the core."),
-  exercise(`side-plank-leg-lift-${side.toLowerCase()}`, `Side Plank + Leg up and down (${side})`, 45,
+  exercise(`side-plank-leg-lift-${side.toLowerCase()}`, `Side Plank + Leg up and down (${side})`, 30,
     "Forearm side plank. Top hand presses ring. Lift top leg up while still pressing on the ring."),
-  exercise(`side-reach-v-up-${side.toLowerCase()}`, `Side reach to v up (${side})`, 45,
+  exercise(`side-reach-v-up-${side.toLowerCase()}`, `Side reach to v up (${side})`, 30,
     "Forearm side plank. While legs are long extended on the mat, reach top arm holding the ring overhead while rotating the body and the gaze towards the mat. Rotate back and lift legs straight up and slide ring while lowering the legs towards the ground. Lift ring and lower legs back down to repeat."),
-  exercise(`ring-press-both-leg-lift-${side.toLowerCase()}`, `Ring press + both leg lift (${side})`, 45,
+  exercise(`ring-press-both-leg-lift-${side.toLowerCase()}`, `Ring press + both leg lift (${side})`, 30,
     "Lower down onto biceps. Top hand presses on ring while both legs lift up. Lower legs and release pulse. Repeat.")
 ];
 
 export const matPilatesRingLegacy = {
   schemaVersion: 1,
   id: "mat-pilates-ring-v1",
-  version: 6,
+  version: 7,
   title: "Mat Pilates Ring Class V1",
   description: "A 60-minute full-body Mat Pilates class using a Pilates ring, with core, arms, glutes, legs, side body, back work, and cooldown.",
   phases: [
@@ -211,9 +218,10 @@ export const matPilatesRingLegacy = {
       name: "Circuit #2: Side body",
       items: [
         rest("side-body-setup", 60, "Lower to the mat and prepare for the side-body circuit."),
-        ...sideBody("L"),
+        ...withBreaks("side-body-left", 10, sideBody("L")),
+        rest("side-body-left-recovery", 10, "Recover before switching sides."),
         rest("side-body-switch", 30, "Switch sides."),
-        ...sideBody("R")
+        ...withBreaks("side-body-right", 10, sideBody("R"))
       ]
     },
     {
@@ -221,7 +229,7 @@ export const matPilatesRingLegacy = {
       name: "Circuit #5: Mat Pilates core",
       items: [
         rest("mat-core-setup", 60, "Cue next circuit."),
-        ...[
+        ...withBreaks("mat-core", 10, [
           exercise("crunch-ring-thighs", "Crunch w ring in between thighs", 45,
             "Knees bent with soles of feet on mat."),
           exercise("crunch-pulse", "Crunch pulse with ring", 45),
@@ -236,7 +244,7 @@ export const matPilatesRingLegacy = {
             "Hold ring and squeeze."),
           exercise("boat-pose-ring", "Boat pose with ring", 30,
             "Hold ring and squeeze.")
-        ]
+        ])
       ]
     },
     {
@@ -276,7 +284,7 @@ export const matPilatesRingCatalog = {
   course: {
     ...adaptedRingCourse.course,
     id: "mat-pilates-ring",
-    version: 6,
+    version: 7,
     title: "Mat Pilates Ring Class"
   }
 };

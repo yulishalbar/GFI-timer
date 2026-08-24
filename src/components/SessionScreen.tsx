@@ -194,8 +194,8 @@ export function SessionScreen({
             ) : null}
             {preview.circuitOverview ? (
               <div className="next-step__circuit">
-                <span>{preview.primary?.phase.name}</span>
-                <p>
+                <span className="next-step__circuit-name">{preview.primary?.phase.name}</span>
+                <p className="next-step__circuit-summary">
                   {preview.circuitOverview.exerciseNames.length} exercises · Breaks: {preview.circuitOverview.breakDurationsMs.length > 0
                     ? preview.circuitOverview.breakDurationsMs.map((duration) => formatDuration(duration)).join(", ")
                     : "none"}
@@ -206,7 +206,7 @@ export function SessionScreen({
               </div>
             ) : preview.circuitExerciseNames.length > 1 ? (
               <div className="next-step__circuit">
-                <span>{preview.primary?.phase.name}</span>
+                <span className="next-step__circuit-name">{preview.primary?.phase.name}</span>
                 <ul>
                   {preview.circuitExerciseNames.map((name) => <li key={name}>{name}</li>)}
                 </ul>

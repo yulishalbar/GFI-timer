@@ -361,7 +361,7 @@ test("opens and starts the ring class", async ({ page }) => {
   });
   await expect(classCard).toContainText("60 min");
   await expect(classCard).toContainText("8 phases");
-  await expect(classCard).toContainText("81 steps");
+  await expect(classCard).toContainText("99 steps");
   await expect(classCard).toContainText("Ring");
   await classCard.getByRole("button", { name: "View class" }).click();
 
