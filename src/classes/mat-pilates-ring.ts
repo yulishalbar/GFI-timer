@@ -51,7 +51,7 @@ function ringRigForEntry(id: string): string | undefined {
     "tabletop-crunch-lifted-legs": "ring-crunch-legs-lifted",
     "cocoons-ring-shins": "ring-slider-in-outs-hands",
     "leg-extensions-ring-calves": "ring-banded-leg-lowers",
-    "roll-up-ring-shins": "ring-roll-ups",
+    "leg-lowers-ring-calves": "ring-banded-leg-lowers",
     "russian-twist-ring": "ring-banded-russian-twist",
     "boat-pose-ring": "ring-reverse-plank-l-sit"
   }[id];
@@ -258,8 +258,8 @@ export const matPilatesRingLegacy = {
             "Laying on the mat with the pelvis tucked in. Place legs over the shins in tabletop. Extend legs out hovering in the air, and reach arms back straight overhead. Exhale to squeeze core and bring legs and hands to center, grabbing the ring with the hand to repeat movement."),
           exercise("leg-extensions-ring-calves", "Leg extensions (ring around calves)", 45,
             "Extend legs to 45 and bend towards chest."),
-          exercise("roll-up-ring-shins", "Roll up (ring around shins)", 45,
-            "Keep the ring around the shins and roll up with control, then lower back down."),
+          exercise("leg-lowers-ring-calves", "Leg lowers (ring around calves)", 45,
+            "Keep the ring around the calves. Lower the straight legs with control, then lift them back up."),
           exercise("russian-twist-ring", "Russian twist with ring", 45,
             "Hold ring and squeeze."),
           exercise("boat-pose-ring", "Boat pose with ring", 30,

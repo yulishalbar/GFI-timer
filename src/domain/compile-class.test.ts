@@ -185,7 +185,11 @@ describe("compileClass", () => {
     ]);
     const matCoreSteps = compiled.steps.filter((step) => step.phase.id === "mat-core");
     expect(matCoreSteps.filter((step) => step.sourceId.startsWith("mat-core-rest-"))).toHaveLength(7);
-    expect(matCoreSteps.some((step) => step.name === "Roll up (ring around shins)")).toBe(true);
+    expect(matCoreSteps.find((step) => step.sourceId === "leg-lowers-ring-calves")).toMatchObject({
+      name: "Leg lowers (ring around calves)",
+      durationMs: 45_000,
+      rig: "ring-banded-leg-lowers"
+    });
     expect(compiled.steps.filter((step) => step.phase.id === "cooldown").map((step) => step.name)).toEqual([
       "REST",
       "Single leg hug knees to chest",
