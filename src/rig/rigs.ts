@@ -3046,6 +3046,7 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
   "ring-banded-russian-twist": ringVariant("banded-russian-twist", "wristNear", "wristFar"),
   "ring-squat-add-arms": ringVariant("squat-add-arms", "wristNear", "wristFar"),
   "ring-superman": ringVariant("superman", "wristNear", "wristFar"),
+  "ring-assisted-knee-push-ups": ringVariant("knee-push-ups", "shoulderNear", "handNear"),
   "ring-quadruped-glute-lift": ringVariant("quadruped-glute-lift", "wristNear", "wristFar"),
   "ring-bird-dog-crunch": ringVariant("bird-dog-crunch", "wristNear", "wristFar"),
   "ring-quadruped-leg-pulse": ringVariant("quadruped-leg-pulse", "wristNear", "wristFar"),
@@ -3064,7 +3065,6 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
   "ring-crunch-legs-lifted": ringVariant("crunch-legs-lifted", "ankleNear", "ankleFar"),
   "ring-slider-in-outs-hands": ringVariant("slider-in-outs", "wristNear", "wristFar"),
   "ring-banded-leg-lowers": ringVariant("banded-leg-lowers", "ankleNear", "ankleFar"),
-  "ring-slider-in-outs-calves": ringVariant("slider-in-outs", "ankleNear", "ankleFar"),
   "ring-reverse-plank-l-sit": ringVariant("reverse-plank-l-sit", "wristNear", "wristFar")
 };
 

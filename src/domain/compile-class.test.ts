@@ -129,30 +129,75 @@ describe("compileClass", () => {
   it("compiles the updated ring class with stable totals", () => {
     const compiled = compileClass(matPilatesRing);
 
-    expect(compiled.steps).toHaveLength(99);
-    expect(compiled.totalDurationMs).toBe(3_600_000);
+    expect(compiled.steps).toHaveLength(94);
+    expect(compiled.totalDurationMs).toBe(3_590_000);
     expect(compiled.phases).toEqual([
       { id: "introduction", name: "INTRODUCTION", index: 1, stepCount: 1, durationMs: 120_000 },
       { id: "warmup", name: "Warm-Up", index: 2, stepCount: 7, durationMs: 330_000 },
-      { id: "abs-arms-back", name: "Circuit #1: ABS + ARMS CIRCUIT + back", index: 3, stepCount: 13, durationMs: 510_000 },
-      { id: "core-glutes", name: "Circuit #3: Core + Glutes", index: 4, stepCount: 14, durationMs: 565_000 },
-      { id: "legs-focused", name: "Circuit #4: legs focused X 2 (switch sides)", index: 5, stepCount: 12, durationMs: 370_000 },
-      { id: "side-body", name: "Circuit #2: Side body", index: 6, stepCount: 25, durationMs: 560_000 },
+      { id: "abs-arms-back", name: "Circuit #1: ABS + ARMS CIRCUIT + back", index: 3, stepCount: 14, durationMs: 540_000 },
+      { id: "core-glutes", name: "Circuit #2: Core + Glutes", index: 4, stepCount: 14, durationMs: 565_000 },
+      { id: "legs-focused", name: "Circuit #3: legs focused X 2 (switch sides)", index: 5, stepCount: 12, durationMs: 370_000 },
+      { id: "side-body", name: "Circuit #4: Side body", index: 6, stepCount: 20, durationMs: 550_000 },
       { id: "mat-core", name: "Circuit #5: Mat Pilates core", index: 7, stepCount: 16, durationMs: 475_000 },
-      { id: "cooldown", name: "Cooldown", index: 8, stepCount: 11, durationMs: 670_000 }
+      { id: "cooldown", name: "Cooldown", index: 8, stepCount: 10, durationMs: 640_000 }
     ]);
     expect(compiled.steps.filter((step) => step.kind === "rest").every((step) => step.name === "REST"))
       .toBe(true);
     expect(compiled.steps.some((step) => step.sourceId.startsWith("in-out-press-"))).toBe(false);
     expect(compiled.steps.filter((step) => step.name === "Squat -> add arms with ring")).toHaveLength(2);
     expect(compiled.steps.filter((step) => step.name === "Squat pulse with ring")).toHaveLength(2);
+    const assistedPushUp = compiled.steps.find((step) => step.sourceId === "assisted-knee-push-up");
+    expect(assistedPushUp).toMatchObject({
+      name: "Assisted knee push-up",
+      durationMs: 30_000,
+      rig: "ring-assisted-knee-push-ups"
+    });
+    expect(assistedPushUp?.longDescription).toContain("ring vertically under the chest");
     const sideBodySteps = compiled.steps.filter((step) => step.phase.id === "side-body");
     expect(sideBodySteps.filter((step) => step.kind === "exercise").every((step) => step.durationMs === 30_000))
       .toBe(true);
-    expect(sideBodySteps.filter((step) => step.sourceId.includes("-rest-")).every((step) => step.durationMs === 10_000))
-      .toBe(true);
+    expect(sideBodySteps.filter((step) => step.kind === "exercise").map((step) => ({
+      name: step.name,
+      side: step.exerciseReference?.side
+    }))).toEqual([
+      { name: "Hip lifts with ring press", side: "left" },
+      { name: "Hip lifts + leg extensions", side: "left" },
+      { name: "Lower and lift top leg", side: "left" },
+      { name: "Side crunch lifted leg in", side: "left" },
+      { name: "Lift and tap ring", side: "left" },
+      { name: "Lift and lower inside leg", side: "right" },
+      { name: "Both legs lift", side: "left" },
+      { name: "Hip lifts with ring press", side: "right" },
+      { name: "Hip lifts + leg extensions", side: "right" },
+      { name: "Lower and lift top leg", side: "right" },
+      { name: "Side crunch lifted leg in", side: "right" },
+      { name: "Lift and tap ring", side: "right" },
+      { name: "Lift and lower inside leg", side: "left" },
+      { name: "Both legs lift", side: "right" }
+    ]);
+    expect(sideBodySteps.find((step) => step.sourceId === "side-lift-tap-ring-l")?.longDescription)
+      .toContain("lower R leg");
+    expect(sideBodySteps.filter((step) => step.sourceId.includes("-rest-")).map((step) => step.sourceId)).toEqual([
+      "side-body-l-rest-2",
+      "side-body-l-rest-4",
+      "side-body-r-rest-2",
+      "side-body-r-rest-4"
+    ]);
     const matCoreSteps = compiled.steps.filter((step) => step.phase.id === "mat-core");
     expect(matCoreSteps.filter((step) => step.sourceId.startsWith("mat-core-rest-"))).toHaveLength(7);
+    expect(matCoreSteps.some((step) => step.name === "Roll up (ring around shins)")).toBe(true);
+    expect(compiled.steps.filter((step) => step.phase.id === "cooldown").map((step) => step.name)).toEqual([
+      "REST",
+      "Single leg hug knees to chest",
+      "Reclining tree pose",
+      "Reclining twist",
+      "Windshield wipers",
+      "Single leg hug knees to chest",
+      "Reclining tree pose",
+      "Reclining twist",
+      "REST",
+      "Shavasana"
+    ]);
     const thighSqueezeIndex = compiled.steps.findIndex((step) => step.sourceId === "ring-between-thighs-squeeze");
     expect(compiled.steps[thighSqueezeIndex + 1]?.sourceId).toBe("bridge-ring-between-thighs-press");
     const bridgeIndex = compiled.steps.findIndex((step) => step.sourceId === "bridge-ring-thighs");

@@ -17,6 +17,7 @@ function ringRigForEntry(id: string): string | undefined {
   if (id.startsWith("ring-chest-press-twist-")) return "ring-banded-russian-twist";
   if (id.startsWith("kneeling-squat-ring-press-")) return "ring-squat-add-arms";
   if (id.startsWith("biceps-press-")) return "ring-collarbone-press";
+  if (id === "assisted-knee-push-up") return "ring-assisted-knee-push-ups";
   if (id.startsWith("tabletop-leg-lifts-")) return "ring-quadruped-glute-lift";
   if (id.startsWith("tabletop-leg-lift-crunch-")) return "ring-bird-dog-crunch";
   if (id.startsWith("tabletop-leg-lift-pulse-")) return "ring-quadruped-leg-pulse";
@@ -24,11 +25,12 @@ function ringRigForEntry(id: string): string | undefined {
   if (id.startsWith("squat-hold-")) return "ring-squat-hold";
   if (id.startsWith("squat-")) return "ring-squat-to-stand";
   if (id.startsWith("lunge-ring-front-") || id.startsWith("high-runners-lunge-")) return "ring-reverse-lunge";
-  if (id.startsWith("side-plank-ring-press-")) return "ring-forearm-side-plank";
+  if (id.startsWith("side-plank-hip-lifts-")) return "ring-forearm-side-plank";
+  if (id.startsWith("side-leg-extensions-")) return "ring-side-lying-forward-back-kick";
+  if (id.startsWith("side-top-leg-lift-")) return "ring-side-lying-leg-lift";
   if (id.startsWith("side-plank-crunch-")) return "ring-side-body-crunch";
-  if (id.startsWith("side-plank-leg-front-")) return "ring-side-lying-forward-back-kick";
-  if (id.startsWith("side-plank-leg-lift-")) return "ring-side-lying-leg-lift";
-  if (id.startsWith("side-reach-v-up-")) return "ring-side-lying-straight-leg-crunch";
+  if (id.startsWith("side-lift-tap-ring-")) return "ring-side-lying-straight-leg-crunch";
+  if (id.startsWith("side-inside-leg-lift-")) return "ring-side-lying-leg-lift";
   if (id.startsWith("ring-press-both-leg-lift-")) return "ring-double-leg-lift";
 
   return {
@@ -49,7 +51,7 @@ function ringRigForEntry(id: string): string | undefined {
     "tabletop-crunch-lifted-legs": "ring-crunch-legs-lifted",
     "cocoons-ring-shins": "ring-slider-in-outs-hands",
     "leg-extensions-ring-calves": "ring-banded-leg-lowers",
-    "in-out-ring-calves": "ring-slider-in-outs-calves",
+    "roll-up-ring-shins": "ring-roll-ups",
     "russian-twist-ring": "ring-banded-russian-twist",
     "boat-pose-ring": "ring-reverse-plank-l-sit"
   }[id];
@@ -119,25 +121,41 @@ const standingRound = (side: "L" | "R"): ExerciseEntry[] => [
     "Hold a high runner's lunge with the front knee bent and the back leg long.")
 ];
 
-const sideBody = (side: "L" | "R"): ExerciseEntry[] => [
-  exercise(`side-plank-ring-press-${side.toLowerCase()}`, `Side Plank + Ring Press (${side})`, 30,
-    "Forearm side plank. Top leg stacks over the bottom leg. Top hand presses ring. Lower and lift hips. Add knee pulls or leg kicks. Finish with pulses."),
-  exercise(`side-plank-crunch-${side.toLowerCase()}`, `Side Plank + side crunch lifted leg in (${side})`, 30,
-    "Forearm side plank. Top hand presses ring. Crunch top leg in and out while still pressing on the ring."),
-  exercise(`side-plank-leg-front-${side.toLowerCase()}`, `Side Plank + bring leg to front (${side})`, 30,
-    "Forearm side plank. Top hand presses ring. Exhale to bring the top straight leg to be perpendicular to the core."),
-  exercise(`side-plank-leg-lift-${side.toLowerCase()}`, `Side Plank + Leg up and down (${side})`, 30,
-    "Forearm side plank. Top hand presses ring. Lift top leg up while still pressing on the ring."),
-  exercise(`side-reach-v-up-${side.toLowerCase()}`, `Side reach to v up (${side})`, 30,
-    "Forearm side plank. While legs are long extended on the mat, reach top arm holding the ring overhead while rotating the body and the gaze towards the mat. Rotate back and lift legs straight up and slide ring while lowering the legs towards the ground. Lift ring and lower legs back down to repeat."),
-  exercise(`ring-press-both-leg-lift-${side.toLowerCase()}`, `Ring press + both leg lift (${side})`, 30,
-    "Lower down onto biceps. Top hand presses on ring while both legs lift up. Lower legs and release pulse. Repeat.")
-];
+const sideBody = (topLeg: "L" | "R"): ExerciseEntry[] => {
+  const lowerShin = topLeg === "L" ? "R" : "L";
+
+  return [
+    exercise(`side-plank-hip-lifts-${topLeg.toLowerCase()}`, `Hip lifts with ring press (${topLeg})`, 30,
+      "From a forearm side plank, press into the ring while lowering and lifting the hips."),
+    exercise(`side-leg-extensions-${topLeg.toLowerCase()}`, `Hip lifts + leg extensions (${topLeg})`, 30,
+      "Stay on your side and extend the top leg long, then draw it back in with control."),
+    exercise(`side-top-leg-lift-${topLeg.toLowerCase()}`, `Lower and lift top leg (${topLeg})`, 30,
+      "Keep the top leg long and lower and lift it with control."),
+    exercise(`side-plank-crunch-${topLeg.toLowerCase()}`, `Side crunch lifted leg in (${topLeg})`, 30,
+      "Draw the lifted top leg in for a side crunch, then extend it long."),
+    exercise(`side-lift-tap-ring-${topLeg.toLowerCase()}`, `Lift and tap ring (${topLeg})`, 30,
+      `Keep the ring vertical around the shin of the lower ${lowerShin} leg. Lift the top leg and tap the ring.`),
+    exercise(`side-inside-leg-lift-${lowerShin.toLowerCase()}`, `Lift and lower inside leg (${lowerShin})`, 30,
+      `Keep the ring vertical around the shin of the lower ${lowerShin} leg. Lift and lower the inside leg.`),
+    exercise(`ring-press-both-leg-lift-${topLeg.toLowerCase()}`, `Both legs lift (${topLeg})`, 30,
+      "Place the ring around the shins. Lift both legs together, then lower with control.")
+  ];
+};
+
+const sideBodyWithPairedMoves = (side: "L" | "R"): ClassEntry[] => {
+  const moves = sideBody(side);
+  return moves.flatMap((move, index) => [
+    move,
+    ...([1, 3].includes(index)
+      ? [rest(`side-body-${side.toLowerCase()}-rest-${index + 1}`, 10)]
+      : [])
+  ]);
+};
 
 export const matPilatesRingLegacy = {
   schemaVersion: 1,
   id: "mat-pilates-ring-v1",
-  version: 7,
+  version: 8,
   title: "Mat Pilates Ring Class V1",
   description: "A 60-minute full-body Mat Pilates class using a Pilates ring, with core, arms, glutes, legs, side body, back work, and cooldown.",
   phases: [
@@ -172,6 +190,8 @@ export const matPilatesRingLegacy = {
       items: [
         ...upperBodyMoves,
         rest("prone-setup", 30, "Lie on back, preparing for back exercises."),
+        exercise("assisted-knee-push-up", "Assisted knee push-up", 30,
+          "Place the ring vertically under the chest for support. From the knees, lower the chest toward the ring and press back up with control."),
         exercise("prone-leg-lifts", "Prone leg lifts with ring", 30,
           "Lie face down on your mat with your arms extended forward, holding the pads of the ring on the floor. Exhale to lift legs up together, squeezing at the top, lower down."),
         exercise("prone-back-lift", "Prone back lift with ring", 30,
@@ -184,7 +204,7 @@ export const matPilatesRingLegacy = {
     },
     {
       id: "core-glutes",
-      name: "Circuit #3: Core + Glutes",
+      name: "Circuit #2: Core + Glutes",
       items: [
         rest("core-glutes-setup", 60, "Come to tabletop and prepare the ring."),
         ...tabletopSide("R"),
@@ -205,7 +225,7 @@ export const matPilatesRingLegacy = {
     },
     {
       id: "legs-focused",
-      name: "Circuit #4: legs focused X 2 (switch sides)",
+      name: "Circuit #3: legs focused X 2 (switch sides)",
       items: [
         rest("legs-setup", 60, "Come to standing. Describe the next movements."),
         ...standingRound("L"),
@@ -215,13 +235,12 @@ export const matPilatesRingLegacy = {
     },
     {
       id: "side-body",
-      name: "Circuit #2: Side body",
+      name: "Circuit #4: Side body",
       items: [
         rest("side-body-setup", 60, "Lower to the mat and prepare for the side-body circuit."),
-        ...withBreaks("side-body-left", 10, sideBody("L")),
-        rest("side-body-left-recovery", 10, "Recover before switching sides."),
+        ...sideBodyWithPairedMoves("L"),
         rest("side-body-switch", 30, "Switch sides."),
-        ...withBreaks("side-body-right", 10, sideBody("R"))
+        ...sideBodyWithPairedMoves("R")
       ]
     },
     {
@@ -239,7 +258,8 @@ export const matPilatesRingLegacy = {
             "Laying on the mat with the pelvis tucked in. Place legs over the shins in tabletop. Extend legs out hovering in the air, and reach arms back straight overhead. Exhale to squeeze core and bring legs and hands to center, grabbing the ring with the hand to repeat movement."),
           exercise("leg-extensions-ring-calves", "Leg extensions (ring around calves)", 45,
             "Extend legs to 45 and bend towards chest."),
-          exercise("in-out-ring-calves", "In and out (ring around calves)", 45),
+          exercise("roll-up-ring-shins", "Roll up (ring around shins)", 45,
+            "Keep the ring around the shins and roll up with control, then lower back down."),
           exercise("russian-twist-ring", "Russian twist with ring", 45,
             "Hold ring and squeeze."),
           exercise("boat-pose-ring", "Boat pose with ring", 30,
@@ -253,17 +273,16 @@ export const matPilatesRingLegacy = {
       items: [
         rest("cooldown-setup", 60, "Sit up tall with legs crossed and prepare for cooldown."),
         exercise("single-leg-knee-hug-left", "Single leg hug knees to chest (L)", 90),
-        exercise("single-leg-knee-hug-right", "Single leg hug knees to chest (R)", 90),
-        exercise("windshield-wipers", "Windshield wipers", 90),
-        exercise("reclining-twist-right", "Reclining twist (R)", 30,
-          "Lie on your back and drop your knees to left side."),
-        exercise("reclining-twist-left", "Reclining twist (L)", 30,
-          "Lie on your back and drop your knees to left side."),
-        exercise("knee-to-chest", "Knee to chest", 30),
-        exercise("reclining-tree-right", "Reclining tree pose (R)", 30,
-          "From knees to chest, extend left leg straight out while lowering the right knee towards the floor, use the right hand on right knee to gently move it towards the floor."),
         exercise("reclining-tree-left", "Reclining tree pose (L)", 30,
           "From knees to chest, extend right leg straight out while lowering the left knee towards the floor, use the left hand on left knee to gently move it towards the floor."),
+        exercise("reclining-twist-left", "Reclining twist (L)", 30,
+          "Lie on your back and drop your left knee across the body toward the right side."),
+        exercise("windshield-wipers", "Windshield wipers", 90),
+        exercise("single-leg-knee-hug-right", "Single leg hug knees to chest (R)", 90),
+        exercise("reclining-tree-right", "Reclining tree pose (R)", 30,
+          "From knees to chest, extend left leg straight out while lowering the right knee towards the floor, use the right hand on right knee to gently move it towards the floor."),
+        exercise("reclining-twist-right", "Reclining twist (R)", 30,
+          "Lie on your back and drop your right knee across the body toward the left side."),
         rest("shavasana-setup", 10, "Extend legs straight out."),
         exercise("shavasana", "Shavasana", 180,
           "Extend legs straight out. End: come to seated. Closing words: Thank you for coming today and working out early in the morning, amazing job! Don't forget to wipe down your mat. See you next time!",
@@ -284,7 +303,7 @@ export const matPilatesRingCatalog = {
   course: {
     ...adaptedRingCourse.course,
     id: "mat-pilates-ring",
-    version: 7,
+    version: 8,
     title: "Mat Pilates Ring Class"
   }
 };
