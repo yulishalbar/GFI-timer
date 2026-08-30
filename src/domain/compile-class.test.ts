@@ -7,10 +7,41 @@ import {
 } from "../classes/hiit-pilates-sliders";
 import { matPilatesBand, matPilatesBandLegacy } from "../classes/mat-pilates-band";
 import { matPilatesRing } from "../classes/mat-pilates-ring";
+import {
+  matPilatesWeightsBlock,
+  matPilatesWeightsBlockLegacy
+} from "../classes/mat-pilates-weights-block";
 import { compileClass } from "./compile-class";
 import { ClassValidationError } from "./validate-class";
 
 describe("compileClass", () => {
+  it("compiles the weights and block class with stable totals and catalog equivalence", () => {
+    const compiled = compileClass(matPilatesWeightsBlock);
+    const legacy = compileClass(matPilatesWeightsBlockLegacy);
+
+    expect(compiled.steps).toHaveLength(94);
+    expect(compiled.totalDurationMs).toBe(3_485_000);
+    const playbackFields = ({ durationMs, kind, shortDescription, longDescription }:
+      (typeof compiled.steps)[number]) => ({ durationMs, kind, shortDescription, longDescription });
+    expect(compiled.steps.map(playbackFields)).toEqual(legacy.steps.map(playbackFields));
+    expect(compiled.steps.filter((step) =>
+      step.phase.id === "upper-body" && step.kind === "exercise"
+    ).map((step) => step.name)).toEqual([
+      "Front arm raises",
+      "Arm raises to the side",
+      "Bent Over Dumbbell Reverse Fly",
+      "Biceps curls",
+      "Close-Grip Push-Up hand on block",
+      "Close-grip high plank",
+      "Close-Grip Push-Up hand on block",
+      "Biceps curls",
+      "Bent Over Dumbbell Reverse Fly",
+      "Arm raises to the side",
+      "Front arm raises"
+    ]);
+    expect(compiled.steps.at(-1)?.name).toBe("Shavasana");
+  });
+
   it("expands phases and repeated rounds in authored order", () => {
     const compiled = compileClass(matPilates0724);
 

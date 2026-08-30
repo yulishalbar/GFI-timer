@@ -5,6 +5,7 @@ import { matPilates0731, matPilates0731Catalog } from "./mat-pilates-07-31";
 import { hiitPilatesSliders, hiitPilatesSlidersCatalog } from "./hiit-pilates-sliders";
 import { matPilatesBand, matPilatesBandCatalog } from "./mat-pilates-band";
 import { matPilatesRing, matPilatesRingCatalog } from "./mat-pilates-ring";
+import { matPilatesWeightsBlock, matPilatesWeightsBlockCatalog } from "./mat-pilates-weights-block";
 import { mergeExerciseCatalogs } from "../catalog/merge-catalogs";
 
 /**
@@ -15,6 +16,7 @@ import { mergeExerciseCatalogs } from "../catalog/merge-catalogs";
  * but showing both would just be the same class twice.
  */
 const classDefinitions: readonly unknown[] = [
+  matPilatesWeightsBlock,
   matPilatesBand,
   matPilatesRing,
   hiitPilatesSliders,
@@ -25,6 +27,7 @@ const classDefinitions: readonly unknown[] = [
 export const availableClasses: readonly CompiledClass[] = classDefinitions.map(compileClass);
 
 export const availableExerciseCatalog = mergeExerciseCatalogs(
+  matPilatesWeightsBlockCatalog.catalog,
   hiitPilatesSlidersCatalog.catalog,
   matPilatesBandCatalog.catalog,
   matPilatesRingCatalog.catalog,
@@ -33,6 +36,7 @@ export const availableExerciseCatalog = mergeExerciseCatalogs(
 );
 
 export const courseTagsById: Readonly<Record<string, readonly string[]>> = {
+  "mat-pilates-weights-block": ["mat-pilates", "mat", "block", "weights", "full-body"],
   "mat-pilates-band": ["mat-pilates", "mat", "band", "full-body"],
   "mat-pilates-ring": ["mat-pilates", "mat", "ring", "full-body"],
   "hiit-pilates-sliders": ["mat-pilates", "mat", "sliders", "full-body"],

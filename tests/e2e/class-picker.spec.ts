@@ -353,6 +353,25 @@ test("opens and starts the band class", async ({ page }) => {
   await expect(page.getByRole("heading", { name: "INTRODUCTION" })).toBeVisible();
 });
 
+test("opens and starts the weights and block class", async ({ page }) => {
+  await page.goto("./");
+
+  const classCard = page.getByRole("article").filter({
+    has: page.getByRole("heading", { name: "Block + Weights (3 lbs) Mat Pilates", exact: true })
+  });
+  await expect(classCard).toContainText("58.1 min");
+  await expect(classCard).toContainText("7 phases");
+  await expect(classCard).toContainText("94 steps");
+  await expect(classCard).toContainText("Block");
+  await expect(classCard).toContainText("Weights");
+  await classCard.getByRole("button", { name: "View class" }).click();
+
+  await expect(page.getByLabel("58.1 min total")).toContainText("58:05");
+  await expect(page.getByRole("heading", { name: "Circuit #5: core" })).toBeVisible();
+  await page.getByRole("button", { name: "Start class" }).click();
+  await expect(page.getByRole("heading", { name: "Child's pose" })).toBeVisible();
+});
+
 test("opens and starts the ring class", async ({ page }) => {
   await page.goto("./");
 

@@ -136,7 +136,7 @@ Candidate features, prioritized after real class use:
   no offline or session-timer regression.
 - Establish stable serialization and a repository boundary for Version 3.
 
-All four courses are now catalog-backed. Explicit V1 definitions remain under
+All built-in courses are now catalog-backed. Explicit V1 definitions remain under
 separate stable IDs as the source each catalog is derived from and as the
 equivalence baseline; they are not listed in the picker. Every migration has
 normalized left/right placements and accessible directional badges, and the

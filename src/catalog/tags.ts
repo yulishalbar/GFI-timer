@@ -12,6 +12,8 @@ export const builtInTags = [
   { id: "band", label: "Band", category: "equipment" },
   { id: "ring", label: "Ring", category: "equipment" },
   { id: "sliders", label: "Sliders", category: "equipment" },
+  { id: "block", label: "Block", category: "equipment" },
+  { id: "weights", label: "Weights", category: "equipment" },
   { id: "standing", label: "Standing", category: "movement-type" },
   { id: "seated", label: "Seated", category: "movement-type" },
   { id: "supine", label: "Supine", category: "movement-type" },
