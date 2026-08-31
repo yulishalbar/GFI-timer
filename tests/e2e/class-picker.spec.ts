@@ -357,19 +357,30 @@ test("opens and starts the weights and block class", async ({ page }) => {
   await page.goto("./");
 
   const classCard = page.getByRole("article").filter({
-    has: page.getByRole("heading", { name: "Block + Weights (3 lbs) Mat Pilates", exact: true })
+    has: page.getByRole("heading", { name: "Block + Weights Mat Pilates", exact: true })
   });
-  await expect(classCard).toContainText("58.1 min");
-  await expect(classCard).toContainText("7 phases");
-  await expect(classCard).toContainText("94 steps");
+  await expect(classCard).toContainText("58 min");
+  await expect(classCard).toContainText("8 phases");
+  await expect(classCard).toContainText("98 steps");
   await expect(classCard).toContainText("Block");
   await expect(classCard).toContainText("Weights");
   await classCard.getByRole("button", { name: "View class" }).click();
 
-  await expect(page.getByLabel("58.1 min total")).toContainText("58:05");
+  await expect(page.getByLabel("58 min total")).toContainText("58:00");
   await expect(page.getByRole("heading", { name: "Circuit #5: core" })).toBeVisible();
   await page.getByRole("button", { name: "Start class" }).click();
-  await expect(page.getByRole("heading", { name: "Child's pose" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "INTRODUCTION" })).toBeVisible();
+
+  for (let step = 0; step < 7; step += 1) {
+    await page.getByRole("button", { name: "Next", exact: true }).click();
+  }
+  await expect(page.getByRole("heading", { name: "REST" })).toBeVisible();
+  const circuitExercises = page.locator(".next-step__circuit li");
+  await expect(circuitExercises).toHaveCount(16);
+  await expect(circuitExercises.first()).toContainText("Mermaid dip");
+  expect(await circuitExercises.first().evaluate((element) =>
+    Number.parseFloat(getComputedStyle(element).fontSize)
+  )).toBeGreaterThanOrEqual(16);
 });
 
 test("opens and starts the ring class", async ({ page }) => {

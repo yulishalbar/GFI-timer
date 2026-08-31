@@ -20,13 +20,13 @@ function rigForExercise(id: string): string | undefined {
   if (id === "downward-facing-dog") return "down-dog";
   if (id.startsWith("mermaid") || id.startsWith("t-arms")) return "standing-side-stretch";
   if (id.startsWith("half-moon")) return "single-leg-deadlift-knee-tuck";
-  if (id === "fire-hydrant") return "quadruped-glute-lift";
-  if (id === "donkey-kicks") return "donkey-kick";
-  if (id === "donkey-kick-cross-over") return "donkey-kick-crossover";
+  if (id.startsWith("fire-hydrant")) return "quadruped-glute-lift";
+  if (id.startsWith("donkey-kick-cross-over")) return "donkey-kick-crossover";
+  if (id.startsWith("donkey-kicks")) return "donkey-kick";
   if (id.startsWith("lunge-rdl")) return "single-leg-deadlift-knee-tuck";
   if (id.startsWith("lunge-pulses")) return "reverse-lunge-pulse";
   if (id.startsWith("lunge")) return "reverse-lunge";
-  if (id.startsWith("squat")) return "squat-to-stand";
+  if (id.startsWith("squat") || id === "regular-squats") return "squat-to-stand";
   if (id.startsWith("bird-dog-pushups")) return "knee-push-ups";
   if (id.startsWith("bird-dog-triceps")) return "band-triceps-ups";
   if (id.startsWith("bird-dogs-pulse")) return "quadruped-leg-pulse";
@@ -71,30 +71,25 @@ const exercise = (
 const lowerBodySide = (side: "L" | "R"): ExerciseEntry[] => {
   const blockFoot = side === "L" ? "right" : "left";
   return [
-    exercise(`lunge-${side.toLowerCase()}`, `Lunge (${side}) (block under ${blockFoot} foot)`, 40),
-    exercise(`lunge-rdl-${side.toLowerCase()}`, `Lunge to single leg rdl (${side}) (block under ${blockFoot} foot)`, 40),
-    exercise(`lunge-runners-${side.toLowerCase()}`, `Lunge to high runner's lunge (${side})`, 40),
-    exercise(`lunge-runners-arms-${side.toLowerCase()}`, `Lunge to high runner's lunge pulsing arms (${side})`, 40),
-    exercise(`lunge-pulses-${side.toLowerCase()}`, `Lunge pulses (${side}) (block under ${blockFoot} foot)`, 30),
-    exercise(`squat-${side.toLowerCase()}`, `Squat (${side}) (block under ${blockFoot} foot)`, 40)
+    exercise(`lunge-${side.toLowerCase()}`, `Lunge (block under ${blockFoot} foot) (${side})`, 30),
+    exercise(`lunge-rdl-${side.toLowerCase()}`, `Lunge to single leg rdl (block under ${blockFoot} foot) (${side})`, 30),
+    exercise(`lunge-pulses-${side.toLowerCase()}`, `Lunge pulses (block under ${blockFoot} foot) (${side})`, 30)
   ];
 };
 
-const coreGlutesSide = (side: "L" | "R"): ClassEntry[] => {
+const coreGlutesSide = (side: "L" | "R"): ExerciseEntry[] => {
   const knee = side === "L" ? "right" : "left";
   return [
-    exercise(`bird-dogs-${side.toLowerCase()}`, `Bird Dogs (${side})`, 45),
-    exercise(`bird-dogs-pulse-${side.toLowerCase()}`, `Bird Dogs Pulse It Out (${side})`, 45),
-    exercise(`bird-dog-pushups-${side.toLowerCase()}`, `Bird Dog Pushups (${side})`, 45),
-    exercise(`bird-dog-triceps-${side.toLowerCase()}`, `Bird dog ${knee} arm triceps extension`, 45),
-    rest(`bird-dog-rest-${side.toLowerCase()}`, 15),
-    exercise(`ninety-ninety-lunge-${side.toLowerCase()}`, `90/90 Lunge Narrow Press (${side})`, 30,
+    exercise(`bird-dogs-${side.toLowerCase()}`, `Bird Dogs (${side})`, 40),
+    exercise(`bird-dog-triceps-${side.toLowerCase()}`, `Bird dog ${knee} arm triceps extension (${side})`, 40),
+    exercise(`bird-dog-pushups-${side.toLowerCase()}`, `Bird Dog Pushups (${side})`, 40),
+    exercise(`ninety-ninety-lunge-${side.toLowerCase()}`, `90/90 Lunge Narrow Press (${side})`, 40,
       `Stepping the ${knee} foot forward into a lunge stance`),
-    exercise(`narrow-press-knee-tap-${side.toLowerCase()}`, `Narrow Press + Knee to Block Tap (${side})`, 30),
-    exercise(`hinge-knee-taps-${side.toLowerCase()}`, `2-Count Hinge + Knee to Block Taps (weights behind head) (${side})`, 30),
-    exercise(`b-stance-squats-${side.toLowerCase()}`, `B-Stance Squats (${side})`, 10),
-    exercise(`b-stance-pulse-${side.toLowerCase()}`, `B-Stance Squats pulse (${side})`, 30),
-    exercise(`b-stance-hold-curls-${side.toLowerCase()}`, `B-Stance Squats hold + biceps curls (${side})`, 30)
+    exercise(`narrow-press-knee-tap-${side.toLowerCase()}`, `Narrow Press + Knee to Block Tap (${side})`, 40),
+    exercise(`hinge-knee-taps-${side.toLowerCase()}`, `2-Count Hinge + Knee to Block Taps (weights behind head) (${side})`, 40),
+    exercise(`b-stance-squats-${side.toLowerCase()}`, `B-Stance Squats (${side})`, 40),
+    exercise(`b-stance-pulse-${side.toLowerCase()}`, `B-Stance Squats pulse (${side})`, 20),
+    exercise(`b-stance-hold-curls-${side.toLowerCase()}`, `B-Stance Squats hold + biceps curls (${side})`, 40)
   ];
 };
 
@@ -107,60 +102,76 @@ const upperBodyMoves = [
   exercise("close-grip-high-plank", "Close-grip high plank", 30)
 ];
 
-const upperBodyReturnMoves = [
-  exercise("close-grip-push-up-return", "Close-Grip Push-Up hand on block", 30),
-  exercise("biceps-curls-return", "Biceps curls", 30),
-  exercise("bent-over-reverse-fly-return", "Bent Over Dumbbell Reverse Fly", 30),
-  exercise("side-arm-raises-return", "Arm raises to the side", 30),
-  exercise("front-arm-raises-return", "Front arm raises", 30)
-];
-
-function withTenSecondRests(prefix: string, moves: readonly ExerciseEntry[]): ClassEntry[] {
+function withRests(prefix: string, seconds: number, moves: readonly ExerciseEntry[]): ClassEntry[] {
   return moves.flatMap((move, index) => [
     move,
-    ...(index < moves.length - 1 ? [rest(`${prefix}-rest-${index + 1}`, 10)] : [])
+    ...(index < moves.length - 1 ? [rest(`${prefix}-rest-${index + 1}`, seconds)] : [])
   ]);
 }
+
+function coreGlutesWithRests(side: "L" | "R"): ClassEntry[] {
+  return coreGlutesSide(side).flatMap((move, index, moves) => [
+    move,
+    ...(index < moves.length - 1 && index !== 6 && index !== 7
+      ? [rest(`core-glutes-${side.toLowerCase()}-rest-${index + 1}`, 15)]
+      : [])
+  ]);
+}
+
+const sideBody = (side: "L" | "R"): ClassEntry[] => [
+  exercise(`mermaid-dip-${side.toLowerCase()}`, `Mermaid dip (weight chest height in hands) (${side})`, 40,
+    side === "L"
+      ? "Bent on left leg, right leg extendeted to the side, block in hands at chest height, dip towards left side"
+      : "Bent on right leg, left leg extended to the side, block in hands at chest height, dip towards right side"),
+  exercise(`mermaid-dip-hold-${side.toLowerCase()}`, `Mermaid dip hold, T-arms (${side})`, 40),
+  exercise(`t-arms-pulse-${side.toLowerCase()}`, `T-arms pulse (${side})`, 20),
+  rest(`side-body-${side.toLowerCase()}-rest-one`, 10),
+  exercise(`half-moon-lift-lower-${side.toLowerCase()}`, `Half moon lift and lower (twisting top hand towards the mat as leg lowers) (${side})`, 40,
+    "Place bottom hand on the block"),
+  exercise(`half-moon-crunch-${side.toLowerCase()}`, `Half moon crunch (${side})`, 40, "Hinge at hips"),
+  rest(`side-body-${side.toLowerCase()}-rest-two`, 10),
+  exercise(`fire-hydrant-${side.toLowerCase()}`, `Fire hydrant (${side})`, 40, "Same hand’s forearms on block, weight behind knee"),
+  exercise(`donkey-kicks-${side.toLowerCase()}`, `Donkey kicks (${side})`, 40),
+  exercise(`donkey-kick-cross-over-${side.toLowerCase()}`, `Donkey kick cross over (${side})`, 40)
+];
 
 export const matPilatesWeightsBlockLegacy = {
   schemaVersion: 1,
   id: "mat-pilates-weights-block-v1",
-  version: 2,
-  title: "Block + Weights (3 lbs) Mat Pilates V1",
+  version: 5,
+  title: "Block + Weights Mat Pilates V1",
   description: "Focus on mind and body connection, stretch total body, and work full body. Equipment: mat, blocks, and 3 lb weights.",
   phases: [
+    {
+      id: "introduction",
+      name: "INTRODUCTION",
+      items: [exercise("introduction", "INTRODUCTION", 120,
+        "Focus on mind and body connection, stretch total body, and work full body. Introduce the mat, blocks, and 3 lb weights.")]
+    },
     {
       id: "warmup",
       name: "WARM-UP",
       items: [
         exercise("childs-pose", "Child's pose", 60,
           "Push hips back and stretch fingers towards the top of the mat. Warm up the spine, stretch the hamstrings, thighs and abdominals"),
-        exercise("tabletop-cat-cows", "Table top → cat and cows", 30,
+        exercise("tabletop-cat-cows", "Table top → cat and cows", 60,
           "Come to all 4s position starting with a neutral spine, inhale as you initiate movement through the chest, lifting it towards the ceiling, along with you gaze if it feels comfortable on the neck. exhale as you round your back and lift the gaze towards the ceiling, not dumping lower back. Stretch arms, back, and abdominals"),
         exercise("tabletop-down-dog-alternating", "Table top → downwards facing dog alternating", 30,
           "Still in all 4s, pelvis parallel to the ground, lift right hand up, opening up the right side of the body, then move right shoulder below left shoulder as you thread the right arm under your belly, stay in this pose for a few seconds. Exhale to bring hand back up and then come back to neutral. Switch sides. Side body stretch"),
         exercise("crescent-half-split-left", "Crescent Low Lunge (L) → half split (L)", 60),
         exercise("downward-facing-dog", "Downward facing dog", 10),
         exercise("crescent-half-split-right", "Crescent Low Lunge (R) → half split (R)", 60,
-          "End: introduce equipment, state its just an option. Set block horiozntally at the front of the mat.")
+          "End: introduce equipment, state its just an option. Set block horiozntally at the front of the mat."),
+        rest("warmup-circuit-preview", 60, "Go over the first circuit.")
       ]
     },
     {
       id: "side-body",
       name: "Circuit #1: side body",
       items: [
-        exercise("mermaid-dip", "Mermaid dip (weight chest height in hands)", 40,
-          "Bent on left leg, right leg extendeted to the side, block in hands at chest height, dip towards left side"),
-        exercise("mermaid-dip-hold", "Mermaid dip hold, T-arms", 40),
-        exercise("t-arms-pulse", "T-arms pulse", 20),
-        rest("side-body-rest-one", 10),
-        exercise("half-moon-lift-lower", "Half moon lift and lower (twisting top hand towards the mat as leg lowers)", 40,
-          "Place bottom hand on the block"),
-        exercise("half-moon-crunch", "Half moon crunch", 40, "Hinge at hips"),
-        rest("side-body-rest-two", 10),
-        exercise("fire-hydrant", "Fire hydrant", 40, "Same hand’s forearms on block, weight behind knee"),
-        exercise("donkey-kicks", "Donkey kicks", 40),
-        exercise("donkey-kick-cross-over", "Donkey kick cross over", 40)
+        ...sideBody("L"),
+        rest("side-body-side-switch", 30, "Switch sides."),
+        ...sideBody("R")
       ]
     },
     {
@@ -168,9 +179,11 @@ export const matPilatesWeightsBlockLegacy = {
       name: "Circuit #2: lower body",
       items: [
         rest("lower-body-setup", 60, "Describe the next movements: Go through all movements"),
-        ...lowerBodySide("L"),
+        ...withRests("lower-body-left", 10, lowerBodySide("L")),
         rest("lower-body-side-switch", 30, "Repeat on right"),
-        ...lowerBodySide("R")
+        ...withRests("lower-body-right", 10, lowerBodySide("R")),
+        rest("lower-body-squat-setup", 10),
+        exercise("regular-squats", "Regular squats", 30)
       ]
     },
     {
@@ -178,33 +191,21 @@ export const matPilatesWeightsBlockLegacy = {
       name: "Circuit #3: Core + glutes + upper body",
       items: [
         rest("core-glutes-setup", 60, "Come to tabletop w right knee on block. Describe the next movements: Start with left leg infront, slider under right leg behind"),
-        ...coreGlutesSide("L"),
-        ...coreGlutesSide("R")
+        ...coreGlutesWithRests("L"),
+        rest("core-glutes-side-switch", 30, "Switch sides."),
+        ...coreGlutesWithRests("R")
       ]
     },
     {
       id: "upper-body",
       name: "Circuit #4: upper body",
-      items: [
-        ...withTenSecondRests("upper-body", upperBodyMoves),
-        ...withTenSecondRests("upper-body-return", upperBodyReturnMoves)
-      ]
+      items: withRests("upper-body", 10, upperBodyMoves)
     },
     {
       id: "core",
       name: "Circuit #5: core",
       items: [
         rest("core-setup", 60, "Sit on mat. Describe the next movements: Go through all movements"),
-        exercise("tabletop-leg-lower-left", "Tabletop leg lower (L) crunch (right hand holds block to right leg)", 30,
-          "Exhale, lift head neck and shoulders while lowering left leg towards the mat"),
-        exercise("tabletop-crunch-block-left", "Tabletop leg lower (L) crunch towards block (right hand holds block to right leg)", 30,
-          "Exhale, crunch left elbow towards the block, return head down towards the mat while lowering left leg down"),
-        exercise("tabletop-crunch-hold-left", "Tabletop leg lower (L) crunch hold (L)", 30),
-        rest("core-side-switch", 15, "Switch sides"),
-        exercise("tabletop-leg-lower-right", "Tabletop leg lower (R) crunch (right hand holds block to right leg)", 40),
-        exercise("tabletop-crunch-block-right", "Tabletop leg lower (R) crunch towards block (right hand holds block to right leg)", 40),
-        exercise("tabletop-crunch-hold-right", "Tabletop leg lower (R) crunch hold (R)", 40),
-        exercise("tabletop-leg-lower-right-repeat", "Tabletop leg lower (R) crunch (right hand holds block to right leg)", 40),
         rest("block-between-feet", 30, "Place block between feet"),
         exercise("tabletop-toe-taps", "Tabletop toe taps", 40),
         exercise("toe-touches-block", "Toe touches grabbing block", 40),
@@ -217,10 +218,9 @@ export const matPilatesWeightsBlockLegacy = {
       id: "cooldown",
       name: "Cooldown",
       items: [
-        rest("cooldown-transition", 30, "Hug knees in"),
         exercise("windshield-wipers", "Windshield wipers", 60,
           "Hamstring flexibility, posterior chain release, gentle spinal decompression"),
-        exercise("figure-four-twist", "Lying figure four → lower ground, twist body towards opposite side → switch sides", 240,
+        exercise("figure-four-twist", "Lying figure four → lower ground, twist body towards opposite side → switch sides", 180,
           "Lie on back with knees bent. Cross one ankle over opposite knee. Inhale to prepare. Exhale as you gently pull the supporting leg toward the chest, stretching the hip and glutes. → use biceps for deeper stretch. From figure four position, lower both legs toward the opposite side. Inhale to lengthen the spine. Exhale as you rotate into the twist while keeping shoulders relaxed on the mat. Glute and piriformis stretch, hip mobility, lower back relief"),
         exercise("reclined-butterfly", "Reclined butterfly (block under glutes)", 30),
         exercise("sleeping-tiger", "Sleeping tiger (block under glutes)", 60,
@@ -249,7 +249,7 @@ export const matPilatesWeightsBlockCatalog = {
   course: {
     ...adaptedWeightsBlockCourse.course,
     id: "mat-pilates-weights-block",
-    title: "Block + Weights (3 lbs) Mat Pilates"
+    title: "Block + Weights Mat Pilates"
   }
 };
 

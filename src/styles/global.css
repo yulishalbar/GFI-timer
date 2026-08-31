@@ -1375,6 +1375,12 @@ h1 {
   line-height: 1.25;
 }
 
+.session-shell--rest .next-step__circuit li {
+  font-size: clamp(1rem, 2.4vw, 1.3rem);
+  font-weight: 750;
+  line-height: 1.25;
+}
+
 /* Approaching the handover the current step steps back rather than vanishing:
    it is still what the class is doing. A rest is exempt - the lead is a fixed
    ten seconds, so a short transition would otherwise spend its whole duration

@@ -19,8 +19,8 @@ describe("compileClass", () => {
     const compiled = compileClass(matPilatesWeightsBlock);
     const legacy = compileClass(matPilatesWeightsBlockLegacy);
 
-    expect(compiled.steps).toHaveLength(94);
-    expect(compiled.totalDurationMs).toBe(3_485_000);
+    expect(compiled.steps).toHaveLength(98);
+    expect(compiled.totalDurationMs).toBe(3_480_000);
     const playbackFields = ({ durationMs, kind, shortDescription, longDescription }:
       (typeof compiled.steps)[number]) => ({ durationMs, kind, shortDescription, longDescription });
     expect(compiled.steps.map(playbackFields)).toEqual(legacy.steps.map(playbackFields));
@@ -32,12 +32,24 @@ describe("compileClass", () => {
       "Bent Over Dumbbell Reverse Fly",
       "Biceps curls",
       "Close-Grip Push-Up hand on block",
-      "Close-grip high plank",
-      "Close-Grip Push-Up hand on block",
-      "Biceps curls",
-      "Bent Over Dumbbell Reverse Fly",
-      "Arm raises to the side",
-      "Front arm raises"
+      "Close-grip high plank"
+    ]);
+    expect(compiled.steps.filter((step) =>
+      step.phase.id === "side-body" && step.kind === "exercise"
+    ).map((step) => step.exerciseReference?.side)).toEqual([
+      ...Array<"left">(8).fill("left"),
+      ...Array<"right">(8).fill("right")
+    ]);
+    expect(compiled.steps.filter((step) =>
+      step.phase.id === "lower-body" && step.kind === "exercise"
+    ).map((step) => [step.name, step.durationMs])).toEqual([
+      ["Lunge (block under right foot)", 30_000],
+      ["Lunge to single leg rdl (block under right foot)", 30_000],
+      ["Lunge pulses (block under right foot)", 30_000],
+      ["Lunge (block under left foot)", 30_000],
+      ["Lunge to single leg rdl (block under left foot)", 30_000],
+      ["Lunge pulses (block under left foot)", 30_000],
+      ["Regular squats", 30_000]
     ]);
     expect(compiled.steps.at(-1)?.name).toBe("Shavasana");
   });
