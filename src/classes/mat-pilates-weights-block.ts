@@ -36,7 +36,6 @@ function rigForExercise(id: string): string | undefined {
   if (id.startsWith("b-stance")) return "static-single-leg-squat";
   if (id.startsWith("front-arm-raises") || id.startsWith("side-arm-raises")) return "arm-circles";
   if (id.startsWith("bent-over-reverse-fly")) return "superman-flutter";
-  if (id === "serve-the-platter") return "serve-the-platter";
   if (id.startsWith("close-grip-push-up")) return "pilates-push-ups";
   if (id === "close-grip-high-plank") return "high-plank-hold";
   if (id === "tabletop-toe-taps") return "toe-taps-both";
@@ -87,7 +86,7 @@ const coreGlutesSide = (side: "L" | "R"): ExerciseEntry[] => {
     exercise(`hinge-knee-taps-${side.toLowerCase()}`, `2-Count Hinge + Knee to Block Taps (weights behind head) (${side})`, 40),
     exercise(`b-stance-squats-${side.toLowerCase()}`, `B-Stance Squats (${side})`, 40),
     exercise(`b-stance-pulse-${side.toLowerCase()}`, `B-Stance Squats pulse (${side})`, 20),
-    exercise(`b-stance-hold-curls-${side.toLowerCase()}`, `B-Stance Squats hold + biceps curls (${side})`, 40)
+    exercise(`b-stance-hold-curls-${side.toLowerCase()}`, `B-Stance Squats hold + biceps curls (${side})`, 20)
   ];
 };
 
@@ -95,7 +94,6 @@ const upperBodyMoves = [
   exercise("front-arm-raises", "Front arm raises", 30),
   exercise("side-arm-raises", "Arm raises to the side", 30),
   exercise("bent-over-reverse-fly", "Bent Over Dumbbell Reverse Fly", 30),
-  exercise("serve-the-platter", "Serve the platter", 30),
   exercise("close-grip-push-up", "Close-Grip Push-Up hand on block", 30),
   exercise("close-grip-high-plank", "Close-grip high plank", 30)
 ];
@@ -137,7 +135,7 @@ const sideBody = (side: "L" | "R"): ClassEntry[] => [
 export const matPilatesWeightsBlockLegacy = {
   schemaVersion: 1,
   id: "mat-pilates-weights-block-v1",
-  version: 6,
+  version: 7,
   title: "Block + Weights Mat Pilates V1",
   description: "Focus on mind and body connection, stretch total body, and work full body. Equipment: mat, blocks, and 3 lb weights.",
   visualsDisabled: true,
@@ -178,7 +176,7 @@ export const matPilatesWeightsBlockLegacy = {
       id: "lower-body",
       name: "Circuit #2: lower body",
       items: [
-        rest("lower-body-setup", 60, "Describe the next movements: Go through all movements"),
+        rest("lower-body-setup", 120, "Describe the next movements: Go through all movements"),
         ...withRests("lower-body-left", 10, lowerBodySide("L")).filter((item) =>
           item.id !== "lower-body-left-rest-1"
         ),
@@ -192,7 +190,7 @@ export const matPilatesWeightsBlockLegacy = {
       id: "core-glutes-upper-body",
       name: "Circuit #3: Core + glutes + upper body",
       items: [
-        rest("core-glutes-setup", 60, "Come to tabletop w right knee on block. Describe the next movements: Start with left leg infront, slider under right leg behind"),
+        rest("core-glutes-setup", 120, "Come to tabletop w right knee on block. Describe the next movements: Start with left leg infront, slider under right leg behind"),
         ...coreGlutesWithRests("L"),
         rest("core-glutes-side-switch", 30, "Switch sides."),
         ...coreGlutesWithRests("R")
@@ -201,7 +199,10 @@ export const matPilatesWeightsBlockLegacy = {
     {
       id: "upper-body",
       name: "Circuit #4: upper body",
-      items: withRests("upper-body", 10, upperBodyMoves)
+      items: [
+        rest("circuit-three-end-break", 60, "Rest after Circuit #3 and go over the upper-body circuit."),
+        ...withRests("upper-body", 10, upperBodyMoves)
+      ]
     },
     {
       id: "core",

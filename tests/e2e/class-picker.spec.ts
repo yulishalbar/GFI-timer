@@ -359,14 +359,14 @@ test("opens and starts the weights and block class", async ({ page }) => {
   const classCard = page.getByRole("article").filter({
     has: page.getByRole("heading", { name: "Block + Weights Mat Pilates", exact: true })
   });
-  await expect(classCard).toContainText("58.5 min");
+  await expect(classCard).toContainText("60.2 min");
   await expect(classCard).toContainText("8 phases");
-  await expect(classCard).toContainText("99 steps");
+  await expect(classCard).toContainText("98 steps");
   await expect(classCard).toContainText("Block");
   await expect(classCard).toContainText("Weights");
   await classCard.getByRole("button", { name: "View class" }).click();
 
-  await expect(page.getByLabel("58.5 min total")).toContainText("58:30");
+  await expect(page.getByLabel("60.2 min total")).toContainText("1:00:10");
   await expect(page.getByRole("heading", { name: "Circuit #5: core" })).toBeVisible();
   await page.getByRole("button", { name: "Start class" }).click();
   await expect(page.getByRole("heading", { name: "INTRODUCTION" })).toBeVisible();

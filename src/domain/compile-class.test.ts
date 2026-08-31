@@ -19,8 +19,8 @@ describe("compileClass", () => {
     const compiled = compileClass(matPilatesWeightsBlock);
     const legacy = compileClass(matPilatesWeightsBlockLegacy);
 
-    expect(compiled.steps).toHaveLength(99);
-    expect(compiled.totalDurationMs).toBe(3_510_000);
+    expect(compiled.steps).toHaveLength(98);
+    expect(compiled.totalDurationMs).toBe(3_610_000);
     const playbackFields = ({ durationMs, kind, shortDescription, longDescription }:
       (typeof compiled.steps)[number]) => ({ durationMs, kind, shortDescription, longDescription });
     expect(compiled.steps.map(playbackFields)).toEqual(legacy.steps.map(playbackFields));
@@ -33,7 +33,6 @@ describe("compileClass", () => {
       "Front arm raises",
       "Arm raises to the side",
       "Bent Over Dumbbell Reverse Fly",
-      "Serve the platter",
       "Close-Grip Push-Up hand on block",
       "Close-grip high plank"
     ]);
@@ -54,6 +53,9 @@ describe("compileClass", () => {
       ["Lunge pulses (block under left foot)", 30_000],
       ["Regular squats", 30_000]
     ]);
+    expect(compiled.steps.filter((step) =>
+      step.sourceId.startsWith("b-stance-hold-curls")
+    ).map((step) => step.durationMs)).toEqual([20_000, 20_000]);
     expect(compiled.steps.at(-1)?.name).toBe("Shavasana");
   });
 
