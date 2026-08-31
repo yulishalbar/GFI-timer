@@ -20,6 +20,7 @@ function rigForExercise(id: string): string | undefined {
   if (id === "downward-facing-dog") return "down-dog";
   if (id.startsWith("mermaid") || id.startsWith("t-arms")) return "standing-side-stretch";
   if (id.startsWith("half-moon")) return "single-leg-deadlift-knee-tuck";
+  if (id.startsWith("fire-hydrant-pulses")) return "quadruped-leg-pulse";
   if (id.startsWith("fire-hydrant")) return "quadruped-glute-lift";
   if (id.startsWith("donkey-kick-cross-over")) return "donkey-kick-crossover";
   if (id.startsWith("donkey-kicks")) return "donkey-kick";
@@ -27,20 +28,17 @@ function rigForExercise(id: string): string | undefined {
   if (id.startsWith("lunge-pulses")) return "reverse-lunge-pulse";
   if (id.startsWith("lunge")) return "reverse-lunge";
   if (id.startsWith("squat") || id === "regular-squats") return "squat-to-stand";
-  if (id.startsWith("bird-dog-pushups")) return "knee-push-ups";
+  if (id.startsWith("single-leg-pike")) return "high-plank-alternating-crunch";
   if (id.startsWith("bird-dog-triceps")) return "band-triceps-ups";
-  if (id.startsWith("bird-dogs-pulse")) return "quadruped-leg-pulse";
   if (id.startsWith("bird-dogs")) return "bird-dog";
   if (id.startsWith("ninety-ninety-lunge") || id.startsWith("narrow-press")) return "reverse-lunge";
   if (id.startsWith("hinge-knee-taps")) return "single-leg-deadlift-knee-tuck";
   if (id.startsWith("b-stance")) return "static-single-leg-squat";
   if (id.startsWith("front-arm-raises") || id.startsWith("side-arm-raises")) return "arm-circles";
   if (id.startsWith("bent-over-reverse-fly")) return "superman-flutter";
-  if (id.startsWith("biceps-curls")) return "banded-biceps-curl";
+  if (id === "serve-the-platter") return "serve-the-platter";
   if (id.startsWith("close-grip-push-up")) return "pilates-push-ups";
   if (id === "close-grip-high-plank") return "high-plank-hold";
-  if (id.startsWith("tabletop-leg-lower")) return "one-leg-stretch";
-  if (id.startsWith("tabletop-crunch")) return "criss-cross";
   if (id === "tabletop-toe-taps") return "toe-taps-both";
   if (id === "toe-touches-block" || id === "crunches-block") return "crunch";
   if (id === "cacoons") return "slider-in-outs";
@@ -82,7 +80,7 @@ const coreGlutesSide = (side: "L" | "R"): ExerciseEntry[] => {
   return [
     exercise(`bird-dogs-${side.toLowerCase()}`, `Bird Dogs (${side})`, 40),
     exercise(`bird-dog-triceps-${side.toLowerCase()}`, `Bird dog ${knee} arm triceps extension (${side})`, 40),
-    exercise(`bird-dog-pushups-${side.toLowerCase()}`, `Bird Dog Pushups (${side})`, 40),
+    exercise(`single-leg-pike-${side.toLowerCase()}`, `Single leg pike (${side})`, 40),
     exercise(`ninety-ninety-lunge-${side.toLowerCase()}`, `90/90 Lunge Narrow Press (${side})`, 40,
       `Stepping the ${knee} foot forward into a lunge stance`),
     exercise(`narrow-press-knee-tap-${side.toLowerCase()}`, `Narrow Press + Knee to Block Tap (${side})`, 40),
@@ -97,7 +95,7 @@ const upperBodyMoves = [
   exercise("front-arm-raises", "Front arm raises", 30),
   exercise("side-arm-raises", "Arm raises to the side", 30),
   exercise("bent-over-reverse-fly", "Bent Over Dumbbell Reverse Fly", 30),
-  exercise("biceps-curls", "Biceps curls", 30),
+  exercise("serve-the-platter", "Serve the platter", 30),
   exercise("close-grip-push-up", "Close-Grip Push-Up hand on block", 30),
   exercise("close-grip-high-plank", "Close-grip high plank", 30)
 ];
@@ -131,6 +129,7 @@ const sideBody = (side: "L" | "R"): ClassEntry[] => [
   exercise(`half-moon-crunch-${side.toLowerCase()}`, `Half moon crunch (${side})`, 40, "Hinge at hips"),
   rest(`side-body-${side.toLowerCase()}-rest-two`, 10),
   exercise(`fire-hydrant-${side.toLowerCase()}`, `Fire hydrant (${side})`, 40, "Same hand’s forearms on block, weight behind knee"),
+  exercise(`fire-hydrant-pulses-${side.toLowerCase()}`, `Fire hydrant pulses (${side})`, 20),
   exercise(`donkey-kicks-${side.toLowerCase()}`, `Donkey kicks (${side})`, 40),
   exercise(`donkey-kick-cross-over-${side.toLowerCase()}`, `Donkey kick cross over (${side})`, 40)
 ];
@@ -138,9 +137,10 @@ const sideBody = (side: "L" | "R"): ClassEntry[] => [
 export const matPilatesWeightsBlockLegacy = {
   schemaVersion: 1,
   id: "mat-pilates-weights-block-v1",
-  version: 5,
+  version: 6,
   title: "Block + Weights Mat Pilates V1",
   description: "Focus on mind and body connection, stretch total body, and work full body. Equipment: mat, blocks, and 3 lb weights.",
+  visualsDisabled: true,
   phases: [
     {
       id: "introduction",
@@ -179,7 +179,9 @@ export const matPilatesWeightsBlockLegacy = {
       name: "Circuit #2: lower body",
       items: [
         rest("lower-body-setup", 60, "Describe the next movements: Go through all movements"),
-        ...withRests("lower-body-left", 10, lowerBodySide("L")),
+        ...withRests("lower-body-left", 10, lowerBodySide("L")).filter((item) =>
+          item.id !== "lower-body-left-rest-1"
+        ),
         rest("lower-body-side-switch", 30, "Repeat on right"),
         ...withRests("lower-body-right", 10, lowerBodySide("R")),
         rest("lower-body-squat-setup", 10),
@@ -253,7 +255,10 @@ export const matPilatesWeightsBlockCatalog = {
   }
 };
 
-export const matPilatesWeightsBlock = resolveCourseDefinition(
-  matPilatesWeightsBlockCatalog.catalog,
-  matPilatesWeightsBlockCatalog.course
-);
+export const matPilatesWeightsBlock = {
+  ...resolveCourseDefinition(
+    matPilatesWeightsBlockCatalog.catalog,
+    matPilatesWeightsBlockCatalog.course
+  ),
+  visualsDisabled: true
+} satisfies FitnessClassDefinition;

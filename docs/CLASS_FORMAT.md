@@ -25,6 +25,8 @@ interface FitnessClassDefinition {
   version: number;
   title: string;
   description?: string;
+  /** Suppress exercise rigs and images for a deliberately text-only class. */
+  visualsDisabled?: boolean;
   phases: PhaseDefinition[];
 }
 

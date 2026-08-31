@@ -19,26 +19,29 @@ describe("compileClass", () => {
     const compiled = compileClass(matPilatesWeightsBlock);
     const legacy = compileClass(matPilatesWeightsBlockLegacy);
 
-    expect(compiled.steps).toHaveLength(98);
-    expect(compiled.totalDurationMs).toBe(3_480_000);
+    expect(compiled.steps).toHaveLength(99);
+    expect(compiled.totalDurationMs).toBe(3_510_000);
     const playbackFields = ({ durationMs, kind, shortDescription, longDescription }:
       (typeof compiled.steps)[number]) => ({ durationMs, kind, shortDescription, longDescription });
     expect(compiled.steps.map(playbackFields)).toEqual(legacy.steps.map(playbackFields));
+    expect(compiled.steps.filter((step) => step.kind === "exercise").every((step) =>
+      !step.rig && !step.illustration && !step.motionIllustrations
+    )).toBe(true);
     expect(compiled.steps.filter((step) =>
       step.phase.id === "upper-body" && step.kind === "exercise"
     ).map((step) => step.name)).toEqual([
       "Front arm raises",
       "Arm raises to the side",
       "Bent Over Dumbbell Reverse Fly",
-      "Biceps curls",
+      "Serve the platter",
       "Close-Grip Push-Up hand on block",
       "Close-grip high plank"
     ]);
     expect(compiled.steps.filter((step) =>
       step.phase.id === "side-body" && step.kind === "exercise"
     ).map((step) => step.exerciseReference?.side)).toEqual([
-      ...Array<"left">(8).fill("left"),
-      ...Array<"right">(8).fill("right")
+      ...Array<"left">(9).fill("left"),
+      ...Array<"right">(9).fill("right")
     ]);
     expect(compiled.steps.filter((step) =>
       step.phase.id === "lower-body" && step.kind === "exercise"

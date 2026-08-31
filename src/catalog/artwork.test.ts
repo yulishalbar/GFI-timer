@@ -8,7 +8,9 @@ import { RIG_BY_EXERCISE_NAME } from "../rig/assignments";
 import { IMAGE_PREFERRED } from "./rig-assignments";
 
 const exercises = availableExerciseCatalog.exercises;
-const steps = availableClasses.flatMap((fitnessClass) => fitnessClass.steps).filter((step) => step.kind === "exercise");
+const steps = availableClasses.flatMap((fitnessClass) =>
+  fitnessClass.definition.visualsDisabled ? [] : fitnessClass.steps
+).filter((step) => step.kind === "exercise");
 
 /** The movements drawn from pose data rather than a picture. */
 const migrated = exercises.filter((exercise) => exercise.rig !== undefined);

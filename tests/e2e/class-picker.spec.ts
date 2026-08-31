@@ -359,14 +359,14 @@ test("opens and starts the weights and block class", async ({ page }) => {
   const classCard = page.getByRole("article").filter({
     has: page.getByRole("heading", { name: "Block + Weights Mat Pilates", exact: true })
   });
-  await expect(classCard).toContainText("58 min");
+  await expect(classCard).toContainText("58.5 min");
   await expect(classCard).toContainText("8 phases");
-  await expect(classCard).toContainText("98 steps");
+  await expect(classCard).toContainText("99 steps");
   await expect(classCard).toContainText("Block");
   await expect(classCard).toContainText("Weights");
   await classCard.getByRole("button", { name: "View class" }).click();
 
-  await expect(page.getByLabel("58 min total")).toContainText("58:00");
+  await expect(page.getByLabel("58.5 min total")).toContainText("58:30");
   await expect(page.getByRole("heading", { name: "Circuit #5: core" })).toBeVisible();
   await page.getByRole("button", { name: "Start class" }).click();
   await expect(page.getByRole("heading", { name: "INTRODUCTION" })).toBeVisible();
@@ -376,7 +376,7 @@ test("opens and starts the weights and block class", async ({ page }) => {
   }
   await expect(page.getByRole("heading", { name: "REST" })).toBeVisible();
   const circuitExercises = page.locator(".next-step__circuit li");
-  await expect(circuitExercises).toHaveCount(16);
+  await expect(circuitExercises).toHaveCount(18);
   await expect(circuitExercises.first()).toContainText("Mermaid dip");
   expect(await circuitExercises.first().evaluate((element) =>
     Number.parseFloat(getComputedStyle(element).fontSize)

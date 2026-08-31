@@ -4,6 +4,8 @@ export interface FitnessClassDefinition {
   version: number;
   title: string;
   description?: string;
+  /** Suppress all exercise media for this class while retaining shared catalog visuals. */
+  visualsDisabled?: boolean;
   phases: PhaseDefinition[];
 }
 

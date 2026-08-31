@@ -250,7 +250,7 @@ export function validateClassDefinition(value: unknown): FitnessClassDefinition 
 
   checkAllowedKeys(
     value,
-    ["schemaVersion", "id", "version", "title", "description", "phases"],
+    ["schemaVersion", "id", "version", "title", "description", "visualsDisabled", "phases"],
     "class",
     issues
   );
@@ -262,6 +262,9 @@ export function validateClassDefinition(value: unknown): FitnessClassDefinition 
   checkPositiveInteger(value.version, "class.version", Number.MAX_SAFE_INTEGER, issues);
   checkRequiredText(value.title, "class.title", issues);
   checkOptionalText(value.description, "class.description", issues);
+  if (value.visualsDisabled !== undefined && typeof value.visualsDisabled !== "boolean") {
+    issues.push("class.visualsDisabled: expected a boolean");
+  }
 
   if (!Array.isArray(value.phases) || value.phases.length === 0) {
     issues.push("class.phases: expected at least one phase");

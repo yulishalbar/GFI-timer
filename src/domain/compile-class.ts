@@ -18,6 +18,7 @@ interface WalkContext {
   runtimePath: string;
   roundPath: RuntimeRound[];
   displayContextId: string;
+  visualsDisabled: boolean;
 }
 
 function toDraftStep(entry: Exclude<ClassEntry, { type: "repeat" }>, context: WalkContext): DraftStep {
@@ -38,6 +39,14 @@ function toDraftStep(entry: Exclude<ClassEntry, { type: "repeat" }>, context: Wa
   };
 
   if (entry.type === "exercise") {
+    if (context.visualsDisabled) {
+      return {
+        ...base,
+        ...(entry.shortDescription === undefined ? {} : { shortDescription: entry.shortDescription }),
+        ...(entry.longDescription === undefined ? {} : { longDescription: entry.longDescription }),
+        ...(entry.exerciseReference === undefined ? {} : { exerciseReference: entry.exerciseReference })
+      };
+    }
     // A movement's guide is resolved from its name unless the entry names one
     // itself, so every representation of a class agrees on how it looks. Once a
     // rig applies it is the only source of truth, and the legacy image it
@@ -85,7 +94,8 @@ function expandEntries(entries: readonly ClassEntry[], context: WalkContext, out
         phase: context.phase,
         runtimePath: repeatRuntimePath,
         roundPath: [...context.roundPath, round],
-        displayContextId: repeatRuntimePath
+        displayContextId: repeatRuntimePath,
+        visualsDisabled: context.visualsDisabled
       }, output);
     }
   }
@@ -128,7 +138,8 @@ export function compileClass(input: unknown): CompiledClass {
       phase: runtimePhase,
       runtimePath: phasePath,
       roundPath: [],
-      displayContextId: phasePath
+      displayContextId: phasePath,
+      visualsDisabled: definition.visualsDisabled === true
     }, drafts);
   });
 
