@@ -29,7 +29,6 @@ function rigForExercise(id: string): string | undefined {
   if (id.startsWith("lunge")) return "reverse-lunge";
   if (id.startsWith("squat") || id === "regular-squats") return "squat-to-stand";
   if (id.startsWith("single-leg-pike")) return "high-plank-alternating-crunch";
-  if (id.startsWith("bird-dog-triceps")) return "band-triceps-ups";
   if (id.startsWith("bird-dogs")) return "bird-dog";
   if (id.startsWith("ninety-ninety-lunge") || id.startsWith("narrow-press")) return "reverse-lunge";
   if (id.startsWith("hinge-knee-taps")) return "single-leg-deadlift-knee-tuck";
@@ -78,7 +77,6 @@ const coreGlutesSide = (side: "L" | "R"): ExerciseEntry[] => {
   const knee = side === "L" ? "right" : "left";
   return [
     exercise(`bird-dogs-${side.toLowerCase()}`, `Bird Dogs (${side})`, 40),
-    exercise(`bird-dog-triceps-${side.toLowerCase()}`, `Bird dog ${knee} arm triceps extension (${side})`, 40),
     exercise(`single-leg-pike-${side.toLowerCase()}`, `Single leg pike (${side})`, 40),
     exercise(`ninety-ninety-lunge-${side.toLowerCase()}`, `90/90 Lunge Narrow Press (${side})`, 40,
       `Stepping the ${knee} foot forward into a lunge stance`),
@@ -135,7 +133,7 @@ const sideBody = (side: "L" | "R"): ClassEntry[] => [
 export const matPilatesWeightsBlockLegacy = {
   schemaVersion: 1,
   id: "mat-pilates-weights-block-v1",
-  version: 7,
+  version: 9,
   title: "Block + Weights Mat Pilates V1",
   description: "Focus on mind and body connection, stretch total body, and work full body. Equipment: mat, blocks, and 3 lb weights.",
   visualsDisabled: true,
@@ -209,7 +207,6 @@ export const matPilatesWeightsBlockLegacy = {
       name: "Circuit #5: core",
       items: [
         rest("core-setup", 60, "Sit on mat. Describe the next movements: Go through all movements"),
-        rest("block-between-feet", 30, "Place block between feet"),
         exercise("tabletop-toe-taps", "Tabletop toe taps", 40),
         exercise("toe-touches-block", "Toe touches grabbing block", 40),
         exercise("cacoons", "Cacoons", 40),

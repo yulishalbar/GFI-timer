@@ -19,8 +19,8 @@ describe("compileClass", () => {
     const compiled = compileClass(matPilatesWeightsBlock);
     const legacy = compileClass(matPilatesWeightsBlockLegacy);
 
-    expect(compiled.steps).toHaveLength(98);
-    expect(compiled.totalDurationMs).toBe(3_610_000);
+    expect(compiled.steps).toHaveLength(95);
+    expect(compiled.totalDurationMs).toBe(3_500_000);
     const playbackFields = ({ durationMs, kind, shortDescription, longDescription }:
       (typeof compiled.steps)[number]) => ({ durationMs, kind, shortDescription, longDescription });
     expect(compiled.steps.map(playbackFields)).toEqual(legacy.steps.map(playbackFields));
@@ -53,6 +53,9 @@ describe("compileClass", () => {
       ["Lunge pulses (block under left foot)", 30_000],
       ["Regular squats", 30_000]
     ]);
+    expect(compiled.steps.some((step) => step.sourceId === "bird-dog-triceps-l")).toBe(false);
+    expect(compiled.steps.some((step) => step.sourceId === "bird-dog-triceps-r")).toBe(false);
+    expect(compiled.steps.some((step) => step.sourceId === "block-between-feet")).toBe(false);
     expect(compiled.steps.filter((step) =>
       step.sourceId.startsWith("b-stance-hold-curls")
     ).map((step) => step.durationMs)).toEqual([20_000, 20_000]);
