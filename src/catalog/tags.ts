@@ -11,6 +11,7 @@ export const builtInTags = [
   { id: "mat", label: "Mat", category: "equipment" },
   { id: "band", label: "Band", category: "equipment" },
   { id: "ring", label: "Ring", category: "equipment" },
+  { id: "ball", label: "Pilates Ball", category: "equipment" },
   { id: "sliders", label: "Sliders", category: "equipment" },
   { id: "block", label: "Block", category: "equipment" },
   { id: "weights", label: "Weights", category: "equipment" },

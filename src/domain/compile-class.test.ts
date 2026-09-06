@@ -7,6 +7,7 @@ import {
 } from "../classes/hiit-pilates-sliders";
 import { matPilatesBand, matPilatesBandLegacy } from "../classes/mat-pilates-band";
 import { matPilatesRing } from "../classes/mat-pilates-ring";
+import { matPilatesBall, matPilatesBallLegacy } from "../classes/mat-pilates-ball";
 import {
   matPilatesWeightsBlock,
   matPilatesWeightsBlockLegacy
@@ -15,6 +16,29 @@ import { compileClass } from "./compile-class";
 import { ClassValidationError } from "./validate-class";
 
 describe("compileClass", () => {
+  it("compiles the Pilates ball class to the authored 60-minute timeline", () => {
+    const compiled = compileClass(matPilatesBall);
+    const legacy = compileClass(matPilatesBallLegacy);
+
+    expect(compiled.steps).toHaveLength(100);
+    expect(compiled.totalDurationMs).toBe(3_600_000);
+    expect(compiled.phases).toEqual([
+      { id: "warmup", name: "WARM-UP", index: 1, stepCount: 7, durationMs: 300_000 },
+      { id: "core", name: "CIRCUIT #1: CORE", index: 2, stepCount: 19, durationMs: 560_000 },
+      { id: "glutes", name: "CIRCUIT #2: GLUTES", index: 3, stepCount: 11, durationMs: 480_000 },
+      { id: "lower-body", name: "CIRCUIT #3: LOWER BODY", index: 4, stepCount: 27, durationMs: 1_060_000 },
+      { id: "upper-body", name: "CIRCUIT #4 - UPPER BODY", index: 5, stepCount: 11, durationMs: 230_000 },
+      { id: "side-body", name: "CIRCUIT #5: SIDE BODY", index: 6, stepCount: 15, durationMs: 370_000 },
+      { id: "cooldown", name: "COOLDOWN", index: 7, stepCount: 10, durationMs: 600_000 }
+    ]);
+    const playbackFields = ({ durationMs, kind, shortDescription, longDescription }:
+      (typeof compiled.steps)[number]) => ({ durationMs, kind, shortDescription, longDescription });
+    expect(compiled.steps.map(playbackFields)).toEqual(legacy.steps.map(playbackFields));
+    expect(compiled.steps.filter((step) => step.kind === "rest").every((step) => step.name === "REST"))
+      .toBe(true);
+    expect(compiled.steps.at(-1)?.name).toBe("Shavasana");
+  });
+
   it("compiles the weights and block class with stable totals and catalog equivalence", () => {
     const compiled = compileClass(matPilatesWeightsBlock);
     const legacy = compileClass(matPilatesWeightsBlockLegacy);
