@@ -2556,17 +2556,17 @@ const BASE_RIGS: Readonly<Record<string, RigDefinition>> = {
     ]
   },
 
-  "kickback-hold-pulse": {
-    title: "Kickback hold and pulse",
+  "kickback-to-rdl": {
+    title: "Kickback to RDL",
     box: STANDING_BOX,
-    tempoMs: 650,
+    tempoMs: 3000,
     loop: "pingpong",
     groundY: 196,
     focus: ["legNear"],
-    // The leg never comes back down; it just pulses at the top.
+    // Kick back, then hinge over the softly bent standing leg.
     poses: [
       standingSide({ legNear: [40, 4, 10], spine: 262, legFar: [91, 2, 92] }),
-      standingSide({ legNear: [26, 4, 10], spine: 260, legFar: [91, 2, 92] })
+      standingSide({ legNear: [0, 4, 10], spine: 190, head: 190, legFar: [91, 2, 92] })
     ]
   },
 
@@ -3032,6 +3032,27 @@ function ringVariant(baseId: string, from: JointId, to: JointId): RigDefinition 
   return { ...base, equipment: [{ type: "ring", from, to }] };
 }
 
+function kneePushUpsToPike(): RigDefinition {
+  const base = BASE_RIGS["knee-push-ups"];
+  const top = base?.poses?.[0];
+  const bottom = base?.poses?.[1];
+  if (!base || !top || !bottom || !top.ikArmNear || !top.ikArmFar) {
+    throw new Error("Missing knee push-up poses or hand targets");
+  }
+  return {
+    ...base,
+    title: "Knee push-ups to pike",
+    tempoMs: 4000,
+    loop: "cycle",
+    poses: [bottom, top, {
+      ...DOWN_DOG,
+      ikArmNear: top.ikArmNear,
+      ikArmFar: top.ikArmFar,
+      ikArmBend: 1
+    }, top]
+  };
+}
+
 /**
  * Ring-course variants keep the reusable body motion while replacing borrowed
  * band/no-equipment visuals with the Pilates circle used by that placement.
@@ -3040,6 +3061,7 @@ function ringVariant(baseId: string, from: JointId, to: JointId): RigDefinition 
  */
 export const RIGS: Readonly<Record<string, RigDefinition>> = {
   ...BASE_RIGS,
+  "knee-push-ups-to-pike": kneePushUpsToPike(),
   "ring-standing-side-stretch": ringVariant("standing-side-stretch", "wristNear", "wristFar"),
   "ring-roll-ups": ringVariant("roll-ups", "wristNear", "wristFar"),
   "ring-band-hold-out": ringVariant("band-hold-out", "wristNear", "wristFar"),

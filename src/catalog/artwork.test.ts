@@ -80,6 +80,10 @@ describe("exercise artwork", () => {
 
   it("ships no pose data the catalog never uses", () => {
     const used = new Set([...exercises, ...steps].flatMap((item) => (item.rig ? [item.rig] : [])));
+    // The original push-up poses also supply the pike combination and ring variant.
+    if (used.has("knee-push-ups-to-pike") || used.has("ring-assisted-knee-push-ups")) {
+      used.add("knee-push-ups");
+    }
     Object.keys(RIGS).forEach((id) => {
       expect(used.has(id), `rig "${id}" is authored but no exercise uses it`).toBe(true);
     });

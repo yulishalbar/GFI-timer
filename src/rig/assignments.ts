@@ -20,6 +20,8 @@ export const RIG_BY_EXERCISE_NAME: Readonly<Record<string, string>> = {
   "High plank opening to a side planks (alternating)": "high-plank-side-plank-open",
   "High-plank alternating crunch": "high-plank-alternating-crunch",
   "Pilates push-ups": "pilates-push-ups",
+  "Bird dogs": "bird-dog",
+  "Knee push-ups to pike": "knee-push-ups-to-pike",
   "Knee push-ups": "knee-push-ups",
 
   // Prone back extension
@@ -142,7 +144,7 @@ export const RIG_BY_EXERCISE_NAME: Readonly<Record<string, string>> = {
   "Reverse lunge": "reverse-lunge",
   "Reverse-lunge pulse": "reverse-lunge-pulse",
   "Standing kickback": "standing-kickback",
-  "Kickback hold and pulse": "kickback-hold-pulse",
+  "Kickback to RDL": "kickback-to-rdl",
   "Side to back kick": "side-to-back-kick",
   "Single-leg deadlift (SLDL) to knee tuck": "single-leg-deadlift-knee-tuck",
   "Knee pulls alternating legs": "standing-knee-pulls",

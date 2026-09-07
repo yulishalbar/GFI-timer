@@ -1,3 +1,5 @@
+> Current app schedule revision (September 7, 2026): glute exercises are 30 seconds and all glute pulses are 20 seconds, including the final bridge pulses. Circuit 3 completes bird dogs then extension and crunch on the right, then both on the left (40 seconds each, with 10-second rests). Knee push-ups become knee push-ups to pike; the high-plank hold is 20 seconds. Lower-body kickback holds/pulses become kickback to RDL on each side (30 seconds). The side-body switching break is 30 seconds, and tricep push-ups and forearm side planks are 30 seconds on each side. The compiled class is 60 minutes 20 seconds. Original source notes follow.
+
 ## **60 MIN MAT PILATES-** WARM UP, CORE, ARMS, GLUTES, LOWER BODY, & COOL DOWN
 
 ---

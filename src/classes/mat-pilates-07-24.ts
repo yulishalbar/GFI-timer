@@ -7,7 +7,7 @@ import { resolveCourseDefinition } from "../domain/resolve-course";
 export const matPilates0724Legacy = {
   schemaVersion: 1,
   id: "mat-pilates-07-24-v1",
-  version: 3,
+  version: 4,
   title: "Mat Pilates — July 24 V1",
   description:
     "A full-body mat class with warmup, core, glutes, lower body, side body, and cooldown. Mat required.",
@@ -149,15 +149,15 @@ export const matPilates0724Legacy = {
       name: "Circuit 2 — Glutes",
       items: [
         { type: "rest", id: "glutes-setup", name: "REST", durationSeconds: 60, shortDescription: "Explain that the circuit has no breaks." },
-        { type: "exercise", id: "bridge-one", name: "Full-range glute bridge", durationSeconds: 40, shortDescription: "Feet planted hip-width.", longDescription: "Drive through the heels to lift the hips and squeeze the glutes; lower with control.", illustration: "exercises/glute-bridge.svg" },
-        { type: "exercise", id: "bridge-knee-drive-right", name: "Bridge with knee drive — right", durationSeconds: 40, shortDescription: "Keep the hips lifted.", longDescription: "Lift the bent right knee while squeezing the left glute, lower, and repeat. Regression: regular bridges." },
-        { type: "exercise", id: "bridge-pulse-right", name: "Bridge knee-drive pulses — right", durationSeconds: 40, shortDescription: "Keep the right leg lifted.", longDescription: "Pulse the lifted leg without letting the hips lower." },
+        { type: "exercise", id: "bridge-one", name: "Full-range glute bridge", durationSeconds: 30, shortDescription: "Feet planted hip-width.", longDescription: "Drive through the heels to lift the hips and squeeze the glutes; lower with control.", illustration: "exercises/glute-bridge.svg" },
+        { type: "exercise", id: "bridge-knee-drive-right", name: "Bridge with knee drive — right", durationSeconds: 30, shortDescription: "Keep the hips lifted.", longDescription: "Lift the bent right knee while squeezing the left glute, lower, and repeat. Regression: regular bridges." },
+        { type: "exercise", id: "bridge-pulse-right", name: "Bridge knee-drive pulses — right", durationSeconds: 20, shortDescription: "Keep the right leg lifted.", longDescription: "Pulse the lifted leg without letting the hips lower." },
         { type: "rest", id: "bridge-side-rest", name: "REST", durationSeconds: 20 },
-        { type: "exercise", id: "bridge-two", name: "Full-range glute bridge", durationSeconds: 40, shortDescription: "Return both feet to the mat.", longDescription: "Drive through the heels to lift the hips and squeeze the glutes; lower with control." },
-        { type: "exercise", id: "bridge-knee-drive-left", name: "Bridge with knee drive — left", durationSeconds: 40, shortDescription: "Keep the hips lifted.", longDescription: "Lift the bent left knee while squeezing the right glute, lower, and repeat. Regression: regular bridges." },
-        { type: "exercise", id: "bridge-pulse-left", name: "Bridge knee-drive pulses — left", durationSeconds: 40, shortDescription: "Keep the left leg lifted.", longDescription: "Pulse the lifted leg without letting the hips lower." },
-        { type: "exercise", id: "bridge-three", name: "Full-range glute bridge", durationSeconds: 40, shortDescription: "Return both feet to the mat.", longDescription: "Drive through the heels to lift the hips and squeeze the glutes; lower with control." },
-        { type: "exercise", id: "bridge-pulses", name: "Glute bridge pulses", durationSeconds: 40, shortDescription: "Stay lifted, then finish seated.", longDescription: "Use small pulses at the top while maintaining constant tension." }
+        { type: "exercise", id: "bridge-two", name: "Full-range glute bridge", durationSeconds: 30, shortDescription: "Return both feet to the mat.", longDescription: "Drive through the heels to lift the hips and squeeze the glutes; lower with control." },
+        { type: "exercise", id: "bridge-knee-drive-left", name: "Bridge with knee drive — left", durationSeconds: 30, shortDescription: "Keep the hips lifted.", longDescription: "Lift the bent left knee while squeezing the right glute, lower, and repeat. Regression: regular bridges." },
+        { type: "exercise", id: "bridge-pulse-left", name: "Bridge knee-drive pulses — left", durationSeconds: 20, shortDescription: "Keep the left leg lifted.", longDescription: "Pulse the lifted leg without letting the hips lower." },
+        { type: "exercise", id: "bridge-three", name: "Full-range glute bridge", durationSeconds: 30, shortDescription: "Return both feet to the mat.", longDescription: "Drive through the heels to lift the hips and squeeze the glutes; lower with control." },
+        { type: "exercise", id: "bridge-pulses", name: "Glute bridge pulses", durationSeconds: 20, shortDescription: "Stay lifted, then finish seated.", longDescription: "Use small pulses at the top while maintaining constant tension." }
       ]
     },
     {
@@ -169,15 +169,19 @@ export const matPilates0724Legacy = {
         { type: "rest", id: "rest-after-superman", name: "REST", durationSeconds: 10 },
         { type: "exercise", id: "superman-flutter", name: "Superman hold with flutter arms", durationSeconds: 40, shortDescription: "Hold the lifted position.", longDescription: "Keep the chest and legs elevated while making small alternating arm lifts. Regression: regular superman repetitions." },
         { type: "rest", id: "rest-after-superman-flutter", name: "REST", durationSeconds: 10, shortDescription: "Take child's pose, then come to tabletop." },
+        { type: "exercise", id: "bird-dog-extension-right", name: "Bird dogs — right", durationSeconds: 40, shortDescription: "Hands under shoulders and knees under hips.", longDescription: "Extend the right leg and left arm, then return to tabletop with control. Keep the hips square and repeat on the same side." },
+        { type: "rest", id: "rest-after-bird-dog-extension-right", name: "REST", durationSeconds: 10, shortDescription: "Stay on the same side and prepare to add the crunch." },
         { type: "exercise", id: "bird-dog-right", name: "Bird-dog extension and crunch — right", durationSeconds: 40, shortDescription: "Hands under shoulders and knees under hips.", longDescription: "Extend opposite arm and leg, then exhale to draw elbow and knee together under the body." },
         { type: "rest", id: "rest-after-bird-dog-right", name: "REST", durationSeconds: 10, shortDescription: "Switch sides." },
+        { type: "exercise", id: "bird-dog-extension-left", name: "Bird dogs — left", durationSeconds: 40, shortDescription: "Hands under shoulders and knees under hips.", longDescription: "Extend the left leg and right arm, then return to tabletop with control. Keep the hips square and repeat on the same side." },
+        { type: "rest", id: "rest-after-bird-dog-extension-left", name: "REST", durationSeconds: 10, shortDescription: "Stay on the same side and prepare to add the crunch." },
         { type: "exercise", id: "bird-dog-left", name: "Bird-dog extension and crunch — left", durationSeconds: 40, shortDescription: "Stay in tabletop with the core engaged.", longDescription: "Extend opposite arm and leg, then exhale to draw elbow and knee together under the body." },
         { type: "rest", id: "rest-after-bird-dog-left", name: "REST", durationSeconds: 10, shortDescription: "Shift forward with the knees down." },
-        { type: "exercise", id: "knee-push-ups", name: "Knee push-ups", durationSeconds: 40, shortDescription: "Keep a straight line from knees through shoulders.", longDescription: "Lower the chest toward the floor and press back up. Progression: full push-ups or a slower lowering phase." },
+        { type: "exercise", id: "knee-push-ups", name: "Knee push-ups to pike", durationSeconds: 40, shortDescription: "Begin with knees down and a straight line from knees through shoulders.", longDescription: "Lower the chest toward the floor and press back up. Tuck the toes, lift the knees, and send the hips up and back into a pike. Lower the knees and repeat with control." },
         { type: "rest", id: "rest-after-knee-push-ups", name: "REST", durationSeconds: 10, shortDescription: "Lift the knees into high plank." },
         { type: "exercise", id: "plank-crunch", name: "High-plank alternating crunch", durationSeconds: 40, shortDescription: "Hands under shoulders and core braced.", longDescription: "Drive one knee toward the chest or elbow and alternate. Regression: slow march or hold plank." },
         { type: "rest", id: "rest-after-plank-crunch", name: "REST", durationSeconds: 10 },
-        { type: "exercise", id: "high-plank-hold", name: "High-plank hold", durationSeconds: 40, shortDescription: "Finish on the knees, take water, then stand.", longDescription: "Hold a neutral spine with steady breathing. Regression: bear hold or lower the knees.", illustration: "exercises/high-plank.svg" }
+        { type: "exercise", id: "high-plank-hold", name: "High-plank hold", durationSeconds: 20, shortDescription: "Finish on the knees, take water, then stand.", longDescription: "Hold a neutral spine with steady breathing. Regression: bear hold or lower the knees.", illustration: "exercises/high-plank.svg" }
       ]
     },
     {
@@ -192,7 +196,7 @@ export const matPilates0724Legacy = {
         { type: "exercise", id: "reverse-lunge-pulse-right", name: "Reverse-lunge pulse — right", durationSeconds: 30, shortDescription: "Stay in the lunge with the chest lifted." },
         { type: "rest", id: "rest-after-lunge-pulse-right", name: "REST", durationSeconds: 10 },
         { type: "exercise", id: "kickback-right", name: "Standing kickback — right", durationSeconds: 30, shortDescription: "Shift weight into the left leg.", longDescription: "Extend the right leg back with square hips, squeeze the glute, and return slowly." },
-        { type: "exercise", id: "kickback-pulse-right", name: "Kickback hold and pulse — right", durationSeconds: 30, shortDescription: "Hold the right leg back and pulse." },
+        { type: "exercise", id: "kickback-pulse-right", name: "Kickback to RDL — right", durationSeconds: 30, shortDescription: "Shift weight into the left leg.", longDescription: "Kick the right leg back, then hinge forward into a single-leg Romanian deadlift with that leg extended behind you. Keep the standing knee soft and hips square; return upright with control and repeat." },
         { type: "rest", id: "lower-body-side-break", name: "REST", durationSeconds: 30, shortDescription: "Switch sides." },
         { type: "exercise", id: "squat-to-stand-left", name: "Squat to stand — left round", durationSeconds: 30, shortDescription: "Feet hip-width.", longDescription: "Sit the hips back, then stand and squeeze the glutes." },
         { type: "exercise", id: "squat-pulse-left", name: "Squat pulse — left round", durationSeconds: 30, shortDescription: "Stay low with weight in the heels." },
@@ -201,7 +205,7 @@ export const matPilates0724Legacy = {
         { type: "exercise", id: "reverse-lunge-pulse-left", name: "Reverse-lunge pulse — left", durationSeconds: 30, shortDescription: "Stay in the lunge with the chest lifted." },
         { type: "rest", id: "rest-after-lunge-pulse-left", name: "REST", durationSeconds: 10 },
         { type: "exercise", id: "kickback-left", name: "Standing kickback — left", durationSeconds: 30, shortDescription: "Shift weight into the right leg.", longDescription: "Extend the left leg back with square hips, squeeze the glute, and return slowly." },
-        { type: "exercise", id: "kickback-pulse-left", name: "Kickback hold and pulse — left", durationSeconds: 30, shortDescription: "Hold the left leg back and pulse." }
+        { type: "exercise", id: "kickback-pulse-left", name: "Kickback to RDL — left", durationSeconds: 30, shortDescription: "Shift weight into the right leg.", longDescription: "Kick the left leg back, then hinge forward into a single-leg Romanian deadlift with that leg extended behind you. Keep the standing knee soft and hips square; return upright with control and repeat." }
       ]
     },
     {
@@ -219,22 +223,22 @@ export const matPilates0724Legacy = {
         { type: "rest", id: "rest-after-small-leg-circles-left", name: "REST", durationSeconds: 10 },
         { type: "exercise", id: "straight-leg-crunch-left", name: "Straight leg crunches (L)", durationSeconds: 40, shortDescription: "Come onto the forearm and plant the bent top foot.", longDescription: "Keep the lower leg straight. Exhale to lift it toward the chest and crunch the opposite elbow toward it. Inhale to lower and repeat." },
         { type: "rest", id: "rest-after-straight-leg-crunch-left", name: "REST", durationSeconds: 10 },
-        { type: "exercise", id: "tricep-push-up-left", name: "Tricep side push-up (L)", durationSeconds: 40, shortDescription: "Top hand comes to the mat; the lower forearm crosses the belly.", longDescription: "Exhale to push away from the mat using the triceps; inhale to lower. Regression: rest at the bottom." },
+        { type: "exercise", id: "tricep-push-up-left", name: "Tricep side push-up (L)", durationSeconds: 30, shortDescription: "Top hand comes to the mat; the lower forearm crosses the belly.", longDescription: "Exhale to push away from the mat using the triceps; inhale to lower. Regression: rest at the bottom." },
         { type: "rest", id: "rest-after-tricep-push-up-left", name: "REST", durationSeconds: 10 },
-        { type: "exercise", id: "side-plank-left", name: "Forearm side plank (L)", durationSeconds: 40, shortDescription: "Forearm under shoulder; legs stacked or staggered.", longDescription: "Lift the hips and hold a strong line from head to feet. Regression: knee side plank. Progression: side plank on the hand." },
+        { type: "exercise", id: "side-plank-left", name: "Forearm side plank (L)", durationSeconds: 30, shortDescription: "Forearm under shoulder; legs stacked or staggered.", longDescription: "Lift the hips and hold a strong line from head to feet. Regression: knee side plank. Progression: side plank on the hand." },
         { type: "rest", id: "rest-before-bottom-leg-right", name: "REST", durationSeconds: 20 },
         { type: "exercise", id: "bottom-leg-lifts-right", name: "Bottom leg lifts (R)", durationSeconds: 40, shortDescription: "Keep the bottom leg straight.", longDescription: "Exhale and lift the bottom leg toward the ceiling. Inhale and lower with control without fully resting." },
         { type: "exercise", id: "bottom-leg-pulses-right", name: "Bottom leg pulses (R)", durationSeconds: 40, shortDescription: "Hold the bottom leg lifted.", longDescription: "Use small controlled pulses upward. Keep hips stacked and core engaged." },
         { type: "exercise", id: "inner-thigh-circles-right", name: "Inner thigh circles (R)", durationSeconds: 40, shortDescription: "Reverse direction after 20 seconds.", longDescription: "Keep the bottom leg lifted and draw small circles." },
         { type: "exercise", id: "double-leg-lift-right", name: "Double-leg lift", durationSeconds: 40, shortDescription: "Lie fully on the side with legs together.", longDescription: "Squeeze the legs together and lift both legs off the mat. Lower slowly. Great for inner thighs and obliques." },
-        { type: "rest", id: "side-body-side-break", name: "REST", durationSeconds: 20, shortDescription: "Roll over and set up on the opposite side." },
+        { type: "rest", id: "side-body-side-break", name: "REST", durationSeconds: 30, shortDescription: "Roll over and set up on the opposite side." },
         { type: "exercise", id: "leg-lift-right", name: "Leg lift (R)", durationSeconds: 40, shortDescription: "Bottom leg bent or straight; top leg long.", longDescription: "Exhale, lift the top leg with control, lower slowly and keep hips stacked. Regression: reduce the range or keep the bottom knee bent.", illustration: "exercises/side-lying-leg-series.svg" },
         { type: "exercise", id: "big-leg-circles-right", name: "Big leg circles (R)", durationSeconds: 40, shortDescription: "Reverse direction after 20 seconds.", longDescription: "Draw large controlled circles while keeping the hips stable. Regression: keep a soft bend in the knee. Progression: increase circle size or use a slower tempo." },
         { type: "exercise", id: "forward-back-kick-right", name: "Forward and back kick (R)", durationSeconds: 40, shortDescription: "Stay on the side with the top leg lifted.", longDescription: "Flex the foot, exhale and kick the leg forward twice; inhale, point the foot and extend it all the way back." },
         { type: "exercise", id: "small-leg-circles-right", name: "Small leg circle pulses (R)", durationSeconds: 40, shortDescription: "Reverse direction after 20 seconds.", longDescription: "Draw small tight circles, 20 seconds in each direction, maintaining constant tension." },
         { type: "exercise", id: "straight-leg-crunch-right", name: "Straight leg crunches (R)", durationSeconds: 40, shortDescription: "Come onto the forearm and plant the bent top foot.", longDescription: "Keep the lower leg straight. Exhale to lift it toward the chest and crunch the opposite elbow toward it. Inhale to lower and repeat." },
-        { type: "exercise", id: "tricep-push-up-right", name: "Tricep side push-up (R)", durationSeconds: 40, shortDescription: "Top hand comes to the mat; the lower forearm crosses the belly.", longDescription: "Exhale to push away from the mat using the triceps; inhale to lower. Regression: rest at the bottom." },
-        { type: "exercise", id: "side-plank-right", name: "Forearm side plank (R)", durationSeconds: 40, shortDescription: "Forearm under shoulder; legs stacked or staggered.", longDescription: "Lift the hips and hold a strong line from head to feet. Regression: knee side plank. Progression: side plank on the hand." },
+        { type: "exercise", id: "tricep-push-up-right", name: "Tricep side push-up (R)", durationSeconds: 30, shortDescription: "Top hand comes to the mat; the lower forearm crosses the belly.", longDescription: "Exhale to push away from the mat using the triceps; inhale to lower. Regression: rest at the bottom." },
+        { type: "exercise", id: "side-plank-right", name: "Forearm side plank (R)", durationSeconds: 30, shortDescription: "Forearm under shoulder; legs stacked or staggered.", longDescription: "Lift the hips and hold a strong line from head to feet. Regression: knee side plank. Progression: side plank on the hand." },
         { type: "rest", id: "rest-before-bottom-leg-left", name: "REST", durationSeconds: 20 },
         { type: "exercise", id: "bottom-leg-lifts-left", name: "Bottom leg lifts (L)", durationSeconds: 40, shortDescription: "Keep the bottom leg straight.", longDescription: "Exhale and lift the bottom leg toward the ceiling. Inhale and lower with control without fully resting." },
         { type: "exercise", id: "bottom-leg-pulses-left", name: "Bottom leg pulses (L)", durationSeconds: 40, shortDescription: "Hold the bottom leg lifted.", longDescription: "Use small controlled pulses upward. Keep hips stacked and core engaged." },
@@ -270,7 +274,7 @@ export const matPilates0724Catalog = {
   course: {
     ...adapted0724.course,
     id: "mat-pilates-07-24",
-    version: 4,
+    version: 5,
     title: "Mat Pilates — July 24"
   }
 };
