@@ -89,8 +89,8 @@ describe("compileClass", () => {
   it("expands phases and repeated rounds in authored order", () => {
     const compiled = compileClass(matPilates0724);
 
-    expect(compiled.steps).toHaveLength(104);
-    expect(compiled.totalDurationMs).toBe(3_620_000);
+    expect(compiled.steps).toHaveLength(100);
+    expect(compiled.totalDurationMs).toBe(3_420_000);
     expect(compiled.phases).toEqual([
       { id: "introduction", name: "Introduction", index: 1, stepCount: 1, durationMs: 120_000 },
       { id: "warmup", name: "Warm-Up", index: 2, stepCount: 6, durationMs: 240_000 },
@@ -98,7 +98,7 @@ describe("compileClass", () => {
       { id: "glutes-circuit", name: "Circuit 2 — Glutes", index: 4, stepCount: 10, durationMs: 290_000 },
       { id: "posterior-core-circuit", name: "Circuit 3 — Core, Glutes, and Back", index: 5, stepCount: 18, durationMs: 480_000 },
       { id: "lower-body-circuit", name: "Circuit 4 — Lower Body", index: 6, stepCount: 18, durationMs: 490_000 },
-      { id: "side-body-circuit", name: "Circuit 5 — Side Body", index: 7, stepCount: 32, durationMs: 1_030_000 },
+      { id: "side-body-circuit", name: "Circuit 5 — Side Body", index: 7, stepCount: 28, durationMs: 830_000 },
       { id: "cooldown", name: "Cooldown", index: 8, stepCount: 8, durationMs: 660_000 }
     ]);
 
@@ -110,7 +110,7 @@ describe("compileClass", () => {
 
   it("applies the July 24 circuit timing and same-side bird-dog progression", () => {
     const { steps, definition } = compileClass(matPilates0724);
-    expect(definition.version).toBe(5);
+    expect(definition.version).toBe(6);
     const step = (id: string) => steps.find((entry) => entry.sourceId === id);
     expect(steps.filter((entry) => entry.phase.id === "glutes-circuit" && entry.kind === "exercise")
       .map((entry) => entry.durationMs)).toEqual([
@@ -124,9 +124,14 @@ describe("compileClass", () => {
         ["Bird-dog extension and crunch", "left", 40_000]
       ]);
     expect(step("knee-push-ups")).toMatchObject({ name: "Knee push-ups to pike", durationMs: 40_000 });
-    expect(step("high-plank-hold")?.durationMs).toBe(20_000);
+    expect(step("plank-crunch")).toMatchObject({ name: "Low-plank opening to the sides", durationMs: 40_000, rig: "low-plank-side-open" });
+    expect(step("high-plank-hold")).toMatchObject({ name: "Low-plank hold", durationMs: 20_000, rig: "low-plank-hold" });
     expect(step("side-body-side-break")?.durationMs).toBe(30_000);
     for (const side of ["left", "right"]) {
+      expect(step(`bottom-leg-lifts-${side}`)?.durationMs).toBe(30_000);
+      expect(step(`bottom-leg-pulses-${side}`)?.durationMs).toBe(30_000);
+      expect(step(`inner-thigh-circles-${side}`)).toBeUndefined();
+      expect(step(`double-leg-lift-${side}`)).toBeUndefined();
       expect(step(`kickback-pulse-${side}`)).toMatchObject({ name: "Kickback to RDL", durationMs: 30_000 });
       expect(step(`tricep-push-up-${side}`)?.durationMs).toBe(30_000);
       expect(step(`side-plank-${side}`)?.durationMs).toBe(30_000);

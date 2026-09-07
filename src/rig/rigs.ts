@@ -514,6 +514,41 @@ const BASE_RIGS: Readonly<Record<string, RigDefinition>> = {
     ]
   },
 
+  "low-plank-hold": {
+    title: "Low-plank hold",
+    box: FLOOR_BOX,
+    tempoMs: 0,
+    loop: "cycle",
+    groundY: 170,
+    ghost: false,
+    poses: [plank({ hip: [174, 150], spine: 188, head: 174,
+      armNear: [90, 90, 0], armFar: [90, 90, 0],
+      legNear: [10, 0, 40], legFar: [10, 0, 40] })]
+  },
+
+  "low-plank-side-open": {
+    title: "Low-plank opening to the sides",
+    box: "32 40 256 144",
+    tempoMs: 4000,
+    loop: "cycle",
+    groundY: 170,
+    focus: ["armNear", "armFar"],
+    poses: [
+      plank({ hip: [174, 150], spine: 188, head: 166, shoulderSpread: 4,
+        armNear: [268, 0, 0], armFar: [90, 90, 0],
+        legNear: [10, 0, 40], legFar: [10, 0, 40] }),
+      plank({ hip: [174, 150], spine: 188, head: 174,
+        armNear: [90, 90, 0], armFar: [90, 90, 0],
+        legNear: [10, 0, 40], legFar: [10, 0, 40] }),
+      plank({ hip: [174, 150], spine: 188, head: 166, shoulderSpread: 4,
+        armNear: [90, 90, 0], armFar: [268, 0, 0],
+        legNear: [10, 0, 40], legFar: [10, 0, 40] }),
+      plank({ hip: [174, 150], spine: 188, head: 174,
+        armNear: [90, 90, 0], armFar: [90, 90, 0],
+        legNear: [10, 0, 40], legFar: [10, 0, 40] })
+    ]
+  },
+
   "high-plank-alternating-crunch": {
     title: "High-plank alternating crunch",
     box: FLOOR_BOX,
@@ -1851,29 +1886,6 @@ const BASE_RIGS: Readonly<Record<string, RigDefinition>> = {
       sideLying({ legNear: [-40, 54, -10], legFar: [-12, 2, -14] }),
       sideLying({ legNear: [-40, 54, -10], legFar: [-22, 2, -14] })
     ]
-  },
-
-  "inner-thigh-circles": {
-    title: "Inner thigh circles",
-    box: SIDE_LYING_BOX,
-    view: "lying",
-    tempoMs: 2400,
-    loop: "cycle",
-    groundY: 152,
-    focus: ["legFar"],
-    trace: "ankleFar",
-    // The bottom leg stays lifted and draws the circle; the top leg is parked.
-    // Drawn wider than the movement literally is: at the size this renders on a
-    // phone, a true-to-life circle for the bottom leg was a few pixels across
-    // and read as a leg holding still.
-    poses: [0, 1, 2, 3, 4, 5].map((index) => {
-      const t = (index / 6) * Math.PI * 2;
-      return sideLying({
-        legNear: [-40, 54, -10],
-        ikBendFar: 1,
-        ikLegFar: sideLyingFoot(-14 - 15 * Math.cos(t), 66 + 6 * Math.sin(t))
-      });
-    }) as [Pose, ...Pose[]]
   },
 
   "double-leg-lift": {

@@ -7,7 +7,7 @@ import { resolveCourseDefinition } from "../domain/resolve-course";
 export const matPilates0724Legacy = {
   schemaVersion: 1,
   id: "mat-pilates-07-24-v1",
-  version: 4,
+  version: 5,
   title: "Mat Pilates — July 24 V1",
   description:
     "A full-body mat class with warmup, core, glutes, lower body, side body, and cooldown. Mat required.",
@@ -178,10 +178,10 @@ export const matPilates0724Legacy = {
         { type: "exercise", id: "bird-dog-left", name: "Bird-dog extension and crunch — left", durationSeconds: 40, shortDescription: "Stay in tabletop with the core engaged.", longDescription: "Extend opposite arm and leg, then exhale to draw elbow and knee together under the body." },
         { type: "rest", id: "rest-after-bird-dog-left", name: "REST", durationSeconds: 10, shortDescription: "Shift forward with the knees down." },
         { type: "exercise", id: "knee-push-ups", name: "Knee push-ups to pike", durationSeconds: 40, shortDescription: "Begin with knees down and a straight line from knees through shoulders.", longDescription: "Lower the chest toward the floor and press back up. Tuck the toes, lift the knees, and send the hips up and back into a pike. Lower the knees and repeat with control." },
-        { type: "rest", id: "rest-after-knee-push-ups", name: "REST", durationSeconds: 10, shortDescription: "Lift the knees into high plank." },
-        { type: "exercise", id: "plank-crunch", name: "High-plank alternating crunch", durationSeconds: 40, shortDescription: "Hands under shoulders and core braced.", longDescription: "Drive one knee toward the chest or elbow and alternate. Regression: slow march or hold plank." },
+        { type: "rest", id: "rest-after-knee-push-ups", name: "REST", durationSeconds: 10, shortDescription: "Lower onto the forearms and lift the knees into low plank." },
+        { type: "exercise", id: "plank-crunch", name: "Low-plank opening to the sides", durationSeconds: 40, shortDescription: "Forearms on the mat, elbows under shoulders, and core braced.", longDescription: "Rotate from low plank into a forearm side plank, opening the chest and reaching the top arm up. Return to center and repeat on the other side. Regression: lower the knees." },
         { type: "rest", id: "rest-after-plank-crunch", name: "REST", durationSeconds: 10 },
-        { type: "exercise", id: "high-plank-hold", name: "High-plank hold", durationSeconds: 20, shortDescription: "Finish on the knees, take water, then stand.", longDescription: "Hold a neutral spine with steady breathing. Regression: bear hold or lower the knees.", illustration: "exercises/high-plank.svg" }
+        { type: "exercise", id: "high-plank-hold", name: "Low-plank hold", durationSeconds: 20, shortDescription: "Forearms grounded and elbows under shoulders. Finish on the knees, take water, then stand.", longDescription: "Keep a straight line from head to heels with the core engaged and breathe steadily. Regression: lower the knees." }
       ]
     },
     {
@@ -227,10 +227,8 @@ export const matPilates0724Legacy = {
         { type: "rest", id: "rest-after-tricep-push-up-left", name: "REST", durationSeconds: 10 },
         { type: "exercise", id: "side-plank-left", name: "Forearm side plank (L)", durationSeconds: 30, shortDescription: "Forearm under shoulder; legs stacked or staggered.", longDescription: "Lift the hips and hold a strong line from head to feet. Regression: knee side plank. Progression: side plank on the hand." },
         { type: "rest", id: "rest-before-bottom-leg-right", name: "REST", durationSeconds: 20 },
-        { type: "exercise", id: "bottom-leg-lifts-right", name: "Bottom leg lifts (R)", durationSeconds: 40, shortDescription: "Keep the bottom leg straight.", longDescription: "Exhale and lift the bottom leg toward the ceiling. Inhale and lower with control without fully resting." },
-        { type: "exercise", id: "bottom-leg-pulses-right", name: "Bottom leg pulses (R)", durationSeconds: 40, shortDescription: "Hold the bottom leg lifted.", longDescription: "Use small controlled pulses upward. Keep hips stacked and core engaged." },
-        { type: "exercise", id: "inner-thigh-circles-right", name: "Inner thigh circles (R)", durationSeconds: 40, shortDescription: "Reverse direction after 20 seconds.", longDescription: "Keep the bottom leg lifted and draw small circles." },
-        { type: "exercise", id: "double-leg-lift-right", name: "Double-leg lift", durationSeconds: 40, shortDescription: "Lie fully on the side with legs together.", longDescription: "Squeeze the legs together and lift both legs off the mat. Lower slowly. Great for inner thighs and obliques." },
+        { type: "exercise", id: "bottom-leg-lifts-right", name: "Bottom leg lifts (R)", durationSeconds: 30, shortDescription: "Keep the bottom leg straight.", longDescription: "Exhale and lift the bottom leg toward the ceiling. Inhale and lower with control without fully resting." },
+        { type: "exercise", id: "bottom-leg-pulses-right", name: "Bottom leg pulses (R)", durationSeconds: 30, shortDescription: "Hold the bottom leg lifted.", longDescription: "Use small controlled pulses upward. Keep hips stacked and core engaged." },
         { type: "rest", id: "side-body-side-break", name: "REST", durationSeconds: 30, shortDescription: "Roll over and set up on the opposite side." },
         { type: "exercise", id: "leg-lift-right", name: "Leg lift (R)", durationSeconds: 40, shortDescription: "Bottom leg bent or straight; top leg long.", longDescription: "Exhale, lift the top leg with control, lower slowly and keep hips stacked. Regression: reduce the range or keep the bottom knee bent.", illustration: "exercises/side-lying-leg-series.svg" },
         { type: "exercise", id: "big-leg-circles-right", name: "Big leg circles (R)", durationSeconds: 40, shortDescription: "Reverse direction after 20 seconds.", longDescription: "Draw large controlled circles while keeping the hips stable. Regression: keep a soft bend in the knee. Progression: increase circle size or use a slower tempo." },
@@ -240,10 +238,8 @@ export const matPilates0724Legacy = {
         { type: "exercise", id: "tricep-push-up-right", name: "Tricep side push-up (R)", durationSeconds: 30, shortDescription: "Top hand comes to the mat; the lower forearm crosses the belly.", longDescription: "Exhale to push away from the mat using the triceps; inhale to lower. Regression: rest at the bottom." },
         { type: "exercise", id: "side-plank-right", name: "Forearm side plank (R)", durationSeconds: 30, shortDescription: "Forearm under shoulder; legs stacked or staggered.", longDescription: "Lift the hips and hold a strong line from head to feet. Regression: knee side plank. Progression: side plank on the hand." },
         { type: "rest", id: "rest-before-bottom-leg-left", name: "REST", durationSeconds: 20 },
-        { type: "exercise", id: "bottom-leg-lifts-left", name: "Bottom leg lifts (L)", durationSeconds: 40, shortDescription: "Keep the bottom leg straight.", longDescription: "Exhale and lift the bottom leg toward the ceiling. Inhale and lower with control without fully resting." },
-        { type: "exercise", id: "bottom-leg-pulses-left", name: "Bottom leg pulses (L)", durationSeconds: 40, shortDescription: "Hold the bottom leg lifted.", longDescription: "Use small controlled pulses upward. Keep hips stacked and core engaged." },
-        { type: "exercise", id: "inner-thigh-circles-left", name: "Inner thigh circles (L)", durationSeconds: 40, shortDescription: "Reverse direction after 20 seconds.", longDescription: "Keep the bottom leg lifted and draw small circles." },
-        { type: "exercise", id: "double-leg-lift-left", name: "Double-leg lift", durationSeconds: 40, shortDescription: "Finish in child's pose and come to the knees.", longDescription: "Squeeze the legs together and lift both legs off the mat. Lower slowly. Great for inner thighs and obliques." }
+        { type: "exercise", id: "bottom-leg-lifts-left", name: "Bottom leg lifts (L)", durationSeconds: 30, shortDescription: "Keep the bottom leg straight.", longDescription: "Exhale and lift the bottom leg toward the ceiling. Inhale and lower with control without fully resting." },
+        { type: "exercise", id: "bottom-leg-pulses-left", name: "Bottom leg pulses (L)", durationSeconds: 30, shortDescription: "Hold the bottom leg lifted.", longDescription: "Use small controlled pulses upward. Keep hips stacked and core engaged." },
       ]
     },
     {
@@ -274,7 +270,7 @@ export const matPilates0724Catalog = {
   course: {
     ...adapted0724.course,
     id: "mat-pilates-07-24",
-    version: 5,
+    version: 6,
     title: "Mat Pilates — July 24"
   }
 };

@@ -84,6 +84,7 @@ describe("exercise artwork", () => {
     if (used.has("knee-push-ups-to-pike") || used.has("ring-assisted-knee-push-ups")) {
       used.add("knee-push-ups");
     }
+    if (used.has("ring-double-leg-lift")) used.add("double-leg-lift");
     Object.keys(RIGS).forEach((id) => {
       expect(used.has(id), `rig "${id}" is authored but no exercise uses it`).toBe(true);
     });
