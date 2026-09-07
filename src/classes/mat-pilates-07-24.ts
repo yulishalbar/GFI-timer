@@ -7,7 +7,7 @@ import { resolveCourseDefinition } from "../domain/resolve-course";
 export const matPilates0724Legacy = {
   schemaVersion: 1,
   id: "mat-pilates-07-24-v1",
-  version: 5,
+  version: 6,
   title: "Mat Pilates — July 24 V1",
   description:
     "A full-body mat class with warmup, core, glutes, lower body, side body, and cooldown. Mat required.",
@@ -112,7 +112,9 @@ export const matPilates0724Legacy = {
           longDescription:
             "Exhale to curl the head, shoulders, and ribcage toward the pelvis; inhale to lower with control. Option: hold the legs at tabletop."
         },
-        { type: "rest", id: "rest-after-crunch", name: "REST", durationSeconds: 10, shortDescription: "Extend the left leg and lift the right leg." },
+        { type: "rest", id: "rest-after-crunch", name: "REST", durationSeconds: 10, shortDescription: "Lift both legs to tabletop with knees bent." },
+        { type: "exercise", id: "crunch-legs-lifted", name: "Crunch w legs lifted", durationSeconds: 40, shortDescription: "Keep both legs lifted in tabletop with knees bent.", longDescription: "Exhale to curl the head and shoulders toward the knees while keeping the legs steady. Inhale to lower with control. Regression: place the feet on the mat." },
+        { type: "rest", id: "rest-after-crunch-legs-lifted", name: "REST", durationSeconds: 10, shortDescription: "Extend the left leg and lift the right leg." },
         {
           type: "exercise",
           id: "leg-circle-right",
@@ -270,7 +272,7 @@ export const matPilates0724Catalog = {
   course: {
     ...adapted0724.course,
     id: "mat-pilates-07-24",
-    version: 6,
+    version: 7,
     title: "Mat Pilates — July 24"
   }
 };

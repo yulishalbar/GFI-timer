@@ -89,12 +89,12 @@ describe("compileClass", () => {
   it("expands phases and repeated rounds in authored order", () => {
     const compiled = compileClass(matPilates0724);
 
-    expect(compiled.steps).toHaveLength(100);
-    expect(compiled.totalDurationMs).toBe(3_420_000);
+    expect(compiled.steps).toHaveLength(102);
+    expect(compiled.totalDurationMs).toBe(3_470_000);
     expect(compiled.phases).toEqual([
       { id: "introduction", name: "Introduction", index: 1, stepCount: 1, durationMs: 120_000 },
       { id: "warmup", name: "Warm-Up", index: 2, stepCount: 6, durationMs: 240_000 },
-      { id: "core-circuit", name: "Circuit 1 — Core", index: 3, stepCount: 11, durationMs: 310_000 },
+      { id: "core-circuit", name: "Circuit 1 — Core", index: 3, stepCount: 13, durationMs: 360_000 },
       { id: "glutes-circuit", name: "Circuit 2 — Glutes", index: 4, stepCount: 10, durationMs: 290_000 },
       { id: "posterior-core-circuit", name: "Circuit 3 — Core, Glutes, and Back", index: 5, stepCount: 18, durationMs: 480_000 },
       { id: "lower-body-circuit", name: "Circuit 4 — Lower Body", index: 6, stepCount: 18, durationMs: 490_000 },
@@ -110,8 +110,13 @@ describe("compileClass", () => {
 
   it("applies the July 24 circuit timing and same-side bird-dog progression", () => {
     const { steps, definition } = compileClass(matPilates0724);
-    expect(definition.version).toBe(6);
+    expect(definition.version).toBe(7);
     const step = (id: string) => steps.find((entry) => entry.sourceId === id);
+    const crunchIndex = steps.findIndex((entry) => entry.sourceId === "crunch");
+    expect(steps.slice(crunchIndex, crunchIndex + 5).map((entry) => entry.sourceId)).toEqual([
+      "crunch", "rest-after-crunch", "crunch-legs-lifted", "rest-after-crunch-legs-lifted", "leg-circle-right"
+    ]);
+    expect(step("crunch-legs-lifted")).toMatchObject({ durationMs: 40_000, rig: "crunch-legs-lifted" });
     expect(steps.filter((entry) => entry.phase.id === "glutes-circuit" && entry.kind === "exercise")
       .map((entry) => entry.durationMs)).toEqual([
         30_000, 30_000, 20_000, 30_000, 30_000, 20_000, 30_000, 20_000

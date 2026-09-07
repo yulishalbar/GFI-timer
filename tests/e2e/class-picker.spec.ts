@@ -37,17 +37,17 @@ test("opens a compiled class schedule and returns to the picker", async ({ page 
 
   await expect(page.getByRole("heading", { name: "Choose today's class" })).toBeVisible();
   const classCard = page.getByRole("article").filter({ hasText: "Mat Pilates — July 24" });
-  await expect(classCard).toContainText("57 min");
+  await expect(classCard).toContainText("57.8 min");
   await expect(classCard).toContainText("8 phases");
-  await expect(classCard).toContainText("100 steps");
+  await expect(classCard).toContainText("102 steps");
 
   await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
   await classCard.getByRole("button", { name: "View class" }).click();
 
   await expect(page.getByRole("heading", { name: "Mat Pilates — July 24" })).toBeVisible();
   await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(0);
-  await expect(page.getByLabel("57 min total")).toContainText("57:00");
-  await expect(page.getByText("100 timed steps")).toBeVisible();
+  await expect(page.getByLabel("57.8 min total")).toContainText("57:50");
+  await expect(page.getByText("102 timed steps")).toBeVisible();
   await expect(page.getByRole("heading", { name: "Circuit 4 — Lower Body" })).toBeVisible();
   const startButton = page.getByRole("button", { name: "Start class" });
   if (testInfo.project.name === "iphone-15-pro-max-chromium") {
