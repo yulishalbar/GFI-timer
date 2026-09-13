@@ -414,3 +414,20 @@ as lying down. Both of those shipped before this existed.
   spatial rig exists. `childs-pose-side-stretch` shows the reach but not which
   way the hands walk, and the clamshells approximate hip rotation. Both are
   honest about it in their comments, and both are candidates for moving across.
+
+## Updated sliders PDF: guide follow-up
+
+The revised sliders schedule uses existing guides for Roll-ups, Donkey kicks,
+Tabletop Toe Tap, Dead Bug, and Lower down slowley. These source spellings are
+aliases in the shared assignment map. The previous Bicycle legs guide is
+retained for reuse even though the revised schedule no longer uses it.
+
+Crunches with bent knees uses the existing crunch guide.
+Matching guides remain pending for Happy Baby, Seated side stretch, Seated Cow Pose
+Variation Arms Crossed On Knees, Reclined butterfly, Breathing with overhead arm sweeps, Donkey kick pulses, Breathing work, head circles, Side to side
+crunch, Seated cat cows, seated cat cow to half roll down, Double Leg Stretch,
+Hundred, Fire hydrants, Fire hydrant pulses, Cross overs, Bent-knee leg lift,
+Pulse bent knee, Rotation knee and heel, Kick knee to chest and extned,
+Extended pulse straight back, and Extended pulse infornt. They display text
+without an unrelated visual. The warm-up's conflicting names/instructions need
+review before assigning guides. The artwork test tracks this exact backlog.

@@ -253,13 +253,13 @@ test("opens and starts the catalog-backed sliders course", async ({ page }) => {
   const classCard = page.getByRole("article").filter({
     has: page.getByRole("heading", { name: "Mat Pilates with Sliders", exact: true })
   });
-  await expect(classCard).toContainText("60 min");
+  await expect(classCard).toContainText("59.5 min");
   await expect(classCard).toContainText("8 phases");
-  await expect(classCard).toContainText("104 steps");
+  await expect(classCard).toContainText("105 steps");
   await classCard.getByRole("button", { name: "View class" }).click();
 
   await expect(page.getByRole("heading", { name: "Mat Pilates with Sliders" })).toBeVisible();
-  await expect(page.getByLabel("60 min total")).toContainText("1:00:00");
+  await expect(page.getByLabel("59.5 min total")).toContainText("59:30");
   const leftBadge = page.getByLabel("Left side").first();
   const rightBadge = page.getByLabel("Right side").first();
   await expect(leftBadge).toBeVisible();
@@ -273,24 +273,27 @@ test("opens and starts the catalog-backed sliders course", async ({ page }) => {
   const mountainClimbers = page.locator(".step-row").filter({ hasText: "Sliders mountain climbers" }).first();
   await expectRigAnimates(mountainClimbers.locator("svg.exercise-rig"));
   await page.getByRole("button", { name: "Start class" }).click();
-  await expect(page.getByRole("heading", { name: "Child's pose" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Breathing work" })).toBeVisible();
 
-  // Child's pose runs 60s and the handover leads by 10s. The next movement is
-  // rigged, so it gets a dimmed preview rather than the current step vanishing.
-  await page.getByRole("slider", { name: "Seek within current step" }).fill("52000");
+  // Advance past warm-up, abs, and setup to the rigged reverse-plank series.
+  for (let index = 0; index < 22; index += 1) {
+    await page.getByRole("button", { name: "Next" }).click();
+  }
+  await expect(page.getByRole("heading", { name: "Reverse plank to L-sit", exact: true })).toBeVisible();
+  await page.getByRole("slider", { name: "Seek within current step" }).fill("22000");
   await expect(page.locator(".session-shell")).toHaveClass(/session-shell--ending/);
   const preview = page.locator(".next-step__preview");
   await expect(preview).toBeVisible();
   await expect(preview.locator("svg.exercise-rig")).toBeVisible();
   await expect(page.locator(".current-step-details")).toBeVisible();
   expect(Number(await preview.evaluate((el) => getComputedStyle(el).opacity))).toBeLessThan(1);
-  await page.getByRole("slider", { name: "Seek within current step" }).fill("20000");
+  await page.getByRole("slider", { name: "Seek within current step" }).fill("10000");
   await expect(page.locator(".next-step__preview")).toHaveCount(0);
 
   // The lead is the same ten seconds on a short step: this one runs 30s, and
   // eight seconds out it is already handing over.
   await page.getByRole("button", { name: "Next" }).click();
-  await expect(page.getByRole("heading", { name: /cat and cows/ })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "In and outs with sliders", exact: true })).toBeVisible();
   await page.getByRole("slider", { name: "Seek within current step" }).fill("22000");
   await expect(page.locator(".session-shell")).toHaveClass(/session-shell--ending/);
   await expect(page.locator(".next-step__preview")).toBeVisible();
@@ -311,7 +314,10 @@ test("keeps the current movement readable during the handover on a phone", async
   });
   await classCard.getByRole("button", { name: "View class" }).click();
   await page.getByRole("button", { name: "Start class" }).click();
-  await page.getByRole("slider", { name: "Seek within current step" }).fill("52000");
+  for (let index = 0; index < 22; index += 1) {
+    await page.getByRole("button", { name: "Next" }).click();
+  }
+  await page.getByRole("slider", { name: "Seek within current step" }).fill("22000");
   await expect(page.locator(".session-shell")).toHaveClass(/session-shell--ending/);
 
   const guide = page.locator(".current-step-details svg.exercise-rig");

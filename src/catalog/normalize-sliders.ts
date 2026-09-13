@@ -36,7 +36,11 @@ export function normalizeSlidersCatalog(input: AdaptedLegacyCourse): AdaptedLega
   allPlacements.forEach((placement) => {
     const isHiitSide = hiitPlacements.has(placement);
     const isSideBody = sideBodyPlacements.has(placement);
-    if (!isHiitSide && !isSideBody) return;
+    const isCooldownSide = ["side-twist-left", "side-twist-right", "reclined-tree-right", "reclined-tree-left",
+      "seated-side-stretch-left", "seated-side-stretch-right",
+      "seated-cow-arms-crossed-left", "seated-cow-arms-crossed-right"]
+      .includes(placement.id);
+    if (!isHiitSide && !isSideBody && !isCooldownSide) return;
 
     const side = placement.id.endsWith("-one") || placement.id.endsWith("-three") || placement.id.endsWith("-left")
       ? "left"

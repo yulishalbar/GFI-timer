@@ -219,21 +219,91 @@ describe("compileClass", () => {
   it("compiles the sliders class with stable totals", () => {
     const compiled = compileClass(hiitPilatesSliders);
 
-    expect(compiled.steps).toHaveLength(104);
-    expect(compiled.totalDurationMs).toBe(3_600_000);
+    expect(compiled.steps).toHaveLength(105);
+    expect(compiled.totalDurationMs).toBe(3_570_000);
     expect(compiled.phases).toEqual([
-      { id: "warmup", name: "Warm-Up", index: 1, stepCount: 4, durationMs: 180_000 },
-      { id: "abs-circuit", name: "Circuit #1: Abs", index: 2, stepCount: 23, durationMs: 590_000 },
+      { id: "warmup", name: "Warm-Up", index: 1, stepCount: 8, durationMs: 300_000 },
+      { id: "abs-circuit", name: "Circuit #1: Abs", index: 2, stepCount: 13, durationMs: 360_000 },
       { id: "upper-core-one", name: "Circuit #2: Upper Body and Core", index: 3, stepCount: 6, durationMs: 210_000 },
-      { id: "hiit-legs", name: "Circuit #3: Legs Focused", index: 4, stepCount: 32, durationMs: 730_000 },
-      { id: "plank-pyramid", name: "Circuit #4: Upper Body and Core Pyramid", index: 5, stepCount: 7, durationMs: 280_000 },
-      { id: "upper-core-two", name: "Circuit #5: Upper Body and Core", index: 6, stepCount: 12, durationMs: 420_000 },
-      { id: "side-body", name: "Circuit #6: Side Body", index: 7, stepCount: 14, durationMs: 560_000 },
-      { id: "cooldown", name: "Cooldown", index: 8, stepCount: 6, durationMs: 630_000 }
+      { id: "hiit-legs", name: "Circuit #3: Legs Focused", index: 4, stepCount: 17, durationMs: 480_000 },
+      { id: "plank-pyramid", name: "Circuit #4: Upper Body and Core Pyramid (If there is time)", index: 5, stepCount: 15, durationMs: 390_000 },
+      { id: "upper-core-two", name: "Circuit #5: Upper Body and Core", index: 6, stepCount: 7, durationMs: 270_000 },
+      { id: "side-body", name: "Circuit #6: Side Body", index: 7, stepCount: 25, durationMs: 810_000 },
+      { id: "cooldown", name: "Cooldown", index: 8, stepCount: 14, durationMs: 750_000 }
     ]);
     expect(compiled.steps.filter((step) => step.kind === "rest").every((step) => step.name === "REST"))
       .toBe(true);
     expect(compiled.steps.at(-1)?.name).toBe("Shavasana");
+  });
+
+  it("uses the revised sliders movements, rests, and side order", () => {
+    const { steps, definition } = compileClass(hiitPilatesSliders);
+    expect(definition.id).toBe("hiit-pilates-sliders");
+    expect(definition.version).toBe(8);
+    const phase = (id: string) => steps.filter((step) => step.phase.id === id);
+    expect(phase("cooldown").find((step) => step.sourceId === "seated-forward-fold")?.name)
+      .toBe("Seated forward fold");
+    expect(phase("cooldown").map((step) => [step.sourceId, step.durationMs, step.exerciseReference?.side]))
+      .toEqual([
+        ["cooldown-breathing-arm-sweeps", 60_000, undefined],
+        ["side-twist-left", 45_000, "left"],
+        ["seated-side-stretch-left", 30_000, "left"],
+        ["seated-cow-arms-crossed-left", 30_000, "left"],
+        ["side-twist-right", 45_000, "right"],
+        ["seated-side-stretch-right", 30_000, "right"],
+        ["seated-cow-arms-crossed-right", 30_000, "right"],
+        ["seated-forward-fold", 60_000, undefined],
+        ["roll-down", 10_000, undefined],
+        ["reclined-tree-right", 60_000, "right"],
+        ["reclined-tree-left", 60_000, "left"],
+        ["reclined-butterfly", 50_000, undefined],
+        ["happy-baby", 60_000, undefined],
+        ["shavasana", 180_000, undefined]
+      ]);
+    expect(phase("abs-circuit").filter((step) => step.kind === "exercise")
+      .map((step) => [step.name, step.durationMs])).toEqual([
+        ["Roll-ups", 60_000], ["Double Leg Stretch", 40_000], ["Leg lowers", 40_000],
+        ["Tabletop Toe Tap", 40_000], ["Dead Bug", 40_000],
+        ["Crunches with bent knees", 40_000], ["Hundred", 40_000]
+      ]);
+    expect(phase("side-body").filter((step) => step.kind === "exercise")
+      .map((step) => step.exerciseReference?.side)).toEqual([
+        ...Array<"right">(11).fill("right"), ...Array<"left">(11).fill("left")
+      ]);
+    for (const side of ["right", "left"]) {
+      const kickIndex = steps.findIndex((step) => step.sourceId === `donkey-kicks-${side}`);
+      expect(steps[kickIndex + 1]).toMatchObject({
+        sourceId: `donkey-kick-pulses-${side}`,
+        name: "Donkey kick pulses",
+        durationMs: 20_000,
+        exerciseReference: { side }
+      });
+    }
+    expect(phase("side-body").filter((step) => step.kind === "rest")
+      .map((step) => step.durationMs)).toEqual([20_000, 30_000, 20_000]);
+    expect(phase("plank-pyramid").map((step) => step.durationMs)).toEqual([
+      40_000, 10_000, 40_000, 10_000, 40_000, 10_000, 40_000,
+      10_000, 40_000, 10_000, 40_000, 10_000, 40_000, 10_000, 40_000
+    ]);
+    expect(phase("plank-pyramid").at(-1)).toMatchObject({
+      name: "Pilates push-ups", durationMs: 40_000
+    });
+    expect(phase("side-body").filter((step) => step.kind === "exercise")
+      .map((step) => step.durationMs)).toEqual([
+        40_000, 20_000, 40_000, 20_000, 40_000, 40_000, 30_000, 40_000, 40_000, 30_000, 30_000,
+        40_000, 20_000, 40_000, 20_000, 40_000, 40_000, 30_000, 40_000, 40_000, 30_000, 30_000
+      ]);
+    for (const sourceId of [
+      "seated-cat-cow-half-roll-down", "squat-side-lunge-one", "squat-side-lunge-two"
+    ]) {
+      const index = steps.findIndex((step) => step.sourceId === sourceId);
+      expect(steps[index + 1]).toMatchObject({ kind: "rest", durationMs: 60_000 });
+      expect(steps[index + 2]?.kind).toBe("exercise");
+    }
+    expect(phase("warmup").map((step) => step.name)).toEqual([
+      "Breathing work", "Breathing with overhead arm sweeps", "head circles", "Shoulder rolls", "Side to side crunch", "Seated cat cows",
+      "seated cat cow to half roll down", "REST"
+    ]);
   });
 
   it("compiles the updated ring class with stable totals", () => {
@@ -355,7 +425,7 @@ describe("compileClass", () => {
     expect(catalogBacked.steps.filter((step) => step.exerciseReference?.side === "right")).not.toHaveLength(0);
     expect(catalogBacked.steps.filter((step) => step.name === "Single-leg lunge with slider").map(
       (step) => step.exerciseReference?.side
-    )).toEqual(["left", "right", "left", "right"]);
+    )).toEqual(["left", "right"]);
   });
 
   it("keeps the catalog-backed band timing and guidance equivalent to V1", () => {

@@ -29,19 +29,16 @@ const exercise = (
   ...(illustration ? { illustration } : {})
 });
 
+// Source: classes/updated sliders class #1.pdf. Explicit rows govern timing.
 const absMoves = [
-  exercise("crunch-legs-lifted", "Crunch w legs lifted", 40,
-    "Knees bent, feet grounded on the mat. Exhale as you lift the head and shoulders, drawing the navel toward the spine and curling the ribcage toward the pelvis. Inhale as you slowly lower back to the mat with control. R: option to keep legs on mat."),
-  exercise("one-leg-stretch", "Single-leg stretch", 40,
-    "Lift head and shoulders into an abdominal curl with legs in tabletop. Exhale as one leg extends long and the opposite knee draws toward the chest. Inhale as you switch legs in a controlled alternating motion while maintaining abdominal engagement. R: option to keep head on mat. P: go faster."),
-  exercise("bicycle-legs", "Bicycle legs", 40,
-    "From an abdominal curl, alternate the legs in a cycling motion. Exhale as one leg extends long, inhale as you transition and switch legs. Maintain a steady torso and controlled breathing rhythm. P: perform slower."),
-  exercise("leg-lowers", "Leg lowers", 40,
-    "Exhale to lower legs toward floor; inhale to lift back to tabletop. R: head rests on mat. P: add a crunch at top."),
-  exercise("one-leg-circle", "One leg circle", 40,
-    "One leg extended on the mat while the other reaches vertically. Inhale to begin the circle across the body and down, exhale as the leg completes the circle back to center. Maintain a stable pelvis and engaged core. Switch sides after 20 sec. R: bend the working leg slightly. P: perform larger circles."),
-  exercise("roll-ups", "Roll ups", 40,
-    "On the mat, inhale to prepare as you stretch the arms above the ears and legs straight out. Exhale to bring shoulders up, lift the chest and slowly roll up to seated, reach fingertips forward, and slowly roll back down. R: bend knees with feet anchored on mat.")
+  exercise("roll-ups", "Roll-ups", 60,
+    "Knees bent, feet grounded on the mat. Exhale as you lift the head and shoulders, drawing the navel toward the spine and curling the ribcage toward the pelvis. Inhale as you slowly lower back to the mat with control. -> R: option to keep legs on mat"),
+  exercise("double-leg-stretch", "Double Leg Stretch", 40),
+  exercise("leg-lowers", "Leg lowers", 40),
+  exercise("tabletop-toe-tap", "Tabletop Toe Tap", 40),
+  exercise("dead-bug", "Dead Bug", 40),
+  exercise("crunches-bent-knees", "Crunches with bent knees", 40),
+  exercise("hundred", "Hundred", 40)
 ];
 
 function withTenSecondRests(prefix: string, moves: readonly ExerciseEntry[]): ClassEntry[] {
@@ -52,7 +49,7 @@ function withTenSecondRests(prefix: string, moves: readonly ExerciseEntry[]): Cl
 }
 
 const reversePlankSeries = (prefix: string): ClassEntry[] => [
-  rest(`${prefix}-setup`, 60, "Sit on mat. Describe the next movements: go through all movements."),
+  rest(`${prefix}-setup`, 60, "Fold mat. Sit on mat. Describe the next movements: go through all movements."),
   exercise(`${prefix}-reverse-plank-l-sit`, "Reverse plank to L-sit", 30,
     "Begin in reverse plank with hands and heels grounded, chest lifted, and sliders under heels of feet. Inhale to hold the reverse plank. Exhale as you bend at the hips and slide the legs toward an L-sit position, lifting through the core. Inhale as you return to reverse plank. R: hold static reverse plank without sliding."),
   exercise(`${prefix}-in-outs`, "In and outs with sliders", 30,
@@ -65,7 +62,7 @@ const reversePlankSeries = (prefix: string): ClassEntry[] => [
     "Pulse at the top with hips lifted and heels grounded to mat.", undefined, "exercises/glute-bridge.svg")
 ];
 
-const hiitLegRound = (round: "one" | "two" | "three" | "four"): ClassEntry[] => {
+const hiitLegRound = (round: "one" | "two"): ClassEntry[] => {
   const moves = [
     exercise(`reverse-lunge-${round}`, "Single-leg lunge with slider", 30,
       "Stand with one foot planted and the other on a slider behind you. Inhale as the sliding leg moves back into a reverse lunge while the front knee bends. Exhale as you press through the front heel and slide the back foot forward to return to standing. Maintain upright posture and engaged core."),
@@ -92,25 +89,25 @@ const plankPyramidMoves = [
 
 function sideBody(side: "right" | "left"): ClassEntry[] {
   return [
-    exercise(`leg-lift-${side}`, "Leg lift", 40,
-      "Lying down with straight legs, point top foot and lift up, lower down as you flex and repeat.", undefined, "exercises/side-lying-leg-series.svg"),
-    exercise(`big-leg-circles-${side}`, "Big leg circles", 40,
-      "Still on the same side, lift top leg and draw large circles."),
-    exercise(`forward-back-kick-${side}`, "Forward and back kick", 40,
-      "Flex foot, exhale to kick leg forward twice, inhale, point foot and extend it all the way back."),
-    exercise(`small-circle-pulses-${side}`, "Small leg circle pulses", 40,
-      "Draw small circles with lifted leg; 20 sec each direction."),
-    exercise(`straight-leg-crunches-${side}`, "Straight leg crunches", 40,
-      "Come up to forearm. Lower top foot on mat with the knee bent, keep lower foot straight, exhale to lift it toward the chest and crunch toward it with opposite arm behind the ear. Inhale to lower and repeat."),
-    exercise(`tricep-side-push-up-${side}`, "Tricep side push-up", 40,
-      "The hand behind ear comes down to mat, the forearm previously on mat comes across the belly. Exhale to push away from the mat using the triceps, inhale to lower down to mat. Repeat.")
+    exercise(`donkey-kicks-${side}`, "Donkey kicks", 40),
+    exercise(`donkey-kick-pulses-${side}`, "Donkey kick pulses", 20),
+    exercise(`fire-hydrants-${side}`, "Fire hydrants", 40),
+    exercise(`fire-hydrant-pulses-${side}`, "Fire hydrant pulses", 20),
+    exercise(`cross-overs-${side}`, "Cross overs", 40),
+    rest(`come-to-side-${side}`, 20, "Rest, come to the side"),
+    exercise(`bent-knee-leg-lift-${side}`, "Bent-knee leg lift", 40),
+    exercise(`pulse-bent-knee-${side}`, "Pulse bent knee", 30),
+    exercise(`rotation-knee-heel-${side}`, "Rotation knee and heel", 40),
+    exercise(`kick-knee-chest-${side}`, "Kick knee to chest and extned", 40),
+    exercise(`extended-pulse-back-${side}`, "Extended pulse straight back", 30),
+    exercise(`extended-pulse-front-${side}`, "Extended pulse infornt", 30)
   ];
 }
 
 export const hiitPilatesSlidersLegacy = {
   schemaVersion: 1,
   id: "hiit-pilates-sliders-v1",
-  version: 1,
+  version: 8,
   title: "Mat Pilates with Sliders V1",
   description:
     "A lower-body-focused Mat Pilates class with sliders, including glutes, legs, core, upper-body support, and cooldown. Equipment: mat and optional sliders.",
@@ -119,23 +116,27 @@ export const hiitPilatesSlidersLegacy = {
       id: "warmup",
       name: "Warm-Up",
       items: [
-        exercise("childs-pose", "Child's pose", 60,
-          "Push hips back and stretch fingers toward the top of the mat.", undefined, "exercises/childs-pose.svg"),
-        exercise("cat-cow", "Tabletop → cat and cows", 30,
-          "Come to all fours starting with a neutral spine. Inhale to open through the chest; exhale as you round your back with control."),
-        exercise("thread-needle", "Tabletop → downward-facing dog alternating", 30,
-          "Still on all fours, lift one hand to open the side body, then thread the arm under your belly. Return to neutral and switch sides."),
-        exercise("bird-dog-wrist-circles", "Tabletop → alternating bird dog → add wrist circles", 60,
-          "From tabletop extend opposite arm and leg. Hold briefly, return to center and switch sides slowly. Add wrist circles while extended, keeping hips square and core engaged.")
+        exercise("breathing-work", "Breathing work", 30,
+          "Push hips back and stretch fingers towards the top of the mat"),
+        exercise("breathing-arm-sweeps", "Breathing with overhead arm sweeps", 30),
+        exercise("head-circles", "head circles", 30,
+          "Come to all 4s position starting with a neutral spine, inhale as you initiate movement through the chest, lifting it towards the ceiling, along with you gaze if it feels comfortable on the neck. exhale as you round your back and lift the gaze towards the ceiling, not dumping lower back"),
+        exercise("shoulder-rolls", "Shoulder rolls", 30),
+        exercise("side-to-side-crunch", "Side to side crunch", 30,
+          "Hands besides ears, slowly exhale to side crunch towards one side, inhale lift neck back straight up, sit tall, and repeate on other side"),
+        exercise("seated-cat-cows", "Seated cat cows", 30,
+          "Still in all 4s, pelvis parallel to the ground, lift right hand up, opening up the right side of the body, then move right shoulder below left shoulder as you thread the right arm under your belly, stay in this pose for a few seconds. Exhale to bring hand back up and then come back to neutral. Switch sides"),
+        exercise("seated-cat-cow-half-roll-down", "seated cat cow to half roll down", 60,
+          "From tabletop position extend right arm forward and left leg back,. Hold briefly, then return to center and switch sides in a slow, controlled manner.. Add wrist circles as extended keeping hips square to the mat and core engaged",
+          "end-> introduce equipment, state its just an option"),
+        rest("warmup-break", 60, "Get ready for the abs circuit.")
       ]
     },
     {
       id: "abs-circuit",
       name: "Circuit #1: Abs",
       items: [
-        ...withTenSecondRests("abs-round-one", absMoves),
-        rest("abs-round-reset", 10, "Get ready to repeat."),
-        ...withTenSecondRests("abs-round-two", absMoves)
+        ...withTenSecondRests("abs-round-one", absMoves)
       ]
     },
     { id: "upper-core-one", name: "Circuit #2: Upper Body and Core", items: reversePlankSeries("upper-one") },
@@ -143,24 +144,24 @@ export const hiitPilatesSlidersLegacy = {
       id: "hiit-legs",
       name: "Circuit #3: Legs Focused",
       items: [
-        rest("hiit-setup", 60, "Come to standing. Start with left leg in front, slider under right leg behind."),
+        rest("hiit-setup", 60, "Come to standing. Start with left leg in front, slider under right leg behind. R-> dont use the sliders"),
         ...hiitLegRound("one"),
-        rest("hiit-side-switch", 10, "Switch sides."),
+        rest("hiit-side-switch", 60, "Switch sides."),
         ...hiitLegRound("two"),
-        rest("hiit-round-two-setup", 50, "Repeat both sides. Start with left leg in front, slider under right leg behind."),
-        ...hiitLegRound("three"),
-        rest("hiit-round-two-side-switch", 10, "Switch sides."),
-        ...hiitLegRound("four")
+        rest("hiit-finish-break", 60, "Get ready for the next circuit.")
       ]
     },
     {
       id: "plank-pyramid",
-      name: "Circuit #4: Upper Body and Core Pyramid",
+      name: "Circuit #4: Upper Body and Core Pyramid (If there is time)",
       items: [
-        ...plankPyramidMoves,
-        { ...plankPyramidMoves[2]!, id: "thread-leg-side-return" },
-        { ...plankPyramidMoves[1]!, id: "straight-leg-sweep-circles-return" },
-        { ...plankPyramidMoves[0]!, id: "straight-leg-sweep-return" }
+        ...withTenSecondRests("plank-pyramid", [
+          ...plankPyramidMoves,
+          { ...plankPyramidMoves[2]!, id: "thread-leg-side-return" },
+          { ...plankPyramidMoves[1]!, id: "straight-leg-sweep-circles-return" },
+          { ...plankPyramidMoves[0]!, id: "straight-leg-sweep-return" },
+          exercise("pilates-push-ups", "Pilates push-ups", 40)
+        ])
       ]
     },
     {
@@ -168,16 +169,15 @@ export const hiitPilatesSlidersLegacy = {
       name: "Circuit #5: Upper Body and Core",
       items: [
         ...reversePlankSeries("upper-two"),
-        ...reversePlankSeries("upper-three")
+        rest("unfold-mat", 60, "Unfold mat. Side body and core (no slider).")
       ]
     },
     {
       id: "side-body",
       name: "Circuit #6: Side Body",
       items: [
-        rest("unfold-mat", 60, "Unfold mat and lie on one side."),
         ...sideBody("right"),
-        rest("side-body-switch", 20, "Repeat on left side."),
+        rest("side-body-switch", 30, "Repeat on left side."),
         ...sideBody("left")
       ]
     },
@@ -185,15 +185,21 @@ export const hiitPilatesSlidersLegacy = {
       id: "cooldown",
       name: "Cooldown",
       items: [
-        rest("cooldown-transition", 30, "Come to knees."),
-        exercise("seated-forward-fold", "Hamstring stretch → seated forward fold", 120,
+        exercise("cooldown-breathing-arm-sweeps", "Breathing with overhead arm sweeps", 60),
+        exercise("side-twist-left", "Side twist", 45, undefined, "Left side."),
+        exercise("seated-side-stretch-left", "Seated side stretch", 30, undefined, "Left side."),
+        exercise("seated-cow-arms-crossed-left", "Seated Cow Pose Variation Arms Crossed On Knees", 30, undefined, "Left side."),
+        exercise("side-twist-right", "Side twist", 45, undefined, "Right side."),
+        exercise("seated-side-stretch-right", "Seated side stretch", 30, undefined, "Right side."),
+        exercise("seated-cow-arms-crossed-right", "Seated Cow Pose Variation Arms Crossed On Knees", 30, undefined, "Right side."),
+        exercise("seated-forward-fold", "Seated forward fold", 60,
           "Sit with legs extended forward. Inhale reaching arms overhead to lengthen the spine. Exhale as you hinge forward from the hips, reaching toward the feet while relaxing the neck and shoulders.", undefined, "exercises/seated-forward-fold.jpg"),
-        exercise("roll-down", "Standing roll down", 30,
+        exercise("roll-down", "Lower down slowley", 10,
           "From seated, exhale as you slowly roll down to the mat one vertebra at a time. Inhale once fully lying down."),
-        exercise("figure-four-twists", "Lying figure four → twist → switch sides", 240,
-          "Lie on back with knees bent. Cross one ankle over opposite knee and gently pull the supporting leg toward the chest. From figure four, lower both legs toward the opposite side while keeping shoulders relaxed. Switch sides after 2 minutes."),
-        exercise("overhead-arm-stretch", "Overhead arm stretch", 30,
-          "Extend arms overhead along the mat. Inhale reaching through fingers and toes to lengthen the body. Exhale relaxing shoulders and allowing the chest to open."),
+        exercise("reclined-tree-right", "Reclining tree pose", 60, undefined, "Right side."),
+        exercise("reclined-tree-left", "Reclining tree pose", 60, undefined, "Left side."),
+        exercise("reclined-butterfly", "Reclined butterfly", 50),
+        exercise("happy-baby", "Happy Baby", 60),
         exercise("shavasana", "Shavasana", 180,
           "Lie comfortably on back with arms relaxed at sides. Slow inhale through the nose, slow exhale through the mouth. Allow the body to fully relax and breathing to settle naturally. End: come to seated. Closing words: Thank you for coming today and working out early in the morning, amazing job! Don't forget to wipe down your mat and the sliders. Have a great spring break!!", undefined, "exercises/shavasana.jpg")
       ]
@@ -212,7 +218,7 @@ export const hiitPilatesSlidersCatalog = {
   course: {
     ...adaptedSlidersCourse.course,
     id: "hiit-pilates-sliders",
-    version: 1,
+    version: 8,
     title: "Mat Pilates with Sliders"
   }
 };

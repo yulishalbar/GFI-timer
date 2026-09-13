@@ -248,3 +248,43 @@ class schedule. They serve different purposes.
 Increment the class version when steps, order, rounds, or durations change. Text
 or illustration corrections that cannot affect session recovery may retain the
 version. A recovered session must match both class ID and class version.
+
+## Updated sliders source
+
+`hiit-pilates-sliders` version 8 follows `classes/updated sliders class #1.pdf`.
+With instructor revisions, the 105 timed steps total **59 minutes 30 seconds**,
+including the optional 6:30 plank pyramid and push-ups. Approximate section headings and the 60-minute
+cover title do not add time. Abs runs once; legs run once per side; Circuit 5
+runs once followed by a one-minute rest. The side-body series includes a
+20-second transition on each side and a 30-second break between sides.
+The optional pyramid remains in the static schedule and is labeled ?If there
+is time?; no automatic skipping is implied. Its seven inter-exercise rests are
+10 seconds each.
+
+The revised warm-up and Roll-ups rows contain descriptions that conflict with
+the movement names. Supplied wording is retained, including source spelling;
+these rows need instructor review. Blank instruction cells remain blank.
+
+Instructor revisions add 30-second Shoulder rolls after head circles and
+40-second Pilates push-ups after the Circuit 4 pyramid, preceded by its usual
+10-second rest. Circuit 6 non-pulse glute movements last 40 seconds on both
+sides; pulse movements and rests retain their original durations.
+
+Circuit 6 includes 20-second Donkey kick pulses immediately after Donkey kicks
+on each side, with no intervening rest.
+
+A 30-second Breathing with overhead arm sweeps step follows Breathing work.
+A 40-second Crunches with bent knees step follows Dead Bug in the abs circuit,
+retaining the circuit's 10-second rests between exercises.
+
+One-minute rests follow seated cat cow to half roll down and each side of
+Isometric hold squat with side lunge. The first side's rest replaces the
+previous 10-second side-switch rest.
+
+The revised cooldown lasts 12:30: overhead breathing arm sweeps (60 seconds),
+left side twist (45 seconds), left seated side stretch (30 seconds), and Seated
+Cow Pose Variation Arms Crossed On Knees on the left (30 seconds), then the
+same three movements on the right. Continue with Seated forward fold (60 seconds),
+lower down (10 seconds), reclined tree right then left (60 seconds each),
+reclined butterfly (50 seconds), Happy Baby (60 seconds), and Shavasana (180 seconds).
+Side placements are explicit.

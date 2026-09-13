@@ -10,6 +10,13 @@
  * Anything absent here is still on its legacy image.
  */
 export const RIG_BY_EXERCISE_NAME: Readonly<Record<string, string>> = {
+  // Updated sliders PDF spellings.
+  "Roll-ups": "roll-ups",
+  "Donkey kicks": "donkey-kick",
+  "Tabletop Toe Tap": "toe-taps-alternating",
+  "Dead Bug": "supine-bird-dog",
+  "Lower down slowley": "roll-down-to-mat",
+
   // Plank and slider floor
   "Straight leg sweep": "straight-leg-sweep",
   "Straight leg sweep circles": "straight-leg-sweep-circles",
@@ -50,6 +57,7 @@ export const RIG_BY_EXERCISE_NAME: Readonly<Record<string, string>> = {
   "Combine Side crunch + Cross body crunch": "quadruped-combined-crunch",
   "Bird-dog extension and crunch": "bird-dog-crunch",
   "Seated Straddle": "seated-straddle",
+  "Seated forward fold": "seated-forward-fold",
   "Side twist": "seated-side-twist",
   "Child's pose": "childs-pose",
   "Child's pose with side stretches": "childs-pose-side-stretch",
@@ -70,6 +78,7 @@ export const RIG_BY_EXERCISE_NAME: Readonly<Record<string, string>> = {
   "Roll ups - band around wrists": "banded-roll-ups",
   "Russian twist - band around wrists": "banded-russian-twist",
   Crunch: "crunch",
+  "Crunches with bent knees": "crunch",
   "Criss-cross": "criss-cross",
   Scissors: "scissors",
   "Toe taps alternating legs": "toe-taps-alternating",
