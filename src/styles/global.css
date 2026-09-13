@@ -1803,6 +1803,24 @@ h1 {
   }
 }
 
+/* Reserve room for complete exercise cues above the fixed controls on
+   compact phones, including the final-ten-second preview. */
+@media (max-width: 414px) and (min-height: 701px) {
+  .session-dashboard {
+    padding-block: 0.4rem;
+  }
+
+  .session-countdown {
+    margin-block: 0.35rem;
+    font-size: 4rem;
+  }
+
+  .session-dashboard,
+  .session-context {
+    gap: 0.5rem;
+  }
+}
+
 @media (min-width: 415px) and (max-width: 460px) and (min-height: 880px) {
   .session-dashboard {
     gap: 0.9rem;
