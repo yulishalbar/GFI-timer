@@ -22,10 +22,11 @@ const migrated = exercises.filter((exercise) => exercise.rig !== undefined);
 // New source movements and conflicting warm-up rows awaiting accurate guides.
 // Keep this explicit: unrelated missing artwork must still fail. See ARTWORK.md.
 const UPDATED_SLIDERS_PENDING = [
+  "High runner's lunge leg in-and-out", "Straight leg lift",
   "Happy Baby", "Seated side stretch", "Seated Cow Pose Variation Arms Crossed On Knees",
   "Reclined butterfly", "Breathing with overhead arm sweeps", "Donkey kick pulses", "Bent-knee leg lift", "Breathing work", "Cross overs", "Double Leg Stretch",
   "Extended pulse infornt", "Extended pulse straight back", "Fire hydrant pulses",
-  "Fire hydrants", "Hundred", "Kick knee to chest and extned", "Pulse bent knee",
+  "Fire hydrants", "Kick knee to chest and extned", "Pulse bent knee",
   "Rotation knee and heel", "Seated cat cows", "Side to side crunch", "head circles",
   "seated cat cow to half roll down"
 ];

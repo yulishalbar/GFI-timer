@@ -172,6 +172,7 @@ export const RIG_BY_EXERCISE_NAME: Readonly<Record<string, string>> = {
 
   // HIIT slider legs
   "Single-leg lunge with slider": "slider-reverse-lunge",
+  "Single-leg lunge with slider with pulse": "slider-lunge-hold-pulse",
   "Isometric hold single-leg lunge with slider with pulse": "slider-lunge-hold-pulse",
   "Side lunge sliding out": "slider-side-lunge",
   "Isometric hold squat with side lunge": "slider-squat-side-lunge",

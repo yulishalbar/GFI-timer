@@ -431,3 +431,6 @@ Pulse bent knee, Rotation knee and heel, Kick knee to chest and extned,
 Extended pulse straight back, and Extended pulse infornt. They display text
 without an unrelated visual. The warm-up's conflicting names/instructions need
 review before assigning guides. The artwork test tracks this exact backlog.
+
+Sliders version 9 adds High runner's lunge leg in-and-out and Straight leg lift;
+these await accurate guides. Rainbow reuses the existing pose rig.

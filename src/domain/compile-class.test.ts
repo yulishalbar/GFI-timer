@@ -219,17 +219,19 @@ describe("compileClass", () => {
   it("compiles the sliders class with stable totals", () => {
     const compiled = compileClass(hiitPilatesSliders);
 
-    expect(compiled.steps).toHaveLength(105);
-    expect(compiled.totalDurationMs).toBe(3_570_000);
-    expect(compiled.phases).toEqual([
-      { id: "warmup", name: "Warm-Up", index: 1, stepCount: 8, durationMs: 300_000 },
-      { id: "abs-circuit", name: "Circuit #1: Abs", index: 2, stepCount: 13, durationMs: 360_000 },
-      { id: "upper-core-one", name: "Circuit #2: Upper Body and Core", index: 3, stepCount: 6, durationMs: 210_000 },
-      { id: "hiit-legs", name: "Circuit #3: Legs Focused", index: 4, stepCount: 17, durationMs: 480_000 },
-      { id: "plank-pyramid", name: "Circuit #4: Upper Body and Core Pyramid (If there is time)", index: 5, stepCount: 15, durationMs: 390_000 },
-      { id: "upper-core-two", name: "Circuit #5: Upper Body and Core", index: 6, stepCount: 7, durationMs: 270_000 },
-      { id: "side-body", name: "Circuit #6: Side Body", index: 7, stepCount: 25, durationMs: 810_000 },
-      { id: "cooldown", name: "Cooldown", index: 8, stepCount: 14, durationMs: 750_000 }
+    expect(compiled.steps).toHaveLength(109);
+    expect(compiled.totalDurationMs).toBe(3_520_000);
+    expect(compiled.phases.filter((phase) => phase.name.startsWith("Circuit"))
+      .map((phase) => phase.name.match(/^Circuit #(\d+)/)?.[1])).toEqual(["1", "2", "3", "4", "5"]);
+    expect(compiled.phases.map(({ id, stepCount, durationMs }) => [id, stepCount, durationMs])).toEqual([
+      ["introduction", 1, 120_000],
+      ["warmup", 8, 270_000],
+      ["abs-circuit", 11, 310_000],
+      ["plank-pyramid", 13, 270_000],
+      ["upper-core-one", 10, 250_000],
+      ["hiit-legs", 17, 520_000],
+      ["side-body", 35, 1_030_000],
+      ["cooldown", 14, 750_000]
     ]);
     expect(compiled.steps.filter((step) => step.kind === "rest").every((step) => step.name === "REST"))
       .toBe(true);
@@ -239,7 +241,7 @@ describe("compileClass", () => {
   it("uses the revised sliders movements, rests, and side order", () => {
     const { steps, definition } = compileClass(hiitPilatesSliders);
     expect(definition.id).toBe("hiit-pilates-sliders");
-    expect(definition.version).toBe(8);
+    expect(definition.version).toBe(10);
     const phase = (id: string) => steps.filter((step) => step.phase.id === id);
     expect(phase("cooldown").find((step) => step.sourceId === "seated-forward-fold")?.name)
       .toBe("Seated forward fold");
@@ -264,11 +266,14 @@ describe("compileClass", () => {
       .map((step) => [step.name, step.durationMs])).toEqual([
         ["Roll-ups", 60_000], ["Double Leg Stretch", 40_000], ["Leg lowers", 40_000],
         ["Tabletop Toe Tap", 40_000], ["Dead Bug", 40_000],
-        ["Crunches with bent knees", 40_000], ["Hundred", 40_000]
+        ["Crunches with bent knees", 40_000]
       ]);
+    expect(steps.some((step) => step.name === "Hundred")).toBe(false);
+    expect(phase("warmup").find((step) => step.sourceId === "seated-cat-cow-half-roll-down"))
+      .toMatchObject({ durationMs: 30_000 });
     expect(phase("side-body").filter((step) => step.kind === "exercise")
       .map((step) => step.exerciseReference?.side)).toEqual([
-        ...Array<"right">(11).fill("right"), ...Array<"left">(11).fill("left")
+        ...Array<"right">(13).fill("right"), ...Array<"left">(13).fill("left")
       ]);
     for (const side of ["right", "left"]) {
       const kickIndex = steps.findIndex((step) => step.sourceId === `donkey-kicks-${side}`);
@@ -280,19 +285,43 @@ describe("compileClass", () => {
       });
     }
     expect(phase("side-body").filter((step) => step.kind === "rest")
-      .map((step) => step.durationMs)).toEqual([20_000, 30_000, 20_000]);
-    expect(phase("plank-pyramid").map((step) => step.durationMs)).toEqual([
-      40_000, 10_000, 40_000, 10_000, 40_000, 10_000, 40_000,
-      10_000, 40_000, 10_000, 40_000, 10_000, 40_000, 10_000, 40_000
-    ]);
-    expect(phase("plank-pyramid").at(-1)).toMatchObject({
-      name: "Pilates push-ups", durationMs: 40_000
-    });
-    expect(phase("side-body").filter((step) => step.kind === "exercise")
-      .map((step) => step.durationMs)).toEqual([
-        40_000, 20_000, 40_000, 20_000, 40_000, 40_000, 30_000, 40_000, 40_000, 30_000, 30_000,
-        40_000, 20_000, 40_000, 20_000, 40_000, 40_000, 30_000, 40_000, 40_000, 30_000, 30_000
+      .map((step) => step.durationMs)).toEqual([10_000, 20_000, 10_000, 10_000, 30_000, 10_000, 20_000, 10_000, 10_000]);
+    expect(phase("plank-pyramid")[0]?.phase.name).toBe("Circuit #2: Upper Body and Core Pyramid");
+    expect(phase("plank-pyramid").filter((step) => step.kind === "exercise")
+      .map((step) => [step.name, step.exerciseReference?.side])).toEqual([
+        ["Straight leg sweep", "right"], ["Straight leg sweep circles", "right"],
+        ["Thread the leg and open to the side", "right"], ["Sliders mountain climbers", undefined],
+        ["Thread the leg and open to the side", "left"], ["Straight leg sweep circles", "left"],
+        ["Straight leg sweep", "left"]
       ]);
+    expect(phase("plank-pyramid").map((step) => step.durationMs)).toEqual([
+      30_000, 10_000, 30_000, 10_000, 30_000, 10_000, 30_000,
+      10_000, 30_000, 10_000, 30_000, 10_000, 30_000
+    ]);
+    expect(steps.some((step) => step.name === "Pilates push-ups")).toBe(false);
+    expect(phase("upper-core-one").map((step) => step.durationMs)).toEqual([
+      60_000, 30_000, 10_000, 30_000, 10_000, 30_000, 10_000, 30_000, 10_000, 30_000
+    ]);
+    for (const round of ["one", "two"]) {
+      const start = steps.findIndex((step) => step.sourceId === `reverse-lunge-${round}`);
+      expect(steps.slice(start, start + 7).map((step) => [step.name, step.durationMs])).toEqual([
+        ["Single-leg lunge with slider", 30_000],
+        ["Single-leg lunge with slider with pulse", 30_000],
+        ["High runner's lunge leg in-and-out", 30_000],
+        ["REST", 10_000], ["Side lunge sliding out", 30_000],
+        ["REST", 10_000], ["Isometric hold squat with side lunge", 30_000]
+      ]);
+    }
+    for (const side of ["right", "left"]) {
+      const start = steps.findIndex((step) => step.sourceId === `fire-hydrant-pulses-${side}`);
+      expect(steps.slice(start, start + 13).map((step) => [step.name, step.durationMs])).toEqual([
+        ["Fire hydrant pulses", 20_000], ["REST", 10_000], ["Cross overs", 40_000],
+        ["Straight leg lift", 40_000], ["Rainbow", 40_000], ["REST", 20_000],
+        ["Bent-knee leg lift", 40_000], ["Pulse bent knee", 30_000], ["REST", 10_000],
+        ["Rotation knee and heel", 40_000], ["Kick knee to chest and extned", 40_000],
+        ["REST", 10_000], ["Extended pulse straight back", 30_000]
+      ]);
+    }
     for (const sourceId of [
       "seated-cat-cow-half-roll-down", "squat-side-lunge-one", "squat-side-lunge-two"
     ]) {

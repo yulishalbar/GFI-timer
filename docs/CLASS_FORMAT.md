@@ -251,26 +251,33 @@ version. A recovered session must match both class ID and class version.
 
 ## Updated sliders source
 
-`hiit-pilates-sliders` version 8 follows `classes/updated sliders class #1.pdf`.
-With instructor revisions, the 105 timed steps total **59 minutes 30 seconds**,
-including the optional 6:30 plank pyramid and push-ups. Approximate section headings and the 60-minute
-cover title do not add time. Abs runs once; legs run once per side; Circuit 5
-runs once followed by a one-minute rest. The side-body series includes a
-20-second transition on each side and a 30-second break between sides.
-The optional pyramid remains in the static schedule and is labeled ?If there
-is time?; no automatic skipping is implied. Its seven inter-exercise rests are
-10 seconds each.
+`hiit-pilates-sliders` version 10 follows `classes/updated sliders class #1.pdf`
+with instructor revisions. Its 109 timed steps total **58 minutes 40 seconds**, including
+an initial two-minute introduction. Seated cat cow to half roll down lasts
+30 seconds; Hundred and its preceding 10-second rest are removed.
+Circuits are numbered in playback order: 1 Abs, 2 Upper Body and Core Pyramid,
+3 Upper Body and Core, 4 Legs Focused, and 5 Side Body. The former Circuit 5
+is removed. Circuit 2 takes 4:30: seven 30-second movements
+with 10-second rests between them, without Pilates push-ups. Circuit 3 has
+10-second rests between exercises.
+
+Each lower-body side flows directly from Single-leg lunge with slider to
+Single-leg lunge with slider with pulse to High runner's lunge leg in-and-out
+(30 seconds each), then rests 10 seconds before the remaining movements.
+Each side-body series adds 40-second Straight leg lift and Rainbow after Cross
+overs, followed by the existing 20-second transition to Bent-knee leg lift.
+There are 10-second rests after Fire hydrant pulses, Pulse bent knee, and
+Kick knee to chest and extned on both sides. New movement durations match
+the surrounding exercises; the left side mirrors the right-side additions.
 
 The revised warm-up and Roll-ups rows contain descriptions that conflict with
 the movement names. Supplied wording is retained, including source spelling;
 these rows need instructor review. Blank instruction cells remain blank.
 
-Instructor revisions add 30-second Shoulder rolls after head circles and
-40-second Pilates push-ups after the Circuit 4 pyramid, preceded by its usual
-10-second rest. Circuit 6 non-pulse glute movements last 40 seconds on both
+Instructor revisions add 30-second Shoulder rolls after head circles. Circuit 5 non-pulse glute movements last 40 seconds on both
 sides; pulse movements and rests retain their original durations.
 
-Circuit 6 includes 20-second Donkey kick pulses immediately after Donkey kicks
+Circuit 5 includes 20-second Donkey kick pulses immediately after Donkey kicks
 on each side, with no intervening rest.
 
 A 30-second Breathing with overhead arm sweeps step follows Breathing work.
@@ -288,3 +295,8 @@ same three movements on the right. Continue with Seated forward fold (60 seconds
 lower down (10 seconds), reclined tree right then left (60 seconds each),
 reclined butterfly (50 seconds), Happy Baby (60 seconds), and Shavasana (180 seconds).
 Side placements are explicit.
+
+Circuit 2 has no optional label. Straight leg sweep, Straight leg sweep circles,
+and Thread the leg and open to the side use right-side placements on the first
+pass and left-side placements on the return pass. Mountain climbers remain
+unsided. Timing and order are unchanged.
