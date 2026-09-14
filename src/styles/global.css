@@ -1964,3 +1964,10 @@ h1 {
     animation-iteration-count: 1 !important;
   }
 }
+
+.session-shell--rest .next-step__exercise-count {
+  color: var(--color-text);
+  font-size: clamp(1.75rem, 5vw, 2.5rem);
+  font-weight: 800;
+  line-height: 1.1;
+}

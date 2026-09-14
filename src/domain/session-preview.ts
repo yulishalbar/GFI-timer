@@ -5,6 +5,7 @@ export interface SessionPreview {
   circuitExerciseNames: string[];
   circuitOverview?: {
     exerciseNames: string[];
+    perSide: boolean;
     breakDurationsMs: number[];
   };
 }
@@ -48,38 +49,24 @@ export function getSessionPreview(
     return { circuitExerciseNames: [] };
   }
 
-  const circuitExerciseNames: string[] = [];
-  const overviewExerciseNames: string[] = [];
-  const overviewBreakDurations = new Set<number>();
-  if (currentStep?.kind === "rest") {
-    const seenSourceIds = new Set<string>();
-    for (let index = nextExerciseIndex; index < steps.length; index += 1) {
-      const step = steps[index];
-      if (step === undefined || step.phase.id !== primary.phase.id) {
-        break;
-      }
-      if (step.kind === "exercise" && !seenSourceIds.has(step.sourceId)) {
-        seenSourceIds.add(step.sourceId);
-        circuitExerciseNames.push(step.name);
-      }
-      if (step.kind === "exercise") {
-        overviewExerciseNames.push(step.name);
-      } else {
-        overviewBreakDurations.add(step.durationMs);
-      }
-    }
-  }
+  const phaseSteps = steps.filter((step) => step.phase.id === primary.phase.id);
+  const exercises = phaseSteps.filter((step) => step.kind === "exercise");
+  const left = exercises.filter((step) => step.exerciseReference?.side === "left");
+  const right = exercises.filter((step) => step.exerciseReference?.side === "right");
+  const perSide = left.length > 0 && left.length === right.length
+    && left.every((step, index) => step.name === right[index]?.name)
+    && exercises.every((step) => step.exerciseReference?.side !== undefined);
+  // Preserve repeated movements within a side (such as a pyramid's return),
+  // while omitting the matching opposite-side sequence.
+  const overviewExercises = perSide ? left : exercises;
+  const exerciseNames = overviewExercises.map((step) => step.name);
+  const breakDurationsMs = [...new Set(phaseSteps
+    .filter((step) => step.kind === "rest")
+    .map((step) => step.durationMs))].sort((a, b) => a - b);
 
   return {
     primary,
-    circuitExerciseNames,
-    ...(currentStep.durationMs === 60_000
-      ? {
-          circuitOverview: {
-            exerciseNames: overviewExerciseNames,
-            breakDurationsMs: [...overviewBreakDurations].sort((a, b) => a - b)
-          }
-        }
-      : {})
+    circuitExerciseNames: [...new Set(exerciseNames)],
+    circuitOverview: { exerciseNames, perSide, breakDurationsMs }
   };
 }

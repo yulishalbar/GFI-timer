@@ -90,6 +90,7 @@ export function SessionScreen({
     nowEpochMs
   );
   const preview = getSessionPreview(fitnessClass.steps, state.stepIndex);
+  const isShortRest = currentStep.kind === "rest" && currentStep.durationMs === 10_000;
   const displayedPhase =
     currentStep.kind === "rest" && preview.primary ? preview.primary.phase : currentStep.phase;
   const isEnding = remainingMs <= PREVIEW_LEAD_MS;
@@ -144,9 +145,11 @@ export function SessionScreen({
             <span className={`status-pill status-pill--${state.status}`}>{state.status}</span>
             <span>{currentStep.kind === "rest" ? "Transition" : "Exercise"}</span>
           </div>
-          <p className="session-phase">
-            Phase {displayedPhase.index}/{displayedPhase.count} · {displayedPhase.name}
-          </p>
+          {!isShortRest ? (
+            <p className="session-phase">
+              Phase {displayedPhase.index}/{displayedPhase.count} · {displayedPhase.name}
+            </p>
+          ) : null}
           <h1>
             {currentStep.name}
             <ExerciseSideBadge side={currentStep.exerciseReference?.side} />
@@ -192,24 +195,22 @@ export function SessionScreen({
                 <ExerciseMedia step={preview.primary} decorative />
               </div>
             ) : null}
-            {preview.circuitOverview ? (
+            {!isShortRest && preview.circuitOverview ? (
               <div className="next-step__circuit">
                 <span className="next-step__circuit-name">{preview.primary?.phase.name}</span>
+                <p className="next-step__exercise-count">
+                  {preview.circuitOverview.exerciseNames.length} exercises{preview.circuitOverview.perSide ? " per side" : ""}
+                </p>
                 <p className="next-step__circuit-summary">
-                  {preview.circuitOverview.exerciseNames.length} exercises · Breaks: {preview.circuitOverview.breakDurationsMs.length > 0
+                  Breaks: {preview.circuitOverview.breakDurationsMs.length > 0
                     ? preview.circuitOverview.breakDurationsMs.map((duration) => formatDuration(duration)).join(", ")
                     : "none"}
                 </p>
-                <ol>
-                  {preview.circuitOverview.exerciseNames.map((name, index) => <li key={`${index}-${name}`}>{name}</li>)}
-                </ol>
-              </div>
-            ) : preview.circuitExerciseNames.length > 1 ? (
-              <div className="next-step__circuit">
-                <span className="next-step__circuit-name">{preview.primary?.phase.name}</span>
-                <ul>
-                  {preview.circuitExerciseNames.map((name) => <li key={name}>{name}</li>)}
-                </ul>
+                {currentStep.durationMs === 60_000 ? (
+                  <ol>
+                    {preview.circuitOverview.exerciseNames.map((name, index) => <li key={`${index}-${name}`}>{name}</li>)}
+                  </ol>
+                ) : null}
               </div>
             ) : null}
           </section>

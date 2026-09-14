@@ -85,7 +85,7 @@ step and End class, but they must not crowd the interface.
 - When a rest or transition is next, the preview identifies it explicitly.
   During the rest, the phase heading switches to the circuit being prepared for,
   while the preview emphasizes its first exercise and lists that circuit's
-  unique exercises.
+  exercises once per side when both sides repeat the same sequence.
 - During the final ten seconds of every step, the upcoming exercise receives
   greater focus and its visual guide is previewed alongside the current one.
   The lead is a fixed ten seconds regardless of step length; on a step shorter
@@ -110,6 +110,15 @@ step and End class, but they must not crowd the interface.
   remaining time without changing the time already completed. Removing the
   final remaining seconds advances once to the next step. Adjustments work
   while running or paused and survive session recovery.
+
+During breaks other than ten-second rests, the next-circuit preview shows a prominent exercise count
+and, only during one-minute rests, the full ordered exercise list. Shorter
+rests omit the list. Ten-second rests show only the next-exercise preview,
+with no circuit heading, summary, or exercise count. Other rest durations
+retain the count and next-exercise preview.
+Matching left/right sequences appear once
+with an exercises-per-side count; repeats within a side remain listed. Mixed
+or different side sequences retain their full list and total count.
 
 ### Recovery
 

@@ -219,6 +219,15 @@ as exercises themselves. Opening the picker or a class overview resets document
 scroll to the beginning. The overview keeps short instructor comments visible
 and provides per-pose plus expand-all controls for longer instructions and art.
 
+During breaks other than ten-second rests, the next-circuit preview shows a prominent exercise count
+and, only during one-minute rests, the full ordered exercise list. Shorter
+rests omit the list. Ten-second rests show only the next-exercise preview,
+with no circuit heading, summary, or exercise count. Other rest durations
+retain the count and next-exercise preview.
+Matching left/right sequences appear once
+with an exercises-per-side count; repeats within a side remain listed. Mixed
+or different side sequences retain their full list and total count.
+
 ## Audio
 
 Generate short cue tones through the local Web Audio context so cues work

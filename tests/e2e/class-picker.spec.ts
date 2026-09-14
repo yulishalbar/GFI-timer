@@ -253,13 +253,13 @@ test("opens and starts the catalog-backed sliders course", async ({ page }) => {
   const classCard = page.getByRole("article").filter({
     has: page.getByRole("heading", { name: "Mat Pilates with Sliders", exact: true })
   });
-  await expect(classCard).toContainText("59.5 min");
+  await expect(classCard).toContainText("58.7 min");
   await expect(classCard).toContainText("8 phases");
-  await expect(classCard).toContainText("105 steps");
+  await expect(classCard).toContainText("109 steps");
   await classCard.getByRole("button", { name: "View class" }).click();
 
   await expect(page.getByRole("heading", { name: "Mat Pilates with Sliders" })).toBeVisible();
-  await expect(page.getByLabel("59.5 min total")).toContainText("59:30");
+  await expect(page.getByLabel("58.7 min total")).toContainText("58:40");
   const leftBadge = page.getByLabel("Left side").first();
   const rightBadge = page.getByLabel("Right side").first();
   await expect(leftBadge).toBeVisible();
@@ -267,36 +267,35 @@ test("opens and starts the catalog-backed sliders course", async ({ page }) => {
   expect(await leftBadge.evaluate((element) => getComputedStyle(element).backgroundColor))
     .not.toBe(await rightBadge.evaluate((element) => getComputedStyle(element).backgroundColor));
   await page.getByRole("button", { name: "Expand all pose details" }).click();
+  await expect(page.getByRole("heading", { name: "Circuit #2: Upper Body and Core Pyramid", exact: true })).toBeVisible();
+  for (const name of ["Straight leg sweep", "Straight leg sweep circles", "Thread the leg and open to the side"]) {
+    const rows = page.locator(".step-row").filter({ hasText: name });
+    await expect(rows.first().getByLabel("Right side")).toBeVisible();
+    await expect(rows.last().getByLabel("Left side")).toBeVisible();
+  }
   const straightLegSweep = page.locator(".step-row").filter({ hasText: "Straight leg sweep" }).first();
   await expect(straightLegSweep.locator("img")).toHaveCount(0);
   await expectRigAnimates(straightLegSweep.locator("svg.exercise-rig"));
   const mountainClimbers = page.locator(".step-row").filter({ hasText: "Sliders mountain climbers" }).first();
   await expectRigAnimates(mountainClimbers.locator("svg.exercise-rig"));
   await page.getByRole("button", { name: "Start class" }).click();
-  await expect(page.getByRole("heading", { name: "Breathing work" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Class introduction" })).toBeVisible();
 
-  // Advance past warm-up, abs, and setup to the rigged reverse-plank series.
-  for (let index = 0; index < 22; index += 1) {
-    await page.getByRole("button", { name: "Next" }).click();
+  // Intro, warm-up, abs, and pyramid precede the reverse-plank setup.
+  for (let index = 0; index < 34; index += 1) {
+    await page.getByRole("button", { name: "Next", exact: true }).click();
   }
   await expect(page.getByRole("heading", { name: "Reverse plank to L-sit", exact: true })).toBeVisible();
   await page.getByRole("slider", { name: "Seek within current step" }).fill("22000");
   await expect(page.locator(".session-shell")).toHaveClass(/session-shell--ending/);
-  const preview = page.locator(".next-step__preview");
-  await expect(preview).toBeVisible();
-  await expect(preview.locator("svg.exercise-rig")).toBeVisible();
-  await expect(page.locator(".current-step-details")).toBeVisible();
-  expect(Number(await preview.evaluate((el) => getComputedStyle(el).opacity))).toBeLessThan(1);
-  await page.getByRole("slider", { name: "Seek within current step" }).fill("10000");
-  await expect(page.locator(".next-step__preview")).toHaveCount(0);
-
-  // The lead is the same ten seconds on a short step: this one runs 30s, and
-  // eight seconds out it is already handing over.
-  await page.getByRole("button", { name: "Next" }).click();
+  await expect(page.getByRole("region", { name: "Next step" })).toContainText("REST");
+  await page.getByRole("button", { name: "Next", exact: true }).click();
+  await expect(page.getByRole("heading", { name: "REST", exact: true })).toBeVisible();
+  await expect(page.locator(".next-step__exercise-count")).toHaveCount(0);
+  await expect(page.locator(".next-step__circuit")).toHaveCount(0);
+  await expect(page.locator(".next-step__preview svg.exercise-rig")).toBeVisible();
+  await page.getByRole("button", { name: "Next", exact: true }).click();
   await expect(page.getByRole("heading", { name: "In and outs with sliders", exact: true })).toBeVisible();
-  await page.getByRole("slider", { name: "Seek within current step" }).fill("22000");
-  await expect(page.locator(".session-shell")).toHaveClass(/session-shell--ending/);
-  await expect(page.locator(".next-step__preview")).toBeVisible();
 });
 
 /**
@@ -314,7 +313,7 @@ test("keeps the current movement readable during the handover on a phone", async
   });
   await classCard.getByRole("button", { name: "View class" }).click();
   await page.getByRole("button", { name: "Start class" }).click();
-  for (let index = 0; index < 22; index += 1) {
+  for (let index = 0; index < 34; index += 1) {
     await page.getByRole("button", { name: "Next" }).click();
   }
   await page.getByRole("slider", { name: "Seek within current step" }).fill("22000");
@@ -335,10 +334,9 @@ test("keeps the current movement readable during the handover on a phone", async
     await page.evaluate(() => document.documentElement.scrollHeight - window.innerHeight)
   ).toBeLessThanOrEqual(0);
 
-  // The look-ahead is present but stays a thumbnail beside the name.
-  const previewHeight = await page.locator(".next-step__preview").evaluate((el) => el.getBoundingClientRect().height);
-  const guideHeight = await guide.evaluate((el) => el.getBoundingClientRect().height);
-  expect(previewHeight).toBeLessThan(guideHeight);
+  // This movement now hands over to an explicit rest, which has no pose art.
+  await expect(page.getByRole("region", { name: "Next step" })).toContainText("REST");
+  await expect(page.locator(".next-step__preview")).toHaveCount(0);
 });
 
 test("opens and starts the band class", async ({ page }) => {
@@ -401,7 +399,8 @@ test("opens and starts the weights and block class", async ({ page }) => {
   }
   await expect(page.getByRole("heading", { name: "REST" })).toBeVisible();
   const circuitExercises = page.locator(".next-step__circuit li");
-  await expect(circuitExercises).toHaveCount(18);
+  await expect(circuitExercises).toHaveCount(9);
+  await expect(page.locator(".next-step__exercise-count")).toHaveText("9 exercises per side");
   await expect(circuitExercises.first()).toContainText("Mermaid dip");
   expect(await circuitExercises.first().evaluate((element) =>
     Number.parseFloat(getComputedStyle(element).fontSize)

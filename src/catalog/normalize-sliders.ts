@@ -40,9 +40,13 @@ export function normalizeSlidersCatalog(input: AdaptedLegacyCourse): AdaptedLega
       "seated-side-stretch-left", "seated-side-stretch-right",
       "seated-cow-arms-crossed-left", "seated-cow-arms-crossed-right"]
       .includes(placement.id);
-    if (!isHiitSide && !isSideBody && !isCooldownSide) return;
+    const isPyramidSide = [
+      "straight-leg-sweep", "straight-leg-sweep-circles", "thread-leg-side",
+      "thread-leg-side-return", "straight-leg-sweep-circles-return", "straight-leg-sweep-return"
+    ].some((id) => placement.id === `${id}-plank-pyramid`);
+    if (!isHiitSide && !isSideBody && !isCooldownSide && !isPyramidSide) return;
 
-    const side = placement.id.endsWith("-one") || placement.id.endsWith("-three") || placement.id.endsWith("-left")
+    const side = placement.id.endsWith("-one") || placement.id.endsWith("-three") || placement.id.endsWith("-left") || placement.id.endsWith("-return-plank-pyramid")
       ? "left"
       : "right";
     placement.side = side;
