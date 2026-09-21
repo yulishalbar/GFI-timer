@@ -36,6 +36,7 @@ const gluteSide = (side: "L" | "R"): ClassEntry[] => [
     `Donkey kick up, and then cross the ${side === "L" ? "left" : "right"} leg over the other leg, touching the knee down, and kick back up.`, undefined, "exercises/quadruped-leg-series.svg"),
   exercise(`donkey-kick-dog-crunch-${side.toLowerCase()}`, `Donkey kick + downward dog crunch in (${side})`, 40,
     "From tabletop, lift the bent leg at 90 degrees toward the ceiling. As you lower down, lift the grounded knee off the mat and straighten the leg, exhale to crunch the working leg in toward the chest, inhale and return to tabletop. Repeat.", undefined, "exercises/quadruped-leg-series.svg"),
+  rest(`glutes-crunch-rest-${side.toLowerCase()}`, 20),
   exercise(`leg-extensions-${side.toLowerCase()}`, `Leg extensions (${side})`, 40,
     "From tabletop, extend the straight back leg and lift toward the ceiling with control. Exhale at the top, holding for a second.", undefined, "exercises/quadruped-leg-series.svg"),
   exercise(`leg-pulses-${side.toLowerCase()}`, `Leg pulses (${side})`, 40,
@@ -52,17 +53,16 @@ const standingLegSide = (side: "L" | "R"): ClassEntry[] => {
   return [
     exercise(`static-single-leg-squat-${suffix}`, `Static single-leg squat (${side}), ${moving} heel lifts and lowers`, 30,
       `Lower to a squat and hold, ${working} leg planted on the ground, ${moving} heel lifts and lowers while staying in a static low squat.`),
-    rest(`standing-legs-rest-one-${suffix}`, 10),
     exercise(`single-leg-squat-opener-${suffix}`, `Single leg squat (${side}) + leg opener`, 30,
       `Stay in a low squat with the ${moving} heel lifted. Open hips toward the ${moving} side, rotate the ${moving} knee outward and twist the ${moving} heel.`),
-    exercise(`pulse-leg-openers-${suffix}`, `Pulse leg openers (${side})`, 30,
+    exercise(`pulse-leg-openers-${suffix}`, `Pulse leg openers (${side})`, 20,
       `Stay in a low squat with the ${moving} heel lifted. Pulse out by adding small knee rotations outward.`),
     rest(`standing-legs-rest-two-${suffix}`, 10),
     exercise(`full-range-single-leg-squat-${suffix}`, `Full-range single-leg squat (${side}), ${moving} heel lifted`, 30,
       `${working[0]!.toUpperCase()}${working.slice(1)} leg planted on the ground, ${moving} heel lifted with toes on the mat, arms in prayer at chest height; squat down.`),
     exercise(`side-squat-curtsy-${suffix}`, `Side squat to curtsy lunge (${side})`, 30,
       `${working[0]!.toUpperCase()}${working.slice(1)} leg planted on the ground, ${moving} heel lifted with toes on the mat, arms in prayer at chest height. Bring the ${moving} leg far to the side and squat. Shift weight to the ${working} leg and sweep the ${moving} leg diagonally behind into a curtsy lunge, lowering straight down with hips square. Press through the ${working} heel to rise, step back to wide, then tap ${moving} toes to center. Repeat.`),
-    exercise(`curtsy-pulse-${suffix}`, `Curtsy pulse (${side})`, 30,
+    exercise(`curtsy-pulse-${suffix}`, `Curtsy pulse (${side})`, 20,
       `Weight in the ${working} leg, with the ${moving} leg diagonally behind in a curtsy lunge; pulse up and down.`)
   ];
 };
@@ -92,7 +92,7 @@ const sideBodyWithRests = sideBodyPyramid.flatMap((move, index) => [
 export const matPilatesBandLegacy = {
   schemaVersion: 1,
   id: "mat-pilates-band-v1",
-  version: 2,
+  version: 4,
   title: "Mat Pilates with Band V1",
   description: "Warm-up, core, glutes, legs, upper body, and cooldown. Equipment: mat and band.",
   phases: [
@@ -127,11 +127,11 @@ export const matPilatesBandLegacy = {
           "Tuck pelvis, imprint back onto mat and lift legs. With band right below knees, lift the head and shoulders, draw stomach in, exhale and curl up; inhale to lower."),
         exercise("hundredth", "Hundredth - band below knees", 60,
           "From the lifted curl, extend arms beside the body and flutter them up and down. Breathe in 2, 3, 4 and out 2, 3, 4."),
-        rest("move-band-ankles-one", 10, "Move band down to ankles."),
-        exercise("leg-lowers", "Leg lowers - band around ankles", 40,
-          "Extend legs up, perpendicular to the body. Lower legs toward the floor, then lift back to tabletop. Option to curl up."),
-        exercise("flutter-kicks", "Flutter kicks up and down - band around ankles", 40,
-          "Back flat on the mat, inhale to prepare, exhale and flutter legs up and down, slowly lowering them toward the mat. Return slowly without fluttering and repeat."),
+        rest("move-band-shins", 10, "Place the band around shins."),
+        exercise("leg-extensions", "Leg extensions - band around shins", 40,
+          "Lie on your back with knees bent in tabletop and the band around shins. Extend both legs away with control, then bend the knees back to tabletop."),
+        exercise("leg-lowers", "Leg lowers - band around shins", 40,
+          "With the band around shins, extend legs up, perpendicular to the body. Lower legs toward the floor, then lift back up. Option to curl up."),
         rest("move-band-wrists", 10, "Move band to around wrists."),
         exercise("roll-ups", "Roll ups - band around wrists", 60,
           "Extend legs on the mat and arms straight overhead. Inhale to prepare. Exhale to bring shoulders up, lift the chest and slowly roll up to seated, reach fingertips forward, and slowly roll back down."),
@@ -143,7 +143,7 @@ export const matPilatesBandLegacy = {
       id: "glutes-circuit",
       name: "Circuit #2: Glutes",
       items: [
-        rest("glutes-setup", 60, "Band around thighs. Cue the full circuit and remind everyone there are no breaks between exercises."),
+        rest("glutes-setup", 60, "Band around thighs. Cue the full circuit, including a 20-second break after the donkey kick and downward dog crunch on each side."),
         ...gluteSide("L"),
         rest("glutes-side-switch", 60, "Rest and switch sides."),
         ...gluteSide("R")
@@ -172,33 +172,35 @@ export const matPilatesBandLegacy = {
       name: "Circuit #5: Standing Upper Body and Core",
       items: [
         rest("upper-body-setup", 60, "Cue the full circuit, starting on the right side."),
-        exercise("standing-punch-outs", "Standing punch-outs", 40,
-          "Stand with a slight bend in the knees, band around wrists. Start with hands close to the chest, punch out with the right hand and then the left."),
         exercise("band-hold-out", "Band hold out", 40, "Straighten hands out and hold the band extended."),
-        exercise("band-pulse-out", "Band pulse out", 40, "Pulse the band while extended."),
+        exercise("band-pulse-out", "Band pulse out", 20, "Pulse the band while extended."),
         rest("upper-body-mid-rest", 10),
         exercise("straight-biceps-curl", "Straight biceps curl", 40,
           "Bring elbows tight to ribs and curl up with the band using triceps."),
         exercise("serve-platter", "Serve the platter", 40,
           "Start with elbows by ribs and palms facing the ceiling; extend arms up to chest height."),
+        rest("serve-platter-rest", 10),
         exercise("band-triceps-ups", "Band triceps ups (behind back)", 40,
           "Bring more of a bend to the knees. Bring the band across wrists behind the back and lift up and lower."),
         exercise("band-outward-extension", "Band outward extension (behind back)", 40,
           "With the band still behind the back, extend the band out and in."),
-        rest("upper-body-round-two-setup", 60, "Reset and cue the second round."),
-        exercise("standing-punch-outs-round-two", "Standing punch-outs", 40,
-          "Stand with a slight bend in the knees, band around wrists. Start with hands close to the chest, punch out with the right hand and then the left."),
+        exercise("band-upwards-lift", "Band upwards lift (behind back)", 40,
+          "Keep the band around wrists behind the back. Lift both arms upward with control, then lower, keeping shoulders relaxed."),
+        rest("upper-body-round-two-setup", 30, "Reset and cue the second round."),
         exercise("band-hold-out-round-two", "Band hold out", 40, "Straighten hands out and hold the band extended."),
-        exercise("band-pulse-out-round-two", "Band pulse out", 40, "Pulse the band while extended."),
+        exercise("band-pulse-out-round-two", "Band pulse out", 20, "Pulse the band while extended."),
         rest("upper-body-mid-rest-round-two", 10),
         exercise("straight-biceps-curl-round-two", "Straight biceps curl", 40,
           "Bring elbows tight to ribs and curl up with the band using triceps."),
         exercise("serve-platter-round-two", "Serve the platter", 40,
           "Start with elbows by ribs and palms facing the ceiling; extend arms up to chest height."),
+        rest("serve-platter-rest-round-two", 10),
         exercise("band-triceps-ups-round-two", "Band triceps ups (behind back)", 40,
           "Bring more of a bend to the knees. Bring the band across wrists behind the back and lift up and lower."),
         exercise("band-outward-extension-round-two", "Band outward extension (behind back)", 40,
-          "With the band still behind the back, extend the band out and in.")
+          "With the band still behind the back, extend the band out and in."),
+        exercise("band-upwards-lift-round-two", "Band upwards lift (behind back)", 40,
+          "Keep the band around wrists behind the back. Lift both arms upward with control, then lower, keeping shoulders relaxed.")
       ]
     },
     {
@@ -212,9 +214,9 @@ export const matPilatesBandLegacy = {
         exercise("forward-fold", "Forward fold", 30,
           "Soften the knees and slowly hinge forward. Let the head, neck and arms relax. Option to hold opposite elbows and gently sway side to side."),
         exercise("down-dog-one", "Downward-facing dog", 20),
-        exercise("crescent-lunge-left", "Crescent low lunge (L)", 30),
+        exercise("crescent-lunge-left", "Crescent low lunge (L)", 60),
         exercise("down-dog-two", "Downward-facing dog", 20),
-        exercise("crescent-lunge-right", "Crescent low lunge (R)", 30),
+        exercise("crescent-lunge-right", "Crescent low lunge (R)", 60),
         exercise("down-dog-childs-pose-seated", "Downward-facing dog → child's pose → seated", 30, undefined, undefined, "exercises/childs-pose.svg"),
         exercise("windshield-wipers", "Bent-knee windshield wipers", 60),
         exercise("shavasana", "Shavasana", 180,
@@ -235,7 +237,7 @@ export const matPilatesBandCatalog = {
   course: {
     ...adaptedBandCourse.course,
     id: "mat-pilates-band",
-    version: 2,
+    version: 4,
     title: "Mat Pilates with Band"
   }
 };

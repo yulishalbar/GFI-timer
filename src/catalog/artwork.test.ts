@@ -90,7 +90,7 @@ describe("exercise artwork", () => {
     });
   });
 
-  it("retains only the previous sliders bicycle guide outside the active catalog", () => {
+  it("retains previous schedule guides outside the active catalog", () => {
     const used = new Set([...exercises, ...steps].flatMap((item) => (item.rig ? [item.rig] : [])));
     // The original push-up poses also supply the pike combination and ring variant.
     if (used.has("knee-push-ups-to-pike") || used.has("ring-assisted-knee-push-ups")) {
@@ -99,7 +99,7 @@ describe("exercise artwork", () => {
     if (used.has("ring-double-leg-lift")) used.add("double-leg-lift");
     const unused = Object.keys(RIGS).filter((id) => !used.has(id)).sort();
     // Retain guides from the previous sliders schedule for future class reuse.
-    expect(unused).toEqual(["bicycle-legs"]);
+    expect(unused).toEqual(["bicycle-legs", "standing-punch-outs"]);
   });
 
   it("draws the same movement the same way wherever it appears", () => {

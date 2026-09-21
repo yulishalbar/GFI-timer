@@ -1619,33 +1619,33 @@ const BASE_RIGS: Readonly<Record<string, RigDefinition>> = {
   },
 
   "banded-leg-lowers": {
-    title: "Leg lowers - band around ankles",
+    title: "Leg lowers - band around shins",
     box: SUPINE_BOX,
     tempoMs: 2400,
     loop: "pingpong",
     groundY: 162,
     focus: ["legNear", "legFar"],
     trace: "ankleNear",
-    equipment: [{ type: "band", from: "ankleNear", to: "ankleFar", sag: 3 }],
+    equipment: [{ type: "band", from: "kneeNear", to: "kneeFar", sag: 3 }],
     poses: [
       supine({ hipSpread: 7, legNear: [-86, 2, -4], legFar: [-84, 2, -4] }),
       supine({ hipSpread: 7, legNear: [-30, 2, -4], legFar: [-28, 2, -4] })
     ]
   },
 
-  "banded-flutter-kicks": {
-    title: "Flutter kicks up and down - band around ankles",
+  "banded-leg-extensions": {
+    title: "Leg extensions - band around shins",
     box: SUPINE_BOX,
-    tempoMs: 800,
+    tempoMs: 2400,
     loop: "pingpong",
     groundY: 162,
     focus: ["legNear", "legFar"],
     trace: "ankleNear",
-    equipment: [{ type: "band", from: "ankleNear", to: "ankleFar", sag: 3 }],
-    // Small, fast, and opposed: the legs pass each other rather than travel far.
+    equipment: [{ type: "band", from: "kneeNear", to: "kneeFar", sag: 3 }],
+    // Both knees bend into tabletop, then extend together.
     poses: [
-      supine({ hipSpread: 6, legNear: [-58, 3, -6], legFar: [-30, 3, -6] }),
-      supine({ hipSpread: 6, legNear: [-30, 3, -6], legFar: [-58, 3, -6] })
+      supine({ hipSpread: 6, legNear: [-90, 90, -6], legFar: [-88, 90, -6] }),
+      supine({ hipSpread: 6, legNear: [-30, 3, -6], legFar: [-28, 3, -6] })
     ]
   },
 

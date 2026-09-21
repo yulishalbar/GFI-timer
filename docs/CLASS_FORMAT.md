@@ -300,3 +300,15 @@ Circuit 2 has no optional label. Straight leg sweep, Straight leg sweep circles,
 and Thread the leg and open to the side use right-side placements on the first
 pass and left-side placements on the return pass. Mountain climbers remain
 unsided. Timing and order are unchanged.
+
+## Updated band schedule
+
+`mat-pilates-band` version 4 has 96 timed steps totaling **59 minutes 50 seconds**.
+The core sequence uses 40-second Leg extensions then Leg lowers, both with the
+band around shins. Each glute side rests 20 seconds after Donkey kick + downward
+dog crunch in. The 10-second rest after each Static single-leg squat is removed.
+Pulse leg openers and Curtsy pulse last 20 seconds each on both sides.
+Both upper-body rounds omit Standing punch-outs, use 20-second Band pulse out,
+rest 10 seconds after Serve the platter, and add a 40-second Band upwards lift
+(behind back) after Band outward extension (behind back). The break between
+upper-body rounds is 30 seconds. Crescent low lunge lasts 60 seconds per side.

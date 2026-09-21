@@ -73,8 +73,8 @@ export const RIG_BY_EXERCISE_NAME: Readonly<Record<string, string>> = {
   "In and outs with sliders": "slider-in-outs",
   "Tabletop crunch - band below knees": "banded-tabletop-crunch",
   "Hundredth - band below knees": "banded-hundred",
-  "Leg lowers - band around ankles": "banded-leg-lowers",
-  "Flutter kicks up and down - band around ankles": "banded-flutter-kicks",
+  "Leg lowers - band around shins": "banded-leg-lowers",
+  "Leg extensions - band around shins": "banded-leg-extensions",
   "Roll ups - band around wrists": "banded-roll-ups",
   "Russian twist - band around wrists": "banded-russian-twist",
   Crunch: "crunch",
@@ -168,6 +168,7 @@ export const RIG_BY_EXERCISE_NAME: Readonly<Record<string, string>> = {
   "Band pulse out": "band-pulse-out",
   "Serve the platter": "serve-the-platter",
   "Band triceps ups (behind back)": "band-triceps-ups",
+  "Band upwards lift (behind back)": "band-triceps-ups",
   "Band outward extension (behind back)": "band-outward-extension",
 
   // HIIT slider legs
