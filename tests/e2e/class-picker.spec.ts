@@ -381,12 +381,13 @@ test("opens and starts the weights and block plank copy", async ({ page }) => {
   const card = page.getByRole("article").filter({
     has: page.getByRole("heading", { name: "Block + Weights Mat Pilates #2", exact: true })
   });
-  await expect(card).toContainText("56 min");
+  await expect(card).toContainText("56.2 min");
+  await expect(card).toContainText("92 steps");
   await card.getByRole("button", { name: "View class" }).click();
   const circuit = page.locator(".phase-section").filter({
     has: page.getByRole("heading", { name: "Circuit #1: plank + side body", exact: true })
   });
-  await expect(circuit.locator(".step-row")).toHaveCount(15);
+  await expect(circuit.locator(".step-row")).toHaveCount(23);
   await page.getByRole("button", { name: "Start class" }).click();
   for (let step = 0; step < 8; step += 1) {
     await page.getByRole("button", { name: "Next", exact: true }).click();
