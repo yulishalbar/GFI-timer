@@ -303,15 +303,26 @@ unsided. Timing and order are unchanged.
 
 ## Block + Weights plank copy
 
-`mat-pilates-weights-block-plank` version 2 is listed as **Block + Weights Mat
-Pilates #2**. It copies the original course with Circuit #1
-replaced by the supplied 15-row plank and side-lying sequence (9 minutes).
-Circuit #2 adds 30-second Regular squat pulses immediately after Regular squats.
-The full class totals **56 minutes**. Explicit 15-, 20-, and 15-second
-rests and both instructor notes are retained. The second high-plank knee drive
-remains left-sided for 10 seconds as supplied; side-lying moves last 60 seconds
-each lying right and 40 seconds each lying left. The original class remains
-available unchanged, and the copy retains its text-only presentation.
+`mat-pilates-weights-block-plank` version 5 is listed as **Block + Weights Mat
+Pilates #2** and totals **56 minutes 10 seconds**. The warm-up ends with a
+two-minute rest. Circuit #1 splits each side's second exercise into Side plank
+bends (holding block) and Side plank twist (holding block), 20 seconds each.
+Ten-second rests follow the first exercise, the split pair, and the high-plank
+knee drive on each side. The second knee drive remains left-sided for 10 seconds;
+side-lying moves remain 60 seconds each lying right and 40 seconds lying left.
+The existing 15-, 20-, and 15-second rests and instructor notes are retained.
+
+Circuit #2 flows directly from Lunge into Lunge to single leg RDL, then into lunge pulses on
+both sides, and retains 30-second Regular squat pulses after Regular squats.
+Circuit #3 names the pike Single leg pike knee drive. The 90/90 Lunge Narrow
+Press, Narrow Press + Knee to Block Tap, 2-Count Hinge + Knee to Block Taps
+(weights behind head), and B-Stance Squats last 30 seconds each on both sides.
+B-Stance Squats flow directly into their pulses. Circuit #4 retains its existing
+rests. Circuit #5 replaces the Tabletop toe taps name with Leg lowers (block
+between ankles), retaining 40 seconds. Crunch pulses follow Crunches
+(holding block) immediately for 30 seconds, before the existing end rest.
+The original class remains unchanged,
+and Class #2 retains its text-only presentation.
 
 ## Updated band schedule
 

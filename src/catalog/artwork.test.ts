@@ -35,12 +35,14 @@ const NOT_A_MOVEMENT = ["Class introduction", "INTRODUCTION"];
 
 // The plank copy retains the original course's text-only presentation.
 const BLOCK_PLANK_PENDING = [
-  "Regular squat pulses",
+  "Regular squat pulses", "Crunch pulses",
+  "Side plank bends (holding block) (L)", "Side plank bends (holding block) (R)",
+  "Single leg pike knee drive", "Leg lowers (block between ankles)",
   "Bear plank side twists", "High plank Knee drive (L)",
   "Downward facing dog to side plank leg bend (holding block) (L)",
   "Downward facing dog to side plank leg bend (holding block) (R)",
-  "Side plank arm twist to mat and up (holding block) (L)",
-  "Side plank arm twist to mat and up (holding block) (R)",
+  "Side plank twist (holding block) (L)",
+  "Side plank twist (holding block) (R)",
   "Lying kneedrive (R) balance block on side of foot",
   "Lying leg lift (R) balance block on side of foot",
   "Lying kneedrive (L) balance block on side of foot",
