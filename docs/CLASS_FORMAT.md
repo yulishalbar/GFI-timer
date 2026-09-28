@@ -301,6 +301,18 @@ and Thread the leg and open to the side use right-side placements on the first
 pass and left-side placements on the return pass. Mountain climbers remain
 unsided. Timing and order are unchanged.
 
+## Block + Weights plank copy
+
+`mat-pilates-weights-block-plank` version 2 is listed as **Block + Weights Mat
+Pilates #2**. It copies the original course with Circuit #1
+replaced by the supplied 15-row plank and side-lying sequence (9 minutes).
+Circuit #2 adds 30-second Regular squat pulses immediately after Regular squats.
+The full class totals **56 minutes**. Explicit 15-, 20-, and 15-second
+rests and both instructor notes are retained. The second high-plank knee drive
+remains left-sided for 10 seconds as supplied; side-lying moves last 60 seconds
+each lying right and 40 seconds each lying left. The original class remains
+available unchanged, and the copy retains its text-only presentation.
+
 ## Updated band schedule
 
 `mat-pilates-band` version 4 has 96 timed steps totaling **59 minutes 50 seconds**.

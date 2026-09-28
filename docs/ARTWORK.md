@@ -3,6 +3,11 @@
 Every catalog exercise must eventually have a visual that explains the exercise
 without relying on its written instructions.
 
+The Block + Weights plank-circuit copy retains its source course's text-only
+presentation. Its new down-dog to side-plank bends, side-plank arm twists,
+high-plank knee drive, bear-plank twists, and side-lying block knee drives and
+leg lifts, and regular squat pulses await accurate guides; the artwork audit lists these explicitly.
+
 ## The pose rig
 
 Exercise guides are **pose data**, not images. One rigged figure lives in

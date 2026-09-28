@@ -7,6 +7,7 @@ import { matPilatesBand, matPilatesBandCatalog } from "./mat-pilates-band";
 import { matPilatesRing, matPilatesRingCatalog } from "./mat-pilates-ring";
 import { matPilatesWeightsBlock, matPilatesWeightsBlockCatalog } from "./mat-pilates-weights-block";
 import { matPilatesBall } from "./mat-pilates-ball";
+import { matPilatesWeightsBlockPlank, matPilatesWeightsBlockPlankCatalog } from "./mat-pilates-weights-block-plank";
 import { mergeExerciseCatalogs } from "../catalog/merge-catalogs";
 
 /**
@@ -18,6 +19,7 @@ import { mergeExerciseCatalogs } from "../catalog/merge-catalogs";
  */
 const classDefinitions: readonly unknown[] = [
   matPilatesBall,
+  matPilatesWeightsBlockPlank,
   matPilatesWeightsBlock,
   matPilatesBand,
   matPilatesRing,
@@ -29,6 +31,7 @@ const classDefinitions: readonly unknown[] = [
 export const availableClasses: readonly CompiledClass[] = classDefinitions.map(compileClass);
 
 export const availableExerciseCatalog = mergeExerciseCatalogs(
+  matPilatesWeightsBlockPlankCatalog.catalog,
   matPilatesWeightsBlockCatalog.catalog,
   hiitPilatesSlidersCatalog.catalog,
   matPilatesBandCatalog.catalog,
@@ -38,6 +41,7 @@ export const availableExerciseCatalog = mergeExerciseCatalogs(
 );
 
 export const courseTagsById: Readonly<Record<string, readonly string[]>> = {
+  "mat-pilates-weights-block-plank": ["mat-pilates", "mat", "block", "weights", "full-body"],
   "mat-pilates-ball": ["mat-pilates", "mat", "ball", "full-body"],
   "mat-pilates-weights-block": ["mat-pilates", "mat", "block", "weights", "full-body"],
   "mat-pilates-band": ["mat-pilates", "mat", "band", "full-body"],

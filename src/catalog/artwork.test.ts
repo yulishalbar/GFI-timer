@@ -33,6 +33,20 @@ const UPDATED_SLIDERS_PENDING = [
 
 const NOT_A_MOVEMENT = ["Class introduction", "INTRODUCTION"];
 
+// The plank copy retains the original course's text-only presentation.
+const BLOCK_PLANK_PENDING = [
+  "Regular squat pulses",
+  "Bear plank side twists", "High plank Knee drive (L)",
+  "Downward facing dog to side plank leg bend (holding block) (L)",
+  "Downward facing dog to side plank leg bend (holding block) (R)",
+  "Side plank arm twist to mat and up (holding block) (L)",
+  "Side plank arm twist to mat and up (holding block) (R)",
+  "Lying kneedrive (R) balance block on side of foot",
+  "Lying leg lift (R) balance block on side of foot",
+  "Lying kneedrive (L) balance block on side of foot",
+  "Lying leg lift (L) balance block on side of foot"
+];
+
 const distinctNames = (records: readonly ExerciseDefinition[]): string[] =>
   [...new Set(records.map((record) => record.name))].sort();
 
@@ -161,7 +175,7 @@ describe("exercise artwork", () => {
     const withoutMedia = exercises.filter(
       (exercise) => !exercise.rig && !exercise.illustration && !exercise.motionIllustrations
     );
-    expect(distinctNames(withoutMedia)).toEqual([...NOT_A_MOVEMENT, ...UPDATED_SLIDERS_PENDING].sort());
+    expect(distinctNames(withoutMedia)).toEqual([...NOT_A_MOVEMENT, ...UPDATED_SLIDERS_PENDING, ...BLOCK_PLANK_PENDING].sort());
   });
 
   it("keeps a picture only where it was chosen over the rig", () => {

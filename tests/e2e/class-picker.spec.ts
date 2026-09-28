@@ -376,6 +376,26 @@ test("opens and starts the Pilates ball class", async ({ page }) => {
   await expect(page.getByRole("heading", { name: "arm stretch across" })).toBeVisible();
 });
 
+test("opens and starts the weights and block plank copy", async ({ page }) => {
+  await page.goto("./");
+  const card = page.getByRole("article").filter({
+    has: page.getByRole("heading", { name: "Block + Weights Mat Pilates #2", exact: true })
+  });
+  await expect(card).toContainText("56 min");
+  await card.getByRole("button", { name: "View class" }).click();
+  const circuit = page.locator(".phase-section").filter({
+    has: page.getByRole("heading", { name: "Circuit #1: plank + side body", exact: true })
+  });
+  await expect(circuit.locator(".step-row")).toHaveCount(15);
+  await page.getByRole("button", { name: "Start class" }).click();
+  for (let step = 0; step < 8; step += 1) {
+    await page.getByRole("button", { name: "Next", exact: true }).click();
+  }
+  await expect(page.getByRole("heading", {
+    name: "Downward facing dog to side plank leg bend (holding block) (L)", exact: true
+  })).toBeVisible();
+});
+
 test("opens and starts the weights and block class", async ({ page }) => {
   await page.goto("./");
 
