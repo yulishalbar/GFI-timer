@@ -2290,6 +2290,14 @@ const BASE_RIGS: Readonly<Record<string, RigDefinition>> = {
     ]
   },
 
+  "cooldown-butterfly": {
+    title: "Butterfly", box: "0 24 336 189", view: "front", tempoMs: 0,
+    loop: "pingpong", groundY: 196, ghost: false,
+    poses: [standingFront({ hip: [150, 166], spine: 270, head: 270, hipSpread: 14,
+      legNear: [150, -120, 0], legFar: [30, 120, 0],
+      armNear: [70, 5, 0], armFar: [110, -5, 0] })]
+  },
+
   "seated-straddle": {
     title: "Seated Straddle",
     box: SEATED_FRONT_BOX,

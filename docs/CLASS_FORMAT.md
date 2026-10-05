@@ -244,8 +244,8 @@ in a test so later edits cannot change it accidentally.
 
 ### Mat Pilates with weight
 
-`mat-pilates-weights` version 5 adapts **Mat Pilates ? July 31** into a
-**57-minute**, 92-step class. Circuit 1 runs Squat -> add arms,
+`mat-pilates-weights` version 7 adapts **Mat Pilates — July 31** into a
+**58-minute 40-second**, 99-step class. Circuit 1 runs Squat -> add arms,
 Squat hold, Squat hold leg lift, Side to back kick, and Single leg RDL on the
 right, then an explicit 30-second rest, then the same sequence on the left.
 Exercise durations remain unchanged; the former balance and kick-reset rests
@@ -254,8 +254,8 @@ hinge-and-return instructions and a matching guide. Optional light weights
 also apply to the final core roll-up and the kneeling arm series.
 Circuit 2 starts on the left: Donkey kick (weight behind knee), Side crunch,
 Cross body crunch, Combine, a 15-second rest to remove the weight, Extended leg
-lift, Extended hamstring curl, and Extended leg pulse. Each exercise lasts
-40 seconds. A 30-second rest precedes the same sequence on the right; the
+lift, Extended hamstring curl, and Extended leg pulse. Extended leg pulses last 20 seconds on each side; the
+other exercises last 40 seconds. A 30-second rest precedes the same sequence on the right; the
 existing 60-second setup rest remains. The first four movements retain the
 weight behind the bent knee; all extended-leg work is unweighted.
 Warm-up, side-lying leg work, push-ups, planks, and cooldown stay unweighted. Equipment cues cover pickup and removal.
@@ -263,7 +263,10 @@ Circuit 3 replaces the old rounds with one pass: Crunch (40s), Crunch pulses
 (20s), rest (10s), Single leg toe reach R (40s), rest (10s), Single leg toe reach
 L (40s), rest (10s), Sit up twist L (40s), Sit up twist R (40s), Russian twists
 (40s), rest (10s), Boat hold (20s), and Roll ups holding a weight (60s).
-The existing 60-second setup rest prepares supine crunches and the weight.
+The opening core-circuit rest lasts two minutes and prepares supine crunches
+and the weight. The rest between warm-up and standing lower body also lasts
+two minutes. Side-body breaks previously lasting ten seconds now last fifteen
+seconds on both sides; its setup and side-switch rests retain their durations.
 Circuit 5's 60-second setup rest cues kneeling on both knees with light weights.
 Biceps curls, Serve the platter (out and to the side), Around the world (kneeling
 arm sweep overhead), Reverse fly, Triceps extensions, and Flutter arms behind
@@ -271,6 +274,13 @@ back each last 40 seconds. Pilates push-ups follow for 30 seconds, then an
 explicit 30-second rest precedes the existing high-plank shoulder taps,
 alternating side planks, and plank hold (30 seconds each). The final 20-second
 rest prepares cooldown; weights are set down before push-ups and planks.
+Cooldown stretches are individual entries: Overhead arm stretch, Overhead arm
+stretch L, Side twist L, Overhead arm stretch, Overhead arm stretch R, Side twist
+R, Cross-body cat+cows, Seated Straddle, Butterfly, Knee hug, Knee to chest
+stretch L, Knee across the body L, Knee to chest stretch R, Knee across the body
+R, and Shavasana. All last 30 seconds except Seated Straddle at 60 seconds.
+Cross-body cat+cows retains the instructor's name without inferred technique
+or an unrelated guide. The cooldown still totals eight minutes.
 The original July 31 class remains available with its own stable ID.
 
 `schemaVersion` describes the file format. `version` describes a particular

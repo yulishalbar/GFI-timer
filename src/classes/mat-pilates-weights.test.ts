@@ -11,10 +11,10 @@ describe("Mat Pilates with weight", () => {
   it("registers a separate weighted class with the adapted July 31 timeline", () => {
     expect(availableClasses.map((item) => item.definition.id)).toContain("mat-pilates-weights");
     expect(courseTagsById[matPilatesWeights.id]).toContain("weights");
-    expect(weighted.totalDurationMs).toBe(3_420_000);
-    expect(weighted.steps).toHaveLength(92);
-    expect(weighted.steps.filter((step) => !["standing-lower-body", "quadruped-glutes-core", "core-circuit", "upper-body-back"].includes(step.phase.id)).map((step) => [step.sourceId, step.name, step.durationMs]))
-      .toEqual(original.steps.filter((step) => !["standing-lower-body", "quadruped-glutes-core", "core-circuit", "upper-body-back"].includes(step.phase.id)).map((step) => [step.sourceId, step.name, step.durationMs]));
+    expect(weighted.totalDurationMs).toBe(3_520_000);
+    expect(weighted.steps).toHaveLength(99);
+    expect(weighted.steps.filter((step) => !["standing-lower-body", "quadruped-glutes-core", "core-circuit", "upper-body-back", "cooldown", "standing-warmup", "side-body-circuit"].includes(step.phase.id)).map((step) => [step.sourceId, step.name, step.durationMs]))
+      .toEqual(original.steps.filter((step) => !["standing-lower-body", "quadruped-glutes-core", "core-circuit", "upper-body-back", "cooldown", "standing-warmup", "side-body-circuit"].includes(step.phase.id)).map((step) => [step.sourceId, step.name, step.durationMs]));
     expect(matPilates0731Catalog.course.tags).not.toContain("weights");
   });
 
@@ -42,7 +42,7 @@ describe("Mat Pilates with weight", () => {
         `donkey-kick-${side}`, `side-crunch-${side}`, `cross-body-crunch-${side}`, `combined-crunch-${side}`,
         `drop-weight-${side}`, `extended-leg-lift-${side}`, `extended-hamstring-curl-${side}`, `extended-leg-pulse-${side}`
       ]);
-      expect(sequence.map((step) => step.durationMs)).toEqual([40_000, 40_000, 40_000, 40_000, 15_000, 40_000, 40_000, 40_000]);
+      expect(sequence.map((step) => step.durationMs)).toEqual([40_000, 40_000, 40_000, 40_000, 15_000, 40_000, 40_000, 20_000]);
       sequence.slice(0, 4).forEach((step) => expect(step.shortDescription).toContain(`weight behind the bent ${side} knee`));
       expect(sequence[4]?.shortDescription).toContain("remove it from behind the knee");
       sequence.filter((step) => step.kind === "exercise").forEach((step) => expect(step.exerciseReference?.side).toBe(side));
@@ -54,7 +54,7 @@ describe("Mat Pilates with weight", () => {
   it("replaces core with one pass in the requested order and durations", () => {
     const steps = weighted.steps.filter((step) => step.phase.id === "core-circuit");
     expect(steps.map((step) => [step.sourceId, step.durationMs, step.exerciseReference?.side])).toEqual([
-      ["core-setup", 60_000, undefined], ["crunches", 40_000, undefined],
+      ["core-setup", 120_000, undefined], ["crunches", 40_000, undefined],
       ["crunch-pulses", 20_000, undefined], ["after-crunch-pulses", 10_000, undefined],
       ["single-leg-toe-reach-right", 40_000, "right"], ["after-toe-reach-right", 10_000, undefined],
       ["single-leg-toe-reach-left", 40_000, "left"], ["after-toe-reach-left", 10_000, undefined],
@@ -81,6 +81,32 @@ describe("Mat Pilates with weight", () => {
     expect(steps[7]?.shortDescription).toContain("Set weights clear of the mat");
   });
 
+  it("times each cooldown stretch separately in order", () => {
+    const steps = weighted.steps.filter((step) => step.phase.id === "cooldown");
+    expect(steps.map((step) => [step.sourceId, step.exerciseReference?.side, step.durationMs])).toEqual([
+      ["overhead-arm-stretch", undefined, 30_000], ["overhead-arm-stretch-left", "left", 30_000],
+      ["side-twist-left", "left", 30_000], ["overhead-arm-stretch-second", undefined, 30_000],
+      ["overhead-arm-stretch-right", "right", 30_000], ["side-twist-right", "right", 30_000],
+      ["cross-body-cat-cows", undefined, 30_000], ["seated-straddle", undefined, 60_000],
+      ["butterfly", undefined, 30_000], ["knee-hug", undefined, 30_000],
+      ["knee-chest-left", "left", 30_000], ["knee-across-left", "left", 30_000],
+      ["knee-chest-right", "right", 30_000], ["knee-across-right", "right", 30_000],
+      ["shavasana", undefined, 30_000]
+    ]);
+    expect(new Set(steps.map((step) => step.runtimeId)).size).toBe(15);
+  });
+
+  it("extends setup rests and only the ten-second side-body breaks", () => {
+    for (const id of ["standing-circuit-preview", "core-setup"]) {
+      expect(weighted.steps.find((step) => step.sourceId === id)).toMatchObject({ kind: "rest", durationMs: 120_000 });
+    }
+    const rests = weighted.steps.filter((step) => step.phase.id === "side-body-circuit" && step.kind === "rest");
+    expect(rests.map((step) => [step.sourceId, step.durationMs])).toEqual([
+      ["side-body-setup", 60_000], ["after-leg-pulses-left", 15_000], ["after-static-hold-left", 15_000],
+      ["side-body-switch", 30_000], ["after-leg-pulses-right", 15_000], ["after-static-hold-right", 15_000]
+    ]);
+  });
+
   it("weights both standing sides and the final core roll-up, keeping the original cues", () => {
     const weightedIds = [
       "squat-arms-right-round", "squat-hold-right-round", "squat-hold-leg-lift-right",
@@ -94,8 +120,8 @@ describe("Mat Pilates with weight", () => {
       const source = original.steps.find((item) => item.sourceId === id);
       if (source?.shortDescription && !id.startsWith("deadlift-knee-tuck-")) expect(step?.shortDescription).toContain(source.shortDescription);
     }
-    expect(weighted.steps.filter((step) => !["quadruped-glutes-core", "core-circuit", "upper-body-back"].includes(step.phase.id) && step.kind === "exercise" && step.sourceId !== "class-introduction" && step.shortDescription !== original.steps.find((source) => source.sourceId === step.sourceId)?.shortDescription).map((step) => step.sourceId).sort()).toEqual([...weightedIds, "side-back-kick-right", "side-back-kick-left"].sort());
-    for (const phaseId of ["standing-warmup", "side-body-circuit", "cooldown"]) {
+    expect(weighted.steps.filter((step) => !["quadruped-glutes-core", "core-circuit", "upper-body-back", "cooldown", "standing-warmup", "side-body-circuit"].includes(step.phase.id) && step.kind === "exercise" && step.sourceId !== "class-introduction" && step.shortDescription !== original.steps.find((source) => source.sourceId === step.sourceId)?.shortDescription).map((step) => step.sourceId).sort()).toEqual([...weightedIds, "side-back-kick-right", "side-back-kick-left"].sort());
+    for (const phaseId of ["standing-warmup", "side-body-circuit"]) {
       expect(weighted.steps.filter((step) => step.phase.id === phaseId && step.kind === "exercise").map((step) => step.shortDescription))
         .toEqual(original.steps.filter((step) => step.phase.id === phaseId && step.kind === "exercise").map((step) => step.shortDescription));
     }

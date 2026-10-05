@@ -63,6 +63,14 @@ const catalog: ExerciseCatalog = {
     existingExercise("Crunch pulses"),
     existingExercise("Roll ups"),
     ...[
+      { id: "weighted-cooldown-overhead-side", name: "Overhead arm stretch", sideSupport: "left-right" as const, shortDescription: "Hold the overhead arm stretch on the indicated side.", rig: "supine-overhead-arm-stretch" },
+      { id: "weighted-cooldown-side-twist", name: "Side twist", sideSupport: "left-right" as const, shortDescription: "Sit tall and hold the twist toward the indicated side.", rig: "seated-side-twist" },
+      { id: "weighted-cooldown-cross-body-cat-cows", name: "Cross-body cat+cows", sideSupport: "none" as const },
+      { id: "weighted-cooldown-straddle", name: "Seated Straddle", sideSupport: "none" as const, shortDescription: "Sit with legs in a comfortable wide V. Stretch for one minute.", rig: "seated-straddle" },
+      { id: "weighted-cooldown-butterfly", name: "Butterfly", sideSupport: "none" as const, shortDescription: "Bring the soles of the feet together and let the knees open to the sides. Hold gently.", rig: "cooldown-butterfly" },
+      { id: "weighted-cooldown-knee-hug", name: "Knee hug", sideSupport: "none" as const, shortDescription: "Lie on your back and gently hug both knees toward the chest.", rig: "hug-knees" }
+    ].map((exercise) => ({ ...exercise, schemaVersion: 1 as const, version: 1, tags: ["mat-pilates", "mat"] })),
+    ...[
       { id: "kneeling-biceps-curls", name: "Biceps curls", rig: "kneeling-biceps-curls", longDescription: "Kneel tall on both knees with a light weight in each hand. Keep elbows beside the ribs, curl the weights toward the shoulders, then lower with control." },
       { id: "kneeling-serve-platter", name: "Serve the platter (out and to the side)", rig: "kneeling-serve-platter", longDescription: "Kneel tall with elbows bent and palms facing up, holding light weights. Reach forward as though offering a platter, open the arms to the sides, then return with control." },
       { id: "kneeling-around-world", name: "Around the world (kneeling arm sweep)", rig: "kneeling-around-world", longDescription: "Kneel tall holding light weights beside the hips. Sweep the arms out to the sides and overhead through a comfortable range, then lower along the same arc. Keep the ribs closed and shoulders relaxed." },
@@ -133,7 +141,7 @@ function quadrupedSequence(items: CourseItem[]): CourseItem[] {
     }),
     { type: "rest", id: `drop-weight-${side}`, name: "REST", durationSeconds: 15, shortDescription: "Drop the weight: remove it from behind the knee and set it beside the mat. Extend the working leg for the unweighted series." },
     ...["extended-leg-lift", "extended-hamstring-curl", "extended-leg-pulse"].map((exerciseId) => ({
-      type: "exercise" as const, id: `${exerciseId}-${side}`, exerciseId, exerciseVersion: 1, side, durationSeconds: 40
+      type: "exercise" as const, id: `${exerciseId}-${side}`, exerciseId, exerciseVersion: 1, side, durationSeconds: exerciseId === "extended-leg-pulse" ? 20 : 40
     }))
   ];
   return [required("quadruped-setup"), ...sideSequence("left"),
@@ -148,7 +156,7 @@ function coreSequence(): CourseItem[] {
   });
   const rest = (id: string): CourseCircuitChild => ({ type: "rest", id, name: "REST", durationSeconds: 10 });
   return [
-    { type: "rest", id: "core-setup", name: "REST", durationSeconds: 60 },
+    { type: "rest", id: "core-setup", name: "REST", durationSeconds: 120 },
     move("crunches", existingExercise("Crunch").id),
     move("crunch-pulses", existingExercise("Crunch pulses").id, 20, undefined, "Keep the shoulders lifted and make small controlled crunch pulses."),
     rest("after-crunch-pulses"),
@@ -184,18 +192,50 @@ function upperBodySequence(items: CourseItem[]): CourseItem[] {
   ];
 }
 
+function cooldownSequence(items: CourseItem[]): CourseItem[] {
+  const move = (id: string, exerciseId: string, side?: "left" | "right", durationSeconds = 30): CourseExerciseItem => ({
+    type: "exercise", id, exerciseId, exerciseVersion: 1, durationSeconds, ...(side ? { side } : {})
+  });
+  const original = (id: string): CourseExerciseItem => {
+    const item = items.find((entry) => entry.id === id);
+    if (!item || item.type !== "exercise") throw new Error(`Missing cooldown exercise ${id}`);
+    return { ...item, durationSeconds: 30 };
+  };
+  return [
+    original("overhead-arm-stretch"),
+    move("overhead-arm-stretch-left", "weighted-cooldown-overhead-side", "left"),
+    move("side-twist-left", "weighted-cooldown-side-twist", "left"),
+    { ...original("overhead-arm-stretch"), id: "overhead-arm-stretch-second" },
+    move("overhead-arm-stretch-right", "weighted-cooldown-overhead-side", "right"),
+    move("side-twist-right", "weighted-cooldown-side-twist", "right"),
+    move("cross-body-cat-cows", "weighted-cooldown-cross-body-cat-cows"),
+    move("seated-straddle", "weighted-cooldown-straddle", undefined, 60),
+    move("butterfly", "weighted-cooldown-butterfly"), move("knee-hug", "weighted-cooldown-knee-hug"),
+    original("knee-chest-left"), original("knee-across-left"),
+    original("knee-chest-right"), original("knee-across-right"), original("shavasana")
+  ];
+}
+
 // Load is a course-specific option on existing movements, not a replacement
 // for the shared exercise records or the original July 31 course.
 const course: CourseDefinition = {
   ...structuredClone(matPilates0731Catalog.course),
   id: "mat-pilates-weights",
-  version: 5,
+  version: 7,
   title: "Mat Pilates with weight",
   description: `Based on Mat Pilates — July 31, with light hand weights for the squat series, single leg RDLs, bent-knee quadruped work, the final core roll-up, and the kneeling arm series. Circuit 1 flows through all five movements per side with a 30-second rest between sides. Equipment: mat and a pair of light hand weights. ${equipmentCue}`,
   tags: ["mat-pilates", "mat", "weights", "full-body"],
   phases: matPilates0731Catalog.course.phases.map((phase) => ({
     ...phase,
-    items: (phase.id === "standing-lower-body" ? standingSequence(phase.items) : phase.id === "quadruped-glutes-core" ? quadrupedSequence(phase.items) : phase.id === "core-circuit" ? coreSequence() : phase.id === "upper-body-back" ? upperBodySequence(phase.items) : phase.items).map(withCue)
+    items: (phase.id === "standing-lower-body" ? standingSequence(phase.items) : phase.id === "quadruped-glutes-core" ? quadrupedSequence(phase.items) : phase.id === "core-circuit" ? coreSequence() : phase.id === "upper-body-back" ? upperBodySequence(phase.items) : phase.id === "cooldown" ? cooldownSequence(phase.items) : phase.items).map((item) => {
+      if (item.type === "rest" && item.id === "standing-circuit-preview") {
+        return { ...item, durationSeconds: 120 };
+      }
+      if (phase.id === "side-body-circuit" && item.type === "rest" && item.durationSeconds === 10) {
+        return { ...item, durationSeconds: 15 };
+      }
+      return item;
+    }).map(withCue)
   }))
 };
 

@@ -5,10 +5,10 @@ test("opens and starts the July 31 weighted adaptation", async ({ page }) => {
   const card = page.getByRole("article").filter({
     has: page.getByRole("heading", { name: "Mat Pilates with weight", exact: true })
   });
-  await expect(card).toContainText("57 min");
+  await expect(card).toContainText("58.7 min");
   await card.getByRole("button", { name: "View class" }).click();
   await expect(page.getByRole("heading", { name: "Mat Pilates with weight", exact: true })).toBeVisible();
-  await expect(page.getByText("92 timed steps")).toBeVisible();
+  await expect(page.getByText("99 timed steps")).toBeVisible();
   await expect(page.getByRole("button", { name: "Start class" })).toBeInViewport();
   const squat = page.locator(".step-row").filter({ hasText: "Squat -> add arms" }).first();
   await expect(squat).toContainText("Hold one light weight in each hand");
@@ -19,6 +19,10 @@ test("opens and starts the July 31 weighted adaptation", async ({ page }) => {
   await expect(page.locator(".step-row").filter({ hasText: "Hold one light weight in both hands" })).toHaveCount(1);
   await expect(page.locator(".step-row").filter({ hasText: "kneeling position on both knees" })).toHaveCount(1);
   await expect(page.locator(".step-row").filter({ hasText: "Flutter arms behind back" })).toHaveCount(1);
+  const cooldown = page.locator(".phase-section").filter({ has: page.getByRole("heading", { name: "Cooldown", exact: true }) });
+  await expect(cooldown.locator(".step-row")).toHaveCount(15);
+  await expect(cooldown.locator(".step-row").filter({ hasText: "Overhead arm stretch" })).toHaveCount(4);
+  await expect(cooldown.locator(".step-row").filter({ hasText: "Cross-body cat+cows" })).toHaveCount(1);
   await page.getByRole("button", { name: "Start class" }).click();
   await expect(page.getByRole("heading", { name: "INTRODUCTION", exact: true })).toBeVisible();
   await expect(page.getByText(/every exercise can also be done without weights/)).toBeVisible();

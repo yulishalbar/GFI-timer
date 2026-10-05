@@ -33,6 +33,7 @@ const UPDATED_SLIDERS_PENDING = [
 
 const NOT_A_MOVEMENT = ["Class introduction", "INTRODUCTION"];
 const BAND_PENDING = ["Palm in with band"];
+const WEIGHTED_COOLDOWN_PENDING = ["Cross-body cat+cows"];
 
 // The plank copy retains the original course's text-only presentation.
 const BLOCK_PLANK_PENDING = [
@@ -178,7 +179,7 @@ describe("exercise artwork", () => {
     const withoutMedia = exercises.filter(
       (exercise) => !exercise.rig && !exercise.illustration && !exercise.motionIllustrations
     );
-    expect(distinctNames(withoutMedia)).toEqual([...NOT_A_MOVEMENT, ...UPDATED_SLIDERS_PENDING, ...BLOCK_PLANK_PENDING, ...BAND_PENDING].sort());
+    expect(distinctNames(withoutMedia)).toEqual([...NOT_A_MOVEMENT, ...UPDATED_SLIDERS_PENDING, ...BLOCK_PLANK_PENDING, ...BAND_PENDING, ...WEIGHTED_COOLDOWN_PENDING].sort());
   });
 
   it("keeps a picture only where it was chosen over the rig", () => {

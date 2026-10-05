@@ -185,7 +185,7 @@ export const RIG_BY_EXERCISE_NAME: Readonly<Record<string, string>> = {
 
   // Pilates ring. The shared skeleton carries the body path; the written cue
   // remains authoritative for where and how the ring is pressed.
-  Butterfly: "seated-straddle",
+  Butterfly: "cooldown-butterfly",
   "Overhead reach with palms inside ring": "standing-side-stretch",
   "Straight leg forward fold - Reach right and left": "seated-forward-fold",
   "One-leg roll-up with ring, with single arms stretching back": "roll-ups",

@@ -455,3 +455,6 @@ existing guides; Crunch pulses reuses the existing text-only catalog entry.
 Weighted-course Circuit 5 has six kneeling arm guides for curls, platter reaches,
 overhead arm sweeps, reverse fly, triceps extensions, and behind-back flutters.
 Weight use is cued in text; the shared rig draws the kneeling movement.
+
+Weighted-course cooldown uses individual stretches, including a static Butterfly
+guide. Cross-body cat+cows is text-only pending clarified movement technique.
