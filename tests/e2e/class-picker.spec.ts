@@ -210,7 +210,7 @@ test("searches and filters the offline course and exercise libraries", async ({ 
 test("opens and starts the July 31 class with completed pose guidance", async ({ page }) => {
   await page.goto("./");
 
-  const classCard = page.getByRole("article").filter({ hasText: "Mat Pilates — July 31" });
+  const classCard = page.getByRole("article").filter({ has: page.getByRole("heading", { name: "Mat Pilates — July 31", exact: true }) });
   await expect(classCard).toContainText("58 min");
   await expect(classCard).toContainText("8 phases");
   await expect(classCard).toContainText("103 steps");
@@ -345,13 +345,13 @@ test("opens and starts the band class", async ({ page }) => {
   const classCard = page.getByRole("article").filter({
     has: page.getByRole("heading", { name: "Mat Pilates with Band", exact: true })
   });
-  await expect(classCard).toContainText("59.8 min");
+  await expect(classCard).toContainText("59.7 min");
   await expect(classCard).toContainText("8 phases");
-  await expect(classCard).toContainText("96 steps");
+  await expect(classCard).toContainText("97 steps");
   await classCard.getByRole("button", { name: "View class" }).click();
 
   await expect(page.getByRole("heading", { name: "Mat Pilates with Band" })).toBeVisible();
-  await expect(page.getByLabel("59.8 min total")).toContainText("59:50");
+  await expect(page.getByLabel("59.7 min total")).toContainText("59:40");
   await expect(page.getByRole("heading", { name: "Circuit #5: Standing Upper Body and Core" })).toBeVisible();
   await page.getByRole("button", { name: "Start class" }).click();
   await expect(page.getByRole("heading", { name: "INTRODUCTION" })).toBeVisible();

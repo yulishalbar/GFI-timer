@@ -64,7 +64,7 @@ test("reloads the cached app and its exercise guides while offline", async ({ co
     await page.reload({ waitUntil: "domcontentloaded" });
     await expect(page.getByRole("heading", { name: "Choose today's class" })).toBeVisible();
 
-    const july31Card = page.getByRole("article").filter({ hasText: "Mat Pilates — July 31" });
+    const july31Card = page.getByRole("article").filter({ has: page.getByRole("heading", { name: "Mat Pilates — July 31", exact: true }) });
     await july31Card.getByRole("button", { name: "View class" }).click();
     await page.getByRole("button", { name: "Expand all pose details" }).click();
     // Guides are solved from pose data in the app bundle rather than fetched,
