@@ -242,6 +242,37 @@ in a test so later edits cannot change it accidentally.
 
 ## Versioning
 
+### Mat Pilates with weight
+
+`mat-pilates-weights` version 5 adapts **Mat Pilates ? July 31** into a
+**57-minute**, 92-step class. Circuit 1 runs Squat -> add arms,
+Squat hold, Squat hold leg lift, Side to back kick, and Single leg RDL on the
+right, then an explicit 30-second rest, then the same sequence on the left.
+Exercise durations remain unchanged; the former balance and kick-reset rests
+are removed. Single leg RDL replaces the deadlift-to-knee-tuck movement with
+hinge-and-return instructions and a matching guide. Optional light weights
+also apply to the final core roll-up and the kneeling arm series.
+Circuit 2 starts on the left: Donkey kick (weight behind knee), Side crunch,
+Cross body crunch, Combine, a 15-second rest to remove the weight, Extended leg
+lift, Extended hamstring curl, and Extended leg pulse. Each exercise lasts
+40 seconds. A 30-second rest precedes the same sequence on the right; the
+existing 60-second setup rest remains. The first four movements retain the
+weight behind the bent knee; all extended-leg work is unweighted.
+Warm-up, side-lying leg work, push-ups, planks, and cooldown stay unweighted. Equipment cues cover pickup and removal.
+Circuit 3 replaces the old rounds with one pass: Crunch (40s), Crunch pulses
+(20s), rest (10s), Single leg toe reach R (40s), rest (10s), Single leg toe reach
+L (40s), rest (10s), Sit up twist L (40s), Sit up twist R (40s), Russian twists
+(40s), rest (10s), Boat hold (20s), and Roll ups holding a weight (60s).
+The existing 60-second setup rest prepares supine crunches and the weight.
+Circuit 5's 60-second setup rest cues kneeling on both knees with light weights.
+Biceps curls, Serve the platter (out and to the side), Around the world (kneeling
+arm sweep overhead), Reverse fly, Triceps extensions, and Flutter arms behind
+back each last 40 seconds. Pilates push-ups follow for 30 seconds, then an
+explicit 30-second rest precedes the existing high-plank shoulder taps,
+alternating side planks, and plank hold (30 seconds each). The final 20-second
+rest prepares cooldown; weights are set down before push-ups and planks.
+The original July 31 class remains available with its own stable ID.
+
 `schemaVersion` describes the file format. `version` describes a particular
 class schedule. They serve different purposes.
 
@@ -326,12 +357,16 @@ and Class #2 retains its text-only presentation.
 
 ## Updated band schedule
 
-`mat-pilates-band` version 4 has 96 timed steps totaling **59 minutes 50 seconds**.
+`mat-pilates-band` version 6 has 97 timed steps totaling **59 minutes 40 seconds**.
 The core sequence uses 40-second Leg extensions then Leg lowers, both with the
 band around shins. Each glute side rests 20 seconds after Donkey kick + downward
 dog crunch in. The 10-second rest after each Static single-leg squat is removed.
+Leg pulses immediately after Leg extensions last 20 seconds on both glute sides.
 Pulse leg openers and Curtsy pulse last 20 seconds each on both sides.
 Both upper-body rounds omit Standing punch-outs, use 20-second Band pulse out,
 rest 10 seconds after Serve the platter, and add a 40-second Band upwards lift
 (behind back) after Band outward extension (behind back). The break between
 upper-body rounds is 30 seconds. Crescent low lunge lasts 60 seconds per side.
+The cooldown starts after its existing transition with Standing side-body stretch
+(band around wrists) for 60 seconds, then Palm in with band for 30 seconds,
+before continuing with Hug knees in towards chest and the remaining sequence.

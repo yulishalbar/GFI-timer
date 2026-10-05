@@ -9,6 +9,7 @@ import { matPilatesWeightsBlock, matPilatesWeightsBlockCatalog } from "./mat-pil
 import { matPilatesBall } from "./mat-pilates-ball";
 import { matPilatesWeightsBlockPlank, matPilatesWeightsBlockPlankCatalog } from "./mat-pilates-weights-block-plank";
 import { mergeExerciseCatalogs } from "../catalog/merge-catalogs";
+import { matPilatesWeights, matPilatesWeightsCatalog } from "./mat-pilates-weights";
 
 /**
  * Every course here is catalog-backed. The V1 definitions are not listed: they
@@ -18,6 +19,7 @@ import { mergeExerciseCatalogs } from "../catalog/merge-catalogs";
  * but showing both would just be the same class twice.
  */
 const classDefinitions: readonly unknown[] = [
+  matPilatesWeights,
   matPilatesBall,
   matPilatesWeightsBlockPlank,
   matPilatesWeightsBlock,
@@ -31,6 +33,7 @@ const classDefinitions: readonly unknown[] = [
 export const availableClasses: readonly CompiledClass[] = classDefinitions.map(compileClass);
 
 export const availableExerciseCatalog = mergeExerciseCatalogs(
+  matPilatesWeightsCatalog.catalog,
   matPilatesWeightsBlockPlankCatalog.catalog,
   matPilatesWeightsBlockCatalog.catalog,
   hiitPilatesSlidersCatalog.catalog,
@@ -41,6 +44,7 @@ export const availableExerciseCatalog = mergeExerciseCatalogs(
 );
 
 export const courseTagsById: Readonly<Record<string, readonly string[]>> = {
+  "mat-pilates-weights": matPilatesWeightsCatalog.course.tags,
   "mat-pilates-weights-block-plank": ["mat-pilates", "mat", "block", "weights", "full-body"],
   "mat-pilates-ball": ["mat-pilates", "mat", "ball", "full-body"],
   "mat-pilates-weights-block": ["mat-pilates", "mat", "block", "weights", "full-body"],

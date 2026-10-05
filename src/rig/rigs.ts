@@ -260,6 +260,13 @@ const STANDING_FRONT: Pose = {
 
 const standingFront = (over: Partial<Pose>): Pose => ({ ...STANDING_FRONT, ...over });
 
+/** Tall kneeling: thighs vertical, shins folded back on the mat. */
+const kneel = (over: Partial<Pose>): Pose => standingSide({ hip: [160, 140], legNear: [90, -90, 0], legFar: [92, -92, 0], ...over });
+const kneelingArms = (title: string, poses: [Pose, ...Pose[]], front = false, tempoMs = 2200): RigDefinition => ({
+  title, box: "-16 -12 352 198", tempoMs, loop: "pingpong", groundY: 177,
+  ...(front ? { view: "front" as const } : {}), focus: ["armNear", "armFar"], poses
+});
+
 /** Room above the head for anything that reaches overhead. */
 const STANDING_REACH_BOX = "-24 2 356 200.25";
 
@@ -834,6 +841,16 @@ const BASE_RIGS: Readonly<Record<string, RigDefinition>> = {
     poses: [quad({}), quad({ legNear: [8, 0, 20], spine: 194 })]
   },
 
+  "extended-hamstring-curl": {
+    title: "Extended hamstring curl",
+    box: FLOOR_BOX,
+    tempoMs: 2200,
+    loop: "pingpong",
+    groundY: 170,
+    focus: ["legNear"],
+    poses: [quad({ legNear: [8, 0, 20] }), quad({ legNear: [8, -90, 80] })]
+  },
+
   "quadruped-leg-pulse": {
     title: "Leg pulses",
     box: FLOOR_BOX,
@@ -1310,6 +1327,28 @@ const BASE_RIGS: Readonly<Record<string, RigDefinition>> = {
         ikLegNear: [186 + Math.cos(angle) * reach, 150 + Math.sin(angle) * reach]
       });
     }) as [Pose, ...Pose[]]
+  },
+
+  "single-leg-toe-reach": {
+    title: "Single leg toe reach", box: "54 30 272 153", tempoMs: 2000,
+    loop: "pingpong", groundY: 162,
+    poses: [
+      supine({ legNear: [-80, 2, -4], ikLegFar: [234, 162], ikBend: 1, armNear: [-65, 4, 4], armFar: [-63, 4, 4] }),
+      supine({ ...CURLED, legNear: [-80, 2, -4], ikLegFar: [234, 162], ikBend: 1, armNear: [-65, 4, 4], armFar: [-63, 4, 4] })
+    ]
+  },
+  "sit-up-twist": {
+    title: "Sit up twist", box: "30 24 320 180", tempoMs: 3000,
+    loop: "pingpong", groundY: 162,
+    poses: [
+      supine({ ikLegNear: [232, 162], ikLegFar: [234, 162], ikBend: 1 }),
+      supine({ spine: 299, spineScale: 0.96, head: 300, facing: 350, shoulderSpread: 12,
+        ikLegNear: [232, 162], ikLegFar: [234, 162], ikBend: 1, armNear: [330, 4, 2], armFar: [355, 4, 2] })
+    ]
+  },
+  "boat-hold": {
+    title: "Boat hold", box: SEATED_BOX, tempoMs: 0, loop: "pingpong", groundY: 162,
+    poses: [{ hip: [186, 144], spine: 245, head: 245, armNear: [355, 4, 2], armFar: [357, 4, 2], legNear: [-45, 70, -6], legFar: [-43, 70, -6] }]
   },
 
   crunch: {
@@ -2602,6 +2641,19 @@ const BASE_RIGS: Readonly<Record<string, RigDefinition>> = {
     ]
   },
 
+  "single-leg-rdl": {
+    title: "Single leg RDL",
+    box: "-12 30 328.889 185",
+    tempoMs: 3000,
+    loop: "pingpong",
+    groundY: 196,
+    focus: ["legNear"],
+    poses: [
+      standingSide({ legNear: [88, 4, 26], legFar: [91, 2, 92] }),
+      standingSide({ legNear: [20, 4, 10], spine: 232, head: 228, armNear: [64, 6, 4], armFar: [66, 6, 4], legFar: [91, 2, 92] })
+    ]
+  },
+
   "single-leg-deadlift-knee-tuck": {
     title: "Single-leg deadlift (SLDL) to knee tuck",
     box: STANDING_BOX,
@@ -2855,6 +2907,32 @@ const BASE_RIGS: Readonly<Record<string, RigDefinition>> = {
     ]
   },
 
+  "kneeling-biceps-curls": kneelingArms("Biceps curls", [
+    kneel({ armNear: [90, 0, 0], armFar: [92, 0, 0] }),
+    kneel({ armNear: [90, 140, 0], armFar: [92, 138, 0] })
+  ]),
+  "kneeling-serve-platter": kneelingArms("Serve the platter (out and to the side)", [
+    kneel({ shoulderSpread: 15, hipSpread: 8, armNear: [85, -85, 0], armFar: [95, 85, 0] }),
+    kneel({ shoulderSpread: 15, hipSpread: 8, armNear: [0, 0, 0], armFar: [180, 0, 0] })
+  ], true),
+  "kneeling-around-world": kneelingArms("Around the world (kneeling arm sweep)", [
+    kneel({ shoulderSpread: 15, armNear: [85, 0, 0], armFar: [95, 0, 0] }),
+    kneel({ shoulderSpread: 15, armNear: [0, 0, 0], armFar: [180, 0, 0] }),
+    kneel({ shoulderSpread: 15, armNear: [270, 0, 0], armFar: [270, 0, 0] })
+  ], true, 3000),
+  "kneeling-reverse-fly": kneelingArms("Reverse fly", [
+    kneel({ spine: 245, head: 245, shoulderSpread: 15, armNear: [90, 5, 0], armFar: [90, -5, 0] }),
+    kneel({ spine: 245, head: 245, shoulderSpread: 15, armNear: [0, 5, 0], armFar: [180, -5, 0] })
+  ], true),
+  "kneeling-triceps-extensions": kneelingArms("Triceps extensions", [
+    kneel({ armNear: [270, 125, 0], armFar: [272, 123, 0] }),
+    kneel({ armNear: [270, 0, 0], armFar: [272, 0, 0] })
+  ]),
+  "kneeling-flutter-arms": kneelingArms("Flutter arms behind back", [
+    kneel({ spine: 255, head: 255, armNear: [48, 0, 0], armFar: [50, 0, 0] }),
+    kneel({ spine: 255, head: 255, armNear: [18, 0, 0], armFar: [20, 0, 0] })
+  ], false, 900),
+
   "serve-the-platter": {
     title: "Serve the platter",
     box: STANDING_BOX,
@@ -3073,6 +3151,7 @@ function kneePushUpsToPike(): RigDefinition {
  */
 export const RIGS: Readonly<Record<string, RigDefinition>> = {
   ...BASE_RIGS,
+  "unweighted-russian-twists": { ...BASE_RIGS["banded-russian-twist"]!, title: "Russian twists", equipment: [] },
   "knee-push-ups-to-pike": kneePushUpsToPike(),
   "ring-standing-side-stretch": ringVariant("standing-side-stretch", "wristNear", "wristFar"),
   "ring-roll-ups": ringVariant("roll-ups", "wristNear", "wristFar"),

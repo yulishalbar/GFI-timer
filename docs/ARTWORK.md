@@ -439,3 +439,19 @@ review before assigning guides. The artwork test tracks this exact backlog.
 
 Sliders version 9 adds High runner's lunge leg in-and-out and Straight leg lift;
 these await accurate guides. Rainbow reuses the existing pose rig.
+
+Band cooldown: Palm in with band is text-only pending an accurate movement
+guide. Standing side-body stretch (band around wrists) retains the standing
+side-stretch body pose; its text supplies the band placement.
+
+Mat Pilates with weight Circuit 2 reuses the quadruped glute-lift and leg-pulse
+guides for extended work. Extended hamstring curl has a dedicated guide showing
+a lifted thigh with knee flexion and extension. Weight placement is cued in text.
+
+Weighted-course Circuit 3 adds guides for single-leg toe reach, sit-up twist,
+unweighted Russian twists, and a static boat hold. Crunch and Roll ups reuse
+existing guides; Crunch pulses reuses the existing text-only catalog entry.
+
+Weighted-course Circuit 5 has six kneeling arm guides for curls, platter reaches,
+overhead arm sweeps, reverse fly, triceps extensions, and behind-back flutters.
+Weight use is cued in text; the shared rig draws the kneeling movement.

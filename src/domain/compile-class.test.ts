@@ -491,6 +491,9 @@ describe("compileClass", () => {
     for (const side of ["l", "r"]) {
       expect(after(`donkey-kick-dog-crunch-${side}`)).toMatchObject({ kind: "rest", durationMs: 20_000 });
       expect(after(`glutes-crunch-rest-${side}`)?.sourceId).toBe(`leg-extensions-${side}`);
+      expect(after(`leg-extensions-${side}`)).toMatchObject({
+        sourceId: `leg-pulses-${side}`, durationMs: 20_000
+      });
       expect(after(`static-single-leg-squat-${side}`)?.sourceId).toBe(`single-leg-squat-opener-${side}`);
       for (const movement of ["pulse-leg-openers", "curtsy-pulse"]) {
         expect(steps.find((step) => step.sourceId === `${movement}-${side}`)?.durationMs).toBe(20_000);
@@ -504,23 +507,30 @@ describe("compileClass", () => {
     }
     expect(steps.find((step) => step.sourceId === "upper-body-round-two-setup")?.durationMs).toBe(30_000);
     expect(steps.filter((step) => step.name === "Crescent low lunge").map((step) => step.durationMs)).toEqual([60_000, 60_000]);
-    expect(matPilatesBand.version).toBe(4);
+    expect(matPilatesBand.version).toBe(6);
+    expect(after("cooldown-transition")).toMatchObject({
+      name: "Standing side-body stretch (band around wrists)", durationMs: 60_000
+    });
+    expect(after("standing-side-body-stretch")).toMatchObject({
+      name: "Palm in with band", durationMs: 30_000
+    });
+    expect(after("palm-in-with-band")?.sourceId).toBe("hug-knees");
   });
 
   it("compiles the band class with stable totals", () => {
     const compiled = compileClass(matPilatesBand);
 
-    expect(compiled.steps).toHaveLength(96);
-    expect(compiled.totalDurationMs).toBe(3_590_000);
+    expect(compiled.steps).toHaveLength(97);
+    expect(compiled.totalDurationMs).toBe(3_580_000);
     expect(compiled.phases).toEqual([
       { id: "introduction", name: "Introduction", index: 1, stepCount: 1, durationMs: 120_000 },
       { id: "warmup", name: "Warm-Up", index: 2, stepCount: 5, durationMs: 300_000 },
       { id: "core-circuit", name: "Circuit #1: Core", index: 3, stepCount: 9, durationMs: 360_000 },
-      { id: "glutes-circuit", name: "Circuit #2: Glutes", index: 4, stepCount: 16, durationMs: 640_000 },
+      { id: "glutes-circuit", name: "Circuit #2: Glutes", index: 4, stepCount: 16, durationMs: 600_000 },
       { id: "standing-legs", name: "Circuit #3: Legs Focused", index: 5, stepCount: 16, durationMs: 440_000 },
       { id: "lower-body-core-glutes", name: "Circuit #4: Lower Body, Core and Glutes", index: 6, stepCount: 18, durationMs: 500_000 },
       { id: "standing-upper-body-core", name: "Circuit #5: Standing Upper Body and Core", index: 7, stepCount: 20, durationMs: 650_000 },
-      { id: "cooldown", name: "Cooldown", index: 8, stepCount: 11, durationMs: 580_000 }
+      { id: "cooldown", name: "Cooldown", index: 8, stepCount: 12, durationMs: 610_000 }
     ]);
     expect(compiled.steps.filter((step) => step.kind === "rest").every((step) => step.name === "REST"))
       .toBe(true);

@@ -39,7 +39,7 @@ const gluteSide = (side: "L" | "R"): ClassEntry[] => [
   rest(`glutes-crunch-rest-${side.toLowerCase()}`, 20),
   exercise(`leg-extensions-${side.toLowerCase()}`, `Leg extensions (${side})`, 40,
     "From tabletop, extend the straight back leg and lift toward the ceiling with control. Exhale at the top, holding for a second.", undefined, "exercises/quadruped-leg-series.svg"),
-  exercise(`leg-pulses-${side.toLowerCase()}`, `Leg pulses (${side})`, 40,
+  exercise(`leg-pulses-${side.toLowerCase()}`, `Leg pulses (${side})`, 20,
     "Extend the straight back leg and pulse up and down.", undefined, "exercises/quadruped-leg-series.svg"),
   exercise(`rainbow-${side.toLowerCase()}`, `Rainbow (${side})`, 40,
     `Extend the ${side === "L" ? "left" : "right"} leg straight back, tap your toe to the outer side of your opposite foot, then lift your leg in a wide arc to tap the floor on the other side.`)
@@ -92,7 +92,7 @@ const sideBodyWithRests = sideBodyPyramid.flatMap((move, index) => [
 export const matPilatesBandLegacy = {
   schemaVersion: 1,
   id: "mat-pilates-band-v1",
-  version: 4,
+  version: 6,
   title: "Mat Pilates with Band V1",
   description: "Warm-up, core, glutes, legs, upper body, and cooldown. Equipment: mat and band.",
   phases: [
@@ -208,8 +208,9 @@ export const matPilatesBandLegacy = {
       name: "Cooldown",
       items: [
         rest("cooldown-transition", 30, "Drink water and stay standing."),
-        exercise("standing-side-body-stretch", "Standing side-body stretch", 60,
-          "Stand tall with feet about hip-width apart. Reach both arms overhead. Grab one wrist and gently lean to the opposite side. Return to center and switch."),
+        exercise("standing-side-body-stretch", "Standing side-body stretch (band around wrists)", 60,
+          "Stand tall with feet about hip-width apart and the band around wrists. Reach both arms overhead and gently lean to one side. Return to center and switch."),
+        exercise("palm-in-with-band", "Palm in with band", 30),
         exercise("hug-knees", "Hug knees in towards chest", 30),
         exercise("forward-fold", "Forward fold", 30,
           "Soften the knees and slowly hinge forward. Let the head, neck and arms relax. Option to hold opposite elbows and gently sway side to side."),
@@ -237,7 +238,7 @@ export const matPilatesBandCatalog = {
   course: {
     ...adaptedBandCourse.course,
     id: "mat-pilates-band",
-    version: 4,
+    version: 6,
     title: "Mat Pilates with Band"
   }
 };
