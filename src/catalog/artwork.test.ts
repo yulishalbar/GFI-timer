@@ -116,8 +116,10 @@ describe("exercise artwork", () => {
     }
     if (used.has("ring-double-leg-lift")) used.add("double-leg-lift");
     const unused = Object.keys(RIGS).filter((id) => !used.has(id)).sort();
-    // Retain guides from the previous sliders schedule for future class reuse.
-    expect(unused).toEqual(["bicycle-legs", "standing-punch-outs"]);
+    // Retain guides from previous sliders and ring schedules for future class reuse.
+    expect(unused).toEqual([
+      "bicycle-legs", "ring-crunch-legs-lifted", "ring-reverse-plank-l-sit", "standing-punch-outs"
+    ]);
   });
 
   it("draws the same movement the same way wherever it appears", () => {

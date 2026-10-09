@@ -3184,6 +3184,7 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
   "ring-double-leg-lift": ringVariant("double-leg-lift", "shoulderNear", "handNear"),
   "ring-crunch": ringVariant("crunch", "kneeNear", "kneeFar"),
   "ring-crunch-legs-lifted": ringVariant("crunch-legs-lifted", "ankleNear", "ankleFar"),
+  "ring-toe-taps-both": ringVariant("toe-taps-both", "ankleNear", "ankleFar"),
   "ring-slider-in-outs-hands": ringVariant("slider-in-outs", "wristNear", "wristFar"),
   "ring-banded-leg-lowers": ringVariant("banded-leg-lowers", "ankleNear", "ankleFar"),
   "ring-reverse-plank-l-sit": ringVariant("reverse-plank-l-sit", "wristNear", "wristFar")

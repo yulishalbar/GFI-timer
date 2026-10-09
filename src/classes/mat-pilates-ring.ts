@@ -48,7 +48,8 @@ function ringRigForEntry(id: string): string | undefined {
     "bridge-ring-between-thighs-hold": "ring-banded-bridge",
     "crunch-ring-thighs": "ring-crunch",
     "crunch-pulse": "ring-crunch",
-    "tabletop-crunch-lifted-legs": "ring-crunch-legs-lifted",
+    "tabletop-tap-ring-shins": "ring-toe-taps-both",
+    "roll-up-ring": "ring-roll-ups",
     "cocoons-ring-shins": "ring-slider-in-outs-hands",
     "leg-extensions-ring-calves": "ring-banded-leg-lowers",
     "leg-lowers-ring-calves": "ring-banded-leg-lowers",
@@ -155,7 +156,7 @@ const sideBodyWithPairedMoves = (side: "L" | "R"): ClassEntry[] => {
 export const matPilatesRingLegacy = {
   schemaVersion: 1,
   id: "mat-pilates-ring-v1",
-  version: 8,
+  version: 9,
   title: "Mat Pilates Ring Class V1",
   description: "A 60-minute full-body Mat Pilates class using a Pilates ring, with core, arms, glutes, legs, side body, back work, and cooldown.",
   phases: [
@@ -252,17 +253,17 @@ export const matPilatesRingLegacy = {
           exercise("crunch-ring-thighs", "Crunch w ring in between thighs", 45,
             "Knees bent with soles of feet on mat."),
           exercise("crunch-pulse", "Crunch pulse with ring", 45),
-          exercise("tabletop-crunch-lifted-legs", "Table top crunch with lifted legs and ring", 45,
-            "Ring in the interior of ankles. Exhale to lift chest, shoulders and head, reach towards the toes and lower down. Progression: come all the way up to a boat pose and lift arms up overhead."),
-          exercise("cocoons-ring-shins", "Cocoons placing ring on shins and then holding ring", 45,
-            "Laying on the mat with the pelvis tucked in. Place legs over the shins in tabletop. Extend legs out hovering in the air, and reach arms back straight overhead. Exhale to squeeze core and bring legs and hands to center, grabbing the ring with the hand to repeat movement."),
+          exercise("tabletop-tap-ring-shins", "Tabletop tap (ring around shins)", 45,
+            "Lie on your back with the ring around the shins and legs in tabletop. Lower both feet to tap the mat, then lift back to tabletop with control."),
           exercise("leg-extensions-ring-calves", "Leg extensions (ring around calves)", 45,
             "Extend legs to 45 and bend towards chest."),
           exercise("leg-lowers-ring-calves", "Leg lowers (ring around calves)", 45,
             "Keep the ring around the calves. Lower the straight legs with control, then lift them back up."),
+          exercise("cocoons-ring-shins", "Cocoons placing ring on shins and then holding ring", 45,
+            "Laying on the mat with the pelvis tucked in. Place legs over the shins in tabletop. Extend legs out hovering in the air, and reach arms back straight overhead. Exhale to squeeze core and bring legs and hands to center, grabbing the ring with the hand to repeat movement."),
+          exercise("roll-up-ring", "Roll up with ring", 60,
+            "Hold the ring in your hands with legs extended along the mat. Exhale to roll up and reach the ring forward, then roll back down with control."),
           exercise("russian-twist-ring", "Russian twist with ring", 45,
-            "Hold ring and squeeze."),
-          exercise("boat-pose-ring", "Boat pose with ring", 30,
             "Hold ring and squeeze.")
         ])
       ]
@@ -303,7 +304,7 @@ export const matPilatesRingCatalog = {
   course: {
     ...adaptedRingCourse.course,
     id: "mat-pilates-ring",
-    version: 8,
+    version: 9,
     title: "Mat Pilates Ring Class"
   }
 };

@@ -339,7 +339,7 @@ describe("compileClass", () => {
     const compiled = compileClass(matPilatesRing);
 
     expect(compiled.steps).toHaveLength(94);
-    expect(compiled.totalDurationMs).toBe(3_590_000);
+    expect(compiled.totalDurationMs).toBe(3_620_000);
     expect(compiled.phases).toEqual([
       { id: "introduction", name: "INTRODUCTION", index: 1, stepCount: 1, durationMs: 120_000 },
       { id: "warmup", name: "Warm-Up", index: 2, stepCount: 7, durationMs: 330_000 },
@@ -347,7 +347,7 @@ describe("compileClass", () => {
       { id: "core-glutes", name: "Circuit #2: Core + Glutes", index: 4, stepCount: 14, durationMs: 565_000 },
       { id: "legs-focused", name: "Circuit #3: legs focused X 2 (switch sides)", index: 5, stepCount: 12, durationMs: 370_000 },
       { id: "side-body", name: "Circuit #4: Side body", index: 6, stepCount: 20, durationMs: 550_000 },
-      { id: "mat-core", name: "Circuit #5: Mat Pilates core", index: 7, stepCount: 16, durationMs: 475_000 },
+      { id: "mat-core", name: "Circuit #5: Mat Pilates core", index: 7, stepCount: 16, durationMs: 505_000 },
       { id: "cooldown", name: "Cooldown", index: 8, stepCount: 10, durationMs: 640_000 }
     ]);
     expect(compiled.steps.filter((step) => step.kind === "rest").every((step) => step.name === "REST"))
@@ -393,6 +393,20 @@ describe("compileClass", () => {
       "side-body-r-rest-4"
     ]);
     const matCoreSteps = compiled.steps.filter((step) => step.phase.id === "mat-core");
+    expect(matCoreSteps.filter((step) => step.kind === "exercise").map((step) => [step.sourceId, step.durationMs])).toEqual([
+      ["crunch-ring-thighs", 45_000],
+      ["crunch-pulse", 45_000],
+      ["tabletop-tap-ring-shins", 45_000],
+      ["leg-extensions-ring-calves", 45_000],
+      ["leg-lowers-ring-calves", 45_000],
+      ["cocoons-ring-shins", 45_000],
+      ["roll-up-ring", 60_000],
+      ["russian-twist-ring", 45_000]
+    ]);
+    expect(matCoreSteps.find((step) => step.sourceId === "tabletop-tap-ring-shins")).toMatchObject({
+      name: "Tabletop tap (ring around shins)",
+      rig: "ring-toe-taps-both"
+    });
     expect(matCoreSteps.filter((step) => step.sourceId.startsWith("mat-core-rest-"))).toHaveLength(7);
     expect(matCoreSteps.find((step) => step.sourceId === "leg-lowers-ring-calves")).toMatchObject({
       name: "Leg lowers (ring around calves)",
