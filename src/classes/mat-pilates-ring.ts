@@ -24,7 +24,8 @@ function ringRigForEntry(id: string): string | undefined {
   if (id.startsWith("squat-add-arms-")) return "ring-squat-hold";
   if (id.startsWith("squat-hold-")) return "ring-squat-hold";
   if (id.startsWith("squat-")) return "ring-squat-to-stand";
-  if (id.startsWith("lunge-ring-front-") || id.startsWith("high-runners-lunge-")) return "ring-reverse-lunge";
+  if (id.startsWith("lunge-ring-front-")) return "ring-reverse-lunge";
+  if (id.startsWith("single-leg-rdl-ring-")) return "ring-single-leg-rdl";
   if (id.startsWith("side-plank-hip-lifts-")) return "ring-forearm-side-plank";
   if (id.startsWith("side-leg-extensions-")) return "ring-side-lying-forward-back-kick";
   if (id.startsWith("side-top-leg-lift-")) return "ring-side-lying-leg-lift";
@@ -85,21 +86,21 @@ function withBreaks(prefix: string, seconds: number, moves: readonly ExerciseEnt
 }
 
 const upperBodyMoves = [
-  exercise("ring-chest-press-one", "Ring chest press on knees", 45,
+  exercise("ring-chest-press-one", "Ring chest press on knees", 30,
     "Kneel tall holding ring at chest. Exhale squeeze ring. Inhale release."),
-  exercise("ring-chest-press-twist-one", "Ring chest press + oblique twist", 45,
+  exercise("ring-chest-press-twist-one", "Ring chest press + oblique twist", 30,
     "Add torso twists while squeezing."),
-  exercise("kneeling-squat-ring-press-one", "Kneeling Squat + Ring Press", 45,
+  exercise("kneeling-squat-ring-press-one", "Kneeling Squat + Ring Press", 30,
     "Lower hips back toward heels. Reach arms forward. Exhale power up to tall kneel while squeezing ring. Add small squeeze pulses."),
-  exercise("biceps-press-left", "Biceps press (L)", 45,
+  exercise("biceps-press-left", "Biceps press (L)", 30,
     "Place one pad of the ring on top of the shoulder or collarbone area using the palm to press straight down against the resistance."),
-  exercise("ring-chest-press-two", "Ring chest press on knees", 45,
+  exercise("ring-chest-press-two", "Ring chest press on knees", 30,
     "Kneel tall holding ring at chest. Exhale squeeze ring. Inhale release."),
-  exercise("ring-chest-press-twist-two", "Ring chest press + oblique twist", 45,
+  exercise("ring-chest-press-twist-two", "Ring chest press + oblique twist", 30,
     "Add torso twists while squeezing."),
-  exercise("kneeling-squat-ring-press-two", "Kneeling Squat + Ring Press", 45,
+  exercise("kneeling-squat-ring-press-two", "Kneeling Squat + Ring Press", 30,
     "Lower hips back toward heels. Reach arms forward. Exhale power up to tall kneel while squeezing ring. Add small squeeze pulses."),
-  exercise("biceps-press-right", "Biceps press (R)", 45,
+  exercise("biceps-press-right", "Biceps press (R)", 30,
     "Place one pad of the ring on top of the shoulder or collarbone area using the palm to press straight down against the resistance.")
 ];
 
@@ -118,8 +119,8 @@ const standingRound = (side: "L" | "R"): ExerciseEntry[] => [
   exercise(`squat-hold-${side.toLowerCase()}-round`, "Squat hold with ring", 30),
   exercise(`lunge-ring-front-${side.toLowerCase()}`, `Lunge with ring in front (${side})`, 30,
     "Hold the ring in front of the chest while lowering into the lunge."),
-  exercise(`high-runners-lunge-${side.toLowerCase()}`, `High runner's lunge (${side})`, 30,
-    "Hold a high runner's lunge with the front knee bent and the back leg long.")
+  exercise(`single-leg-rdl-ring-${side.toLowerCase()}`, `Single leg RDL pressing ring to mat (${side})`, 30,
+    "Stand on the working leg with a soft knee. Hinge at the hips, extending the other leg behind you while pressing the ring down into the mat. Keep the hips level and the spine long. Return to standing with control.")
 ];
 
 const sideBody = (topLeg: "L" | "R"): ExerciseEntry[] => {
@@ -156,7 +157,7 @@ const sideBodyWithPairedMoves = (side: "L" | "R"): ClassEntry[] => {
 export const matPilatesRingLegacy = {
   schemaVersion: 1,
   id: "mat-pilates-ring-v1",
-  version: 9,
+  version: 15,
   title: "Mat Pilates Ring Class V1",
   description: "A 60-minute full-body Mat Pilates class using a Pilates ring, with core, arms, glutes, legs, side body, back work, and cooldown.",
   phases: [
@@ -174,7 +175,7 @@ export const matPilatesRingLegacy = {
           "Sit tall with soles of the feet together, knees open wide. Hold ankles or shins. Gently press knees toward the floor while lengthening through the spine. Option to add small pulses or remain still."),
         exercise("side-twist", "Side twist", 60,
           "Sit with legs crossed. Twist towards the left side, grabbing left knee with right hand and left hand towards the back. Switch sides after 30 sec."),
-        exercise("overhead-reach-palms-inside-ring", "Overhead reach with palms inside ring", 30,
+        exercise("overhead-reach-palms-inside-ring", "Overhead reach with palms inside ring", 90,
           "Reach the ring overhead with the palms pressing into the inside pads of the ring."),
         exercise("straight-leg-forward-fold", "Straight leg forward fold - Reach right and left", 30,
           "Straighten legs. Sit with both legs extended straight in front. Flex feet and sit tall. Inhale lengthen spine. Exhale hinge forward from hips, reaching toward shins, ankles, or feet. Keep chest lifted and avoid rounding excessively."),
@@ -182,25 +183,31 @@ export const matPilatesRingLegacy = {
           "Place ring over lifted left leg. Inhale prepare. Exhale to roll down with control. Inhale at the bottom. Exhale roll up toward the lifted leg, reaching the ring forward. At the top, extend one arm back behind you to open the chest. Return arm forward."),
         exercise("one-leg-roll-up-ring-right", "One-leg roll-up with ring, with single arms stretching back (R)", 60,
           "Place ring over lifted right leg. Inhale prepare. Exhale to roll down with control. Inhale at the bottom. Exhale roll up toward the lifted leg, reaching the ring forward. At the top, extend one arm back behind you to open the chest. Return arm forward."),
-        rest("warmup-end", 60, "Rest before beginning standing circuit.")
+        rest("warmup-end", 60, "Rest before beginning the mat core circuit.")
       ]
     },
     {
-      id: "abs-arms-back",
-      name: "Circuit #1: ABS + ARMS CIRCUIT + back",
+      id: "mat-core",
+      name: "Circuit #1: Mat Pilates core",
       items: [
-        ...upperBodyMoves,
-        rest("prone-setup", 30, "Lie on back, preparing for back exercises."),
-        exercise("assisted-knee-push-up", "Assisted knee push-up", 30,
-          "Place the ring vertically under the chest for support. From the knees, lower the chest toward the ring and press back up with control."),
-        exercise("prone-leg-lifts", "Prone leg lifts with ring", 30,
-          "Lie face down on your mat with your arms extended forward, holding the pads of the ring on the floor. Exhale to lift legs up together, squeezing at the top, lower down."),
-        exercise("prone-back-lift", "Prone back lift with ring", 30,
-          "Lie face down on your mat with your arms extended forward, holding the pads of the ring on the floor. Inhale to prepare, then exhale as you press down lightly on the ring and lift your head, chest, and arms a few inches off the mat. Keep your lower ribs and pubic bone anchored to the floor. Inhale to lower back down with control."),
-        exercise("superman", "Superman with ring", 30,
-          "Combining prone Back lift and prone leg lifts."),
-        exercise("prone-chest-lift-ring", "Lifted chest ring press", 30,
-          "Lie face down with legs extended long behind you and arms reaching overhead, holding the Pilates ring. Engage your core and glutes. Keeping the arms long, gently lift your head, chest, and arms off the mat by extending through the upper back. Reach the ring forward as you lift rather than pulling the shoulders toward the ears. Keep the pelvis and legs grounded. Slowly lower the chest and arms back toward the mat with control, then repeat.")
+        rest("mat-core-setup", 60, "Cue next circuit."),
+        ...withBreaks("mat-core", 10, [
+          exercise("crunch-ring-thighs", "Crunch w ring in between thighs", 40,
+            "Knees bent with soles of feet on mat."),
+          exercise("crunch-pulse", "Crunch pulse with ring", 20),
+          exercise("tabletop-tap-ring-shins", "Tabletop tap (ring around shins)", 45,
+            "Lie on your back with the ring around the shins and legs in tabletop. Lower both feet to tap the mat, then lift back to tabletop with control."),
+          exercise("leg-extensions-ring-calves", "Leg extensions (ring around calves)", 45,
+            "Extend legs to 45 and bend towards chest."),
+          exercise("leg-lowers-ring-calves", "Leg lowers (ring around calves)", 45,
+            "Keep the ring around the calves. Lower the straight legs with control, then lift them back up."),
+          exercise("cocoons-ring-shins", "Cocoons placing ring on shins and then holding ring", 45,
+            "Laying on the mat with the pelvis tucked in. Place legs over the shins in tabletop. Extend legs out hovering in the air, and reach arms back straight overhead. Exhale to squeeze core and bring legs and hands to center, grabbing the ring with the hand to repeat movement."),
+          exercise("roll-up-ring", "Roll up with ring", 60,
+            "Hold the ring in your hands with legs extended along the mat. Exhale to roll up and reach the ring forward, then roll back down with control."),
+          exercise("russian-twist-ring", "Russian twist with ring", 45,
+            "Hold ring and squeeze.")
+        ]).filter((entry) => entry.id !== "mat-core-rest-1")
       ]
     },
     {
@@ -209,6 +216,7 @@ export const matPilatesRingLegacy = {
       items: [
         rest("core-glutes-setup", 60, "Come to tabletop and prepare the ring."),
         ...tabletopSide("R"),
+        rest("tabletop-side-switch", 20, "Switch to the left side."),
         ...tabletopSide("L"),
         rest("tabletop-to-bridge", 30, "Move onto your back and place the ring around the thighs."),
         exercise("bridge-ring-thighs", "Bridge with ring Around Thighs", 30,
@@ -245,27 +253,21 @@ export const matPilatesRingLegacy = {
       ]
     },
     {
-      id: "mat-core",
-      name: "Circuit #5: Mat Pilates core",
+      id: "abs-arms-back",
+      name: "Circuit #5: ABS + ARMS CIRCUIT + back",
       items: [
-        rest("mat-core-setup", 60, "Cue next circuit."),
-        ...withBreaks("mat-core", 10, [
-          exercise("crunch-ring-thighs", "Crunch w ring in between thighs", 45,
-            "Knees bent with soles of feet on mat."),
-          exercise("crunch-pulse", "Crunch pulse with ring", 45),
-          exercise("tabletop-tap-ring-shins", "Tabletop tap (ring around shins)", 45,
-            "Lie on your back with the ring around the shins and legs in tabletop. Lower both feet to tap the mat, then lift back to tabletop with control."),
-          exercise("leg-extensions-ring-calves", "Leg extensions (ring around calves)", 45,
-            "Extend legs to 45 and bend towards chest."),
-          exercise("leg-lowers-ring-calves", "Leg lowers (ring around calves)", 45,
-            "Keep the ring around the calves. Lower the straight legs with control, then lift them back up."),
-          exercise("cocoons-ring-shins", "Cocoons placing ring on shins and then holding ring", 45,
-            "Laying on the mat with the pelvis tucked in. Place legs over the shins in tabletop. Extend legs out hovering in the air, and reach arms back straight overhead. Exhale to squeeze core and bring legs and hands to center, grabbing the ring with the hand to repeat movement."),
-          exercise("roll-up-ring", "Roll up with ring", 60,
-            "Hold the ring in your hands with legs extended along the mat. Exhale to roll up and reach the ring forward, then roll back down with control."),
-          exercise("russian-twist-ring", "Russian twist with ring", 45,
-            "Hold ring and squeeze.")
-        ])
+        ...upperBodyMoves,
+        rest("prone-setup", 30, "Lie on back, preparing for back exercises."),
+        exercise("assisted-knee-push-up", "Assisted knee push-up", 30,
+          "Place the ring vertically under the chest for support. From the knees, lower the chest toward the ring and press back up with control."),
+        exercise("prone-leg-lifts", "Prone leg lifts with ring", 30,
+          "Lie face down on your mat with your arms extended forward, holding the pads of the ring on the floor. Exhale to lift legs up together, squeezing at the top, lower down."),
+        exercise("prone-back-lift", "Prone back lift with ring", 30,
+          "Lie face down on your mat with your arms extended forward, holding the pads of the ring on the floor. Inhale to prepare, then exhale as you press down lightly on the ring and lift your head, chest, and arms a few inches off the mat. Keep your lower ribs and pubic bone anchored to the floor. Inhale to lower back down with control."),
+        exercise("superman", "Superman with ring", 30,
+          "Combining prone Back lift and prone leg lifts."),
+        exercise("prone-chest-lift-ring", "Lifted chest ring press", 30,
+          "Lie face down with legs extended long behind you and arms reaching overhead, holding the Pilates ring. Engage your core and glutes. Keeping the arms long, gently lift your head, chest, and arms off the mat by extending through the upper back. Reach the ring forward as you lift rather than pulling the shoulders toward the ears. Keep the pelvis and legs grounded. Slowly lower the chest and arms back toward the mat with control, then repeat.")
       ]
     },
     {
@@ -304,7 +306,7 @@ export const matPilatesRingCatalog = {
   course: {
     ...adaptedRingCourse.course,
     id: "mat-pilates-ring",
-    version: 9,
+    version: 15,
     title: "Mat Pilates Ring Class"
   }
 };

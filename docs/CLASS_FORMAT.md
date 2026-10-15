@@ -380,3 +380,30 @@ upper-body rounds is 30 seconds. Crescent low lunge lasts 60 seconds per side.
 The cooldown starts after its existing transition with Standing side-body stretch
 (band around wrists) for 60 seconds, then Palm in with band for 30 seconds,
 before continuing with Hug knees in towards chest and the remaining sequence.
+
+## Ring circuit order
+
+`mat-pilates-ring` version 10 swaps the first and last circuits: Mat Pilates
+core is Circuit #1, and ABS + ARMS CIRCUIT + back is Circuit #5. Circuits
+2 through 4 retain their order. Circuit exercises, rests, and durations remain
+unchanged; the class still totals 60 minutes 20 seconds across 94 timed steps.
+
+Version 11 sets every exercise in the final ABS + ARMS CIRCUIT + back circuit
+to 30 seconds. Its existing rest is also 30 seconds, so the circuit totals
+7 minutes and the class totals **58 minutes 20 seconds** across 94 timed steps.
+
+Version 12 sets Crunch w ring in between thighs to 40 seconds, followed
+immediately by 20-second Crunch pulse with ring, removing the intervening
+10-second rest. The class totals **57 minutes 40 seconds** across 93 timed steps.
+
+Version 13 extends Overhead reach with palms inside ring in the warm-up to
+90 seconds. The class totals **58 minutes 40 seconds** across 93 timed steps.
+
+Version 14 replaces High runner's lunge on both sides of Circuit #3 with
+Single leg RDL pressing ring to mat, retaining 30 seconds per side. Instructions
+cue a hip hinge while pressing the ring into the mat; the guide shows the RDL
+movement. Total duration remains **58 minutes 40 seconds** across 93 timed steps.
+
+Version 15 adds a 20-second side-switch rest immediately after Tabletop leg
+lift pulse up and down (R), before the left-side tabletop sequence. The class
+totals **59 minutes** across 94 timed steps.

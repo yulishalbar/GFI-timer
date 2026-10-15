@@ -3175,6 +3175,7 @@ export const RIGS: Readonly<Record<string, RigDefinition>> = {
   "ring-glute-bridge-pulse": ringVariant("glute-bridge-pulse", "kneeNear", "kneeFar"),
   "ring-squat-to-stand": ringVariant("squat-to-stand", "wristNear", "wristFar"),
   "ring-squat-hold": ringVariant("squat-hold", "wristNear", "wristFar"),
+  "ring-single-leg-rdl": ringVariant("single-leg-rdl", "wristNear", "wristFar"),
   "ring-reverse-lunge": ringVariant("reverse-lunge", "wristNear", "wristFar"),
   "ring-forearm-side-plank": ringVariant("forearm-side-plank", "shoulderNear", "handNear"),
   "ring-side-body-crunch": ringVariant("side-body-crunch", "shoulderNear", "handNear"),
