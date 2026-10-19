@@ -1,3 +1,4 @@
+import { matPilatesBall01, matPilatesBall01Catalog } from "./mat-pilates-ball-01";
 import { compileClass } from "../domain/compile-class";
 import type { CompiledClass } from "../domain/timeline";
 import { matPilates0724, matPilates0724Catalog } from "./mat-pilates-07-24";
@@ -19,6 +20,7 @@ import { matPilatesWeights, matPilatesWeightsCatalog } from "./mat-pilates-weigh
  * but showing both would just be the same class twice.
  */
 const classDefinitions: readonly unknown[] = [
+  matPilatesBall01,
   matPilatesWeights,
   matPilatesBall,
   matPilatesWeightsBlockPlank,
@@ -44,6 +46,7 @@ export const availableExerciseCatalog = mergeExerciseCatalogs(
 );
 
 export const courseTagsById: Readonly<Record<string, readonly string[]>> = {
+  "mat-pilates-ball-01": matPilatesBall01Catalog.course.tags,
   "mat-pilates-weights": matPilatesWeightsCatalog.course.tags,
   "mat-pilates-weights-block-plank": ["mat-pilates", "mat", "block", "weights", "full-body"],
   "mat-pilates-ball": ["mat-pilates", "mat", "ball", "full-body"],

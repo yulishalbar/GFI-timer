@@ -242,6 +242,36 @@ in a test so later edits cannot change it accidentally.
 
 ## Versioning
 
+### Pilates Ball Mat Pilates #1
+
+`mat-pilates-ball-01` version 1 follows `classes/Pilates ball class #1.pdf`:
+97 timed steps totaling **52 minutes 10 seconds**, with warm-up, side body,
+lower body, glutes, upper body, core, and cooldown in that order. The original
+`mat-pilates-ball` remains available unchanged. This course uses text guidance.
+
+The PDF's block-and-weights heading conflicts with its ball exercises; the
+course uses mat and Pilates ball. Explicit row durations take precedence over
+the approximate 60-minute heading. The side-body sequence runs left then right,
+with ten-second rests between exercises and a ten-second side switch; its
+explicit twenty-second rest replaces the usual ten-second gap. Lower body
+repeats on the right as directed. The second printed right-side glute sequence
+is interpreted as the opposite side, following the repeat note. Spelling, grammar, punctuation, and capitalization have been corrected at the
+instructor's request, including the closing equipment reference to the Pilates
+ball. No extra time is added to reach sixty minutes.
+
+Version 2 adds a two-minute introduction, extends Thread the needle to one
+minute per side, and adds a one-minute rest after warm-up to cue Circuit #1.
+A one-minute setup rest precedes Circuit #4. The final thirty-second rest in
+Circuit #2 is removed; its side-switch rest remains. A thirty-second Boat hold
+follows the final core exercise, before the existing cooldown rest. The revised
+class totals **57 minutes 10 seconds** across **100 timed steps**.
+
+Version 3 reorders the circuits to Core, Glutes, Lower Body, Side Body, then
+Upper Body, numbered 1 through 5. Warm-up and upper-body setup cues follow the
+new numbering. Each circuit retains its exercises, durations, and rests,
+including Boat hold in Core. Introduction, warm-up, and cooldown remain in
+place. The total remains **57 minutes 10 seconds** across **100 timed steps**.
+
 ### Mat Pilates with weight
 
 `mat-pilates-weights` version 7 adapts **Mat Pilates — July 31** into a
