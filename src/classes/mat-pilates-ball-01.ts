@@ -8,7 +8,7 @@ import { resolveCourseDefinition } from "../domain/resolve-course";
 export const matPilatesBall01Source = {
   "schemaVersion": 1,
   "id": "mat-pilates-ball-01-source",
-  "version": 4,
+  "version": 5,
   "title": "Pilates Ball Mat Pilates #1",
   "description": "Mat and Pilates ball. Timed rows from Pilates ball class #1.pdf.",
   "visualsDisabled": true,
@@ -638,6 +638,14 @@ export const matPilatesBall01Source = {
         },
         {
           "type": "exercise",
+          "id": "half-split-r",
+          "name": "Half split pose (R)",
+          "durationSeconds": 30,
+          "shortDescription": "From Lizard pose, shift your hips back and straighten the front leg, keeping a soft bend in the knee.",
+          "longDescription": "Flex the front foot and lengthen your spine as you gently hinge forward. Keep your hands supported on the mat or blocks."
+        },
+        {
+          "type": "exercise",
           "id": "pigeon-r",
           "name": "Pigeon pose (R)",
           "durationSeconds": 30
@@ -653,6 +661,14 @@ export const matPilatesBall01Source = {
           "id": "lizard-l",
           "name": "Lizard pose (L)",
           "durationSeconds": 30
+        },
+        {
+          "type": "exercise",
+          "id": "half-split-l",
+          "name": "Half split pose (L)",
+          "durationSeconds": 30,
+          "shortDescription": "From Lizard pose, shift your hips back and straighten the front leg, keeping a soft bend in the knee.",
+          "longDescription": "Flex the front foot and lengthen your spine as you gently hinge forward. Keep your hands supported on the mat or blocks."
         },
         {
           "type": "exercise",

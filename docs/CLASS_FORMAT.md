@@ -279,6 +279,10 @@ thirty-second side switch. Half moon twist flows directly into top-leg pulses
 on both sides. Puppy Pose is removed from cooldown. The revised total is
 **55 minutes 50 seconds** across **99 timed steps**.
 
+Version 5 adds a thirty-second Half split pose immediately after Lizard pose
+and before Pigeon pose on each side of cooldown. The total is now
+**56 minutes 50 seconds** across **101 timed steps**.
+
 ### Mat Pilates with weight
 
 `mat-pilates-weights` version 7 adapts **Mat Pilates — July 31** into a
