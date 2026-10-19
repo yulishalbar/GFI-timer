@@ -283,6 +283,10 @@ Version 5 adds a thirty-second Half split pose immediately after Lizard pose
 and before Pigeon pose on each side of cooldown. The total is now
 **56 minutes 50 seconds** across **101 timed steps**.
 
+Version 6 appends forty-second Full-range glute bridges as the final exercise
+in Circuit #2: glutes, immediately after the left-side pulses. The total is now
+**57 minutes 30 seconds** across **102 timed steps**.
+
 ### Mat Pilates with weight
 
 `mat-pilates-weights` version 7 adapts **Mat Pilates — July 31** into a

@@ -8,7 +8,7 @@ import { resolveCourseDefinition } from "../domain/resolve-course";
 export const matPilatesBall01Source = {
   "schemaVersion": 1,
   "id": "mat-pilates-ball-01-source",
-  "version": 5,
+  "version": 6,
   "title": "Pilates Ball Mat Pilates #1",
   "description": "Mat and Pilates ball. Timed rows from Pilates ball class #1.pdf.",
   "visualsDisabled": true,
@@ -249,6 +249,14 @@ export const matPilatesBall01Source = {
           "id": "pulse-l",
           "name": "Pulse (L)",
           "durationSeconds": 20
+        },
+        {
+          "type": "exercise",
+          "id": "full-range-glute-bridges",
+          "name": "Full-range glute bridges",
+          "durationSeconds": 40,
+          "shortDescription": "Lie on your back with knees bent and both feet flat on the mat.",
+          "longDescription": "Press through your feet to lift your hips, then lower with control through your full comfortable range. Keep your ribs relaxed and avoid arching your lower back."
         }
       ]
     },

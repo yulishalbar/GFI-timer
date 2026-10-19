@@ -5,8 +5,8 @@ import { matPilatesBall01, matPilatesBall01Catalog } from "./mat-pilates-ball-01
 
 it("applies instructor timing revisions with explicit breaks", () => {
   const timeline = compileClass(matPilatesBall01);
-  expect(timeline.steps).toHaveLength(101);
-  expect(timeline.totalDurationMs).toBe(3_410_000);
+  expect(timeline.steps).toHaveLength(102);
+  expect(timeline.totalDurationMs).toBe(3_450_000);
   expect(timeline.phases.map((phase) => phase.id)).toEqual([
     "intro", "warmup", "core", "glutes", "lower-body", "side-body", "upper-body", "cooldown"
   ]);
@@ -15,13 +15,17 @@ it("applies instructor timing revisions with explicit breaks", () => {
     "Circuit #4: side body", "Circuit #5: upper body"
   ]);
   const steps = timeline.steps;
-  expect(timeline.definition.version).toBe(5);
+  expect(timeline.definition.version).toBe(6);
   expect(steps[0]?.sourceId).toBe("introduction");
   expect(steps[0]?.durationMs).toBe(120_000);
   for (const id of ["thread-l", "thread-r", "warmup-end", "upper-body-setup", "side-body-setup"]) {
     expect(steps.find((step) => step.sourceId === id)?.durationMs).toBe(60_000);
   }
   expect(steps.some((step) => step.sourceId === "lower-end-r")).toBe(false);
+  const gluteSteps = steps.filter((step) => step.phase.id === "glutes");
+  expect(gluteSteps.at(-1)?.sourceId).toBe("full-range-glute-bridges");
+  expect(gluteSteps.at(-1)?.durationMs).toBe(40_000);
+  expect(gluteSteps.at(-2)?.sourceId).toBe("pulse-l");
   const coreSteps = steps.filter((step) => step.phase.id === "core");
   expect(coreSteps.at(-2)?.sourceId).toBe("boat-hold");
   expect(coreSteps.at(-2)?.durationMs).toBe(30_000);
