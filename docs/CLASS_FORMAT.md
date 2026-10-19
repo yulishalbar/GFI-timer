@@ -272,6 +272,13 @@ new numbering. Each circuit retains its exercises, durations, and rests,
 including Boat hold in Core. Introduction, warm-up, and cooldown remain in
 place. The total remains **57 minutes 10 seconds** across **100 timed steps**.
 
+Version 4 adds a ten-second rest between Passing the ball in scissors and Boat
+hold. Every lower-body exercise lasts thirty seconds; that circuit's rests
+retain their durations. A one-minute setup rest precedes Side Body, with a
+thirty-second side switch. Half moon twist flows directly into top-leg pulses
+on both sides. Puppy Pose is removed from cooldown. The revised total is
+**55 minutes 50 seconds** across **99 timed steps**.
+
 ### Mat Pilates with weight
 
 `mat-pilates-weights` version 7 adapts **Mat Pilates — July 31** into a

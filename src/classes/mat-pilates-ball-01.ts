@@ -8,7 +8,7 @@ import { resolveCourseDefinition } from "../domain/resolve-course";
 export const matPilatesBall01Source = {
   "schemaVersion": 1,
   "id": "mat-pilates-ball-01-source",
-  "version": 3,
+  "version": 4,
   "title": "Pilates Ball Mat Pilates #1",
   "description": "Mat and Pilates ball. Timed rows from Pilates ball class #1.pdf.",
   "visualsDisabled": true,
@@ -163,6 +163,13 @@ export const matPilatesBall01Source = {
           "durationSeconds": 40
         },
         {
+          "type": "rest",
+          "id": "boat-setup",
+          "name": "REST",
+          "durationSeconds": 10,
+          "shortDescription": "Prepare for Boat hold."
+        },
+        {
           "type": "exercise",
           "id": "boat-hold",
           "name": "Boat hold",
@@ -259,25 +266,25 @@ export const matPilatesBall01Source = {
           "type": "exercise",
           "id": "lunge-l",
           "name": "Lunge onto ball",
-          "durationSeconds": 40
+          "durationSeconds": 30
         },
         {
           "type": "exercise",
           "id": "lunge-hinge-l",
           "name": "Lunge onto ball + hinge",
-          "durationSeconds": 40
+          "durationSeconds": 30
         },
         {
           "type": "exercise",
           "id": "hinge-pulse-l",
           "name": "Static hinge with arm pulses (knee on ball)",
-          "durationSeconds": 40
+          "durationSeconds": 30
         },
         {
           "type": "exercise",
           "id": "lunge-pulse-l",
           "name": "Lunge with knee pulses onto the ball",
-          "durationSeconds": 40
+          "durationSeconds": 30
         },
         {
           "type": "rest",
@@ -290,14 +297,14 @@ export const matPilatesBall01Source = {
           "type": "exercise",
           "id": "tabletop-lift-l",
           "name": "Tabletop leg lift (ball under knee)",
-          "durationSeconds": 40,
+          "durationSeconds": 30,
           "shortDescription": "Keep your knee on the ball and lower your hands into a tabletop position."
         },
         {
           "type": "exercise",
           "id": "tabletop-lunge-l",
           "name": "Tabletop leg lift + lunge (ball under knee)",
-          "durationSeconds": 40
+          "durationSeconds": 30
         },
         {
           "type": "rest",
@@ -310,25 +317,25 @@ export const matPilatesBall01Source = {
           "type": "exercise",
           "id": "lunge-r",
           "name": "Lunge onto ball",
-          "durationSeconds": 40
+          "durationSeconds": 30
         },
         {
           "type": "exercise",
           "id": "lunge-hinge-r",
           "name": "Lunge onto ball + hinge",
-          "durationSeconds": 40
+          "durationSeconds": 30
         },
         {
           "type": "exercise",
           "id": "hinge-pulse-r",
           "name": "Static hinge with arm pulses (knee on ball)",
-          "durationSeconds": 40
+          "durationSeconds": 30
         },
         {
           "type": "exercise",
           "id": "lunge-pulse-r",
           "name": "Lunge with knee pulses onto the ball",
-          "durationSeconds": 40
+          "durationSeconds": 30
         },
         {
           "type": "rest",
@@ -341,14 +348,14 @@ export const matPilatesBall01Source = {
           "type": "exercise",
           "id": "tabletop-lift-r",
           "name": "Tabletop leg lift (ball under knee)",
-          "durationSeconds": 40,
+          "durationSeconds": 30,
           "shortDescription": "Keep your knee on the ball and lower your hands into a tabletop position."
         },
         {
           "type": "exercise",
           "id": "tabletop-lunge-r",
           "name": "Tabletop leg lift + lunge (ball under knee)",
-          "durationSeconds": 40
+          "durationSeconds": 30
         }
       ]
     },
@@ -356,6 +363,13 @@ export const matPilatesBall01Source = {
       "id": "side-body",
       "name": "Circuit #4: side body",
       "items": [
+        {
+          "type": "rest",
+          "id": "side-body-setup",
+          "name": "REST",
+          "durationSeconds": 60,
+          "shortDescription": "Prepare for Circuit #4: side body. Lie on your left side with the ball between elbow and knee."
+        },
         {
           "type": "exercise",
           "id": "clamshells-l",
@@ -404,12 +418,6 @@ export const matPilatesBall01Source = {
           "durationSeconds": 40
         },
         {
-          "type": "rest",
-          "id": "side-l-rest-5",
-          "name": "REST",
-          "durationSeconds": 10
-        },
-        {
           "type": "exercise",
           "id": "half-moon-pulse-l",
           "name": "Half moon top-leg pulses",
@@ -432,7 +440,7 @@ export const matPilatesBall01Source = {
           "type": "rest",
           "id": "side-switch",
           "name": "REST",
-          "durationSeconds": 10,
+          "durationSeconds": 30,
           "shortDescription": "Repeat on the opposite side."
         },
         {
@@ -481,12 +489,6 @@ export const matPilatesBall01Source = {
           "id": "half-moon-r",
           "name": "Half moon twist toward the mat (holding ball)",
           "durationSeconds": 40
-        },
-        {
-          "type": "rest",
-          "id": "side-r-rest-5",
-          "name": "REST",
-          "durationSeconds": 10
         },
         {
           "type": "exercise",
@@ -663,14 +665,6 @@ export const matPilatesBall01Source = {
           "id": "cobra",
           "name": "Cobra",
           "durationSeconds": 30
-        },
-        {
-          "type": "exercise",
-          "id": "puppy",
-          "name": "Puppy Pose",
-          "durationSeconds": 30,
-          "shortDescription": "From cobra, return to all fours, widen your knees, keep your hips elevated, and lower your forehead and chest.",
-          "longDescription": "Reach arms forward, lengthen spine, and gently draw armpits toward the mat."
         },
         {
           "type": "exercise",
