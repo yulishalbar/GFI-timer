@@ -287,6 +287,27 @@ Version 6 appends forty-second Full-range glute bridges as the final exercise
 in Circuit #2: glutes, immediately after the left-side pulses. The total is now
 **57 minutes 30 seconds** across **102 timed steps**.
 
+Version 7 replaces Tabletop palm flips and Tabletop palm twists in warm-up
+with Bird dogs with wrist rotations, right then left, thirty seconds per side.
+The closing equipment cue remains on the left-side entry. The total remains
+**57 minutes 30 seconds** across **102 timed steps**.
+
+Version 8 replaces Boat hold after Passing the ball in scissors with Single-leg
+deadbug (ball between hand and thigh), left then right for forty seconds each.
+The preceding ten-second setup rest remains and cues deadbug; the two sides
+flow directly into each other. The class now totals **58 minutes 20 seconds**
+across **103 timed steps**.
+
+Version 9 removes all six ten-second rests in Side Body and all six ten-second
+rests in Upper Body, preserving the longer setup, half-moon preparation, and
+side-switch breaks. Ball lifts replaces Press hands on ball for thirty seconds.
+The class now totals **56 minutes 20 seconds** across **91 timed steps**.
+
+Version 10 repeats Bear hold rotations, Bear hold to pike, and Bear hold
+rotations with arm lifts (all with the ball between thighs) after Around the
+world at the end of Upper Body. Each lasts thirty seconds, with no intervening
+rests. The class now totals **57 minutes 50 seconds** across **94 timed steps**.
+
 ### Mat Pilates with weight
 
 `mat-pilates-weights` version 7 adapts **Mat Pilates — July 31** into a

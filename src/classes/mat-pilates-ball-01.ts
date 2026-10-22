@@ -8,7 +8,7 @@ import { resolveCourseDefinition } from "../domain/resolve-course";
 export const matPilatesBall01Source = {
   "schemaVersion": 1,
   "id": "mat-pilates-ball-01-source",
-  "version": 6,
+  "version": 10,
   "title": "Pilates Ball Mat Pilates #1",
   "description": "Mat and Pilates ball. Timed rows from Pilates ball class #1.pdf.",
   "visualsDisabled": true,
@@ -64,14 +64,14 @@ export const matPilatesBall01Source = {
         },
         {
           "type": "exercise",
-          "id": "flip-palms",
-          "name": "Tabletop palm flips",
+          "id": "bird-dogs-wrist-rotations-r",
+          "name": "Bird dogs with wrist rotations (R)",
           "durationSeconds": 30
         },
         {
           "type": "exercise",
-          "id": "twist-palms",
-          "name": "Tabletop palm twists",
+          "id": "bird-dogs-wrist-rotations-l",
+          "name": "Bird dogs with wrist rotations (L)",
           "durationSeconds": 30,
           "shortDescription": "At the end, introduce the equipment and explain that it is optional."
         },
@@ -164,18 +164,22 @@ export const matPilatesBall01Source = {
         },
         {
           "type": "rest",
-          "id": "boat-setup",
+          "id": "deadbug-setup",
           "name": "REST",
           "durationSeconds": 10,
-          "shortDescription": "Prepare for Boat hold."
+          "shortDescription": "Prepare for single-leg deadbug with the ball between hand and thigh."
         },
         {
           "type": "exercise",
-          "id": "boat-hold",
-          "name": "Boat hold",
-          "durationSeconds": 30,
-          "shortDescription": "Balance behind the sit bones with knees bent and chest lifted.",
-          "longDescription": "Hold the torso steady and breathe. Keep feet on the mat for support as needed."
+          "id": "single-leg-deadbug-l",
+          "name": "Single-leg deadbug (ball between hand and thigh) (L)",
+          "durationSeconds": 40
+        },
+        {
+          "type": "exercise",
+          "id": "single-leg-deadbug-r",
+          "name": "Single-leg deadbug (ball between hand and thigh) (R)",
+          "durationSeconds": 40
         },
         {
           "type": "rest",
@@ -386,24 +390,12 @@ export const matPilatesBall01Source = {
           "shortDescription": "Keep your hips on the mat and squeeze the ball between your elbow and knee."
         },
         {
-          "type": "rest",
-          "id": "side-l-rest-1",
-          "name": "REST",
-          "durationSeconds": 10
-        },
-        {
           "type": "exercise",
           "id": "extension-l",
           "name": "Leg and arm extension",
           "durationSeconds": 40,
           "shortDescription": "Stay in the same position and extend your leg and arm straight out.",
           "longDescription": "Extend your leg and arm straight out."
-        },
-        {
-          "type": "rest",
-          "id": "side-l-rest-2",
-          "name": "REST",
-          "durationSeconds": 10
         },
         {
           "type": "exercise",
@@ -432,12 +424,6 @@ export const matPilatesBall01Source = {
           "durationSeconds": 20
         },
         {
-          "type": "rest",
-          "id": "side-l-rest-6",
-          "name": "REST",
-          "durationSeconds": 10
-        },
-        {
           "type": "exercise",
           "id": "side-bend-l",
           "name": "Side bend with oblique rotation",
@@ -459,24 +445,12 @@ export const matPilatesBall01Source = {
           "shortDescription": "Keep your hips on the mat and squeeze the ball between your elbow and knee."
         },
         {
-          "type": "rest",
-          "id": "side-r-rest-1",
-          "name": "REST",
-          "durationSeconds": 10
-        },
-        {
           "type": "exercise",
           "id": "extension-r",
           "name": "Leg and arm extension",
           "durationSeconds": 40,
           "shortDescription": "Stay in the same position and extend your leg and arm straight out.",
           "longDescription": "Extend your leg and arm straight out."
-        },
-        {
-          "type": "rest",
-          "id": "side-r-rest-2",
-          "name": "REST",
-          "durationSeconds": 10
         },
         {
           "type": "exercise",
@@ -505,12 +479,6 @@ export const matPilatesBall01Source = {
           "durationSeconds": 20
         },
         {
-          "type": "rest",
-          "id": "side-r-rest-6",
-          "name": "REST",
-          "durationSeconds": 10
-        },
-        {
           "type": "exercise",
           "id": "side-bend-r",
           "name": "Side bend with oblique rotation",
@@ -537,22 +505,10 @@ export const matPilatesBall01Source = {
           "durationSeconds": 30
         },
         {
-          "type": "rest",
-          "id": "upper-rest-1",
-          "name": "REST",
-          "durationSeconds": 10
-        },
-        {
           "type": "exercise",
           "id": "bear-pike",
           "name": "Bear hold to pike (ball between thighs)",
           "durationSeconds": 30
-        },
-        {
-          "type": "rest",
-          "id": "upper-rest-2",
-          "name": "REST",
-          "durationSeconds": 10
         },
         {
           "type": "exercise",
@@ -561,22 +517,10 @@ export const matPilatesBall01Source = {
           "durationSeconds": 30
         },
         {
-          "type": "rest",
-          "id": "upper-rest-3",
-          "name": "REST",
-          "durationSeconds": 10
-        },
-        {
           "type": "exercise",
           "id": "push-ups",
           "name": "Push-ups (chest to ball)",
           "durationSeconds": 30
-        },
-        {
-          "type": "rest",
-          "id": "upper-rest-4",
-          "name": "REST",
-          "durationSeconds": 10
         },
         {
           "type": "exercise",
@@ -587,22 +531,10 @@ export const matPilatesBall01Source = {
           "longDescription": "Roll the ball back and forth while lifting your chest and head."
         },
         {
-          "type": "rest",
-          "id": "upper-rest-5",
-          "name": "REST",
-          "durationSeconds": 10
-        },
-        {
           "type": "exercise",
-          "id": "press",
-          "name": "Press hands on ball",
+          "id": "ball-lifts",
+          "name": "Ball lifts",
           "durationSeconds": 30
-        },
-        {
-          "type": "rest",
-          "id": "upper-rest-6",
-          "name": "REST",
-          "durationSeconds": 10
         },
         {
           "type": "exercise",
@@ -611,6 +543,24 @@ export const matPilatesBall01Source = {
           "durationSeconds": 30,
           "shortDescription": "Hold the ball in both hands with your arms extended straight in front of you.",
           "longDescription": "Lift your head, chest, neck, and shoulders. Take the ball in your right hand and pass it to your left hand behind your back."
+        },
+        {
+          "type": "exercise",
+          "id": "bear-rotations-repeat",
+          "name": "Bear hold rotations (ball between thighs)",
+          "durationSeconds": 30
+        },
+        {
+          "type": "exercise",
+          "id": "bear-pike-repeat",
+          "name": "Bear hold to pike (ball between thighs)",
+          "durationSeconds": 30
+        },
+        {
+          "type": "exercise",
+          "id": "bear-arm-lifts-repeat",
+          "name": "Bear hold rotations with arm lifts (ball between thighs)",
+          "durationSeconds": 30
         }
       ]
     },
