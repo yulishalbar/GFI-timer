@@ -34,6 +34,23 @@ const UPDATED_SLIDERS_PENDING = [
 const NOT_A_MOVEMENT = ["Class introduction", "INTRODUCTION"];
 const BAND_PENDING = ["Palm in with band"];
 const WEIGHTED_COOLDOWN_PENDING = ["Cross-body cat+cows"];
+const WEIGHTS_STRENGTH_PENDING = [
+  "Seated ab row with both arms",
+  "Crunch knee in with weight behind knee",
+  "Seated ab rows with weight",
+  "Single arm toe reach with weight", "Crunch to sit up with weight",
+  "Donkey kick pulses with weight behind knee", "Fire hydrant with weight behind knee", "Fire hydrant pulses with weight behind knee", "Bent-knee crossover with weight behind knee", "Donkey kick hold with weight behind knee",
+  "Hundred prep with hand weights", "Half roll back with weight", "C-curve hold with weight",
+  "Oblique roll back with weight", "Bridge heel raises with weight", "Bridge hold with weight"
+];
+const WEIGHTS_MOBILITY_PENDING = [
+  "Figure four stretch",
+  "Overhead side body stretch", "Back bend (hands behind ears)", "Standing forward fold", "Yogi squat", "Squat Twist & reach",
+  "March in place", "Side steps with arm sweeps", "Standing open the gate",
+  "Standing heel raises", "Bodyweight hip hinge", "Lateral weight shifts",
+  "Side-lying open book", "Side-lying quadriceps stretch",
+  "Seated cross-body shoulder stretch", "Supine hamstring stretch", "Constructive rest breathing"
+];
 
 // The plank copy retains the original course's text-only presentation.
 const BLOCK_PLANK_PENDING = [
@@ -181,7 +198,7 @@ describe("exercise artwork", () => {
     const withoutMedia = exercises.filter(
       (exercise) => !exercise.rig && !exercise.illustration && !exercise.motionIllustrations
     );
-    expect(distinctNames(withoutMedia)).toEqual([...NOT_A_MOVEMENT, ...UPDATED_SLIDERS_PENDING, ...BLOCK_PLANK_PENDING, ...BAND_PENDING, ...WEIGHTED_COOLDOWN_PENDING].sort());
+    expect(distinctNames(withoutMedia)).toEqual([...NOT_A_MOVEMENT, ...UPDATED_SLIDERS_PENDING, ...BLOCK_PLANK_PENDING, ...BAND_PENDING, ...WEIGHTED_COOLDOWN_PENDING, ...WEIGHTS_MOBILITY_PENDING, ...WEIGHTS_STRENGTH_PENDING].sort());
   });
 
   it("keeps a picture only where it was chosen over the rig", () => {

@@ -242,6 +242,119 @@ in a test so later edits cannot change it accidentally.
 
 ## Versioning
 
+### Mat Pilates with Weights #2
+
+`mat-pilates-weights-02` version 2 replaces the initial reordered copy with
+five newly assembled circuits drawn from July 24, July 31, and Block + Weights.
+Core uses lifted-leg crunches, toe taps, single-leg stretch, criss-cross, leg
+circles, and weighted roll-ups. Standing Legs combines reverse lunges and
+pulses with B-stance squats, pulses, and a squat hold with curls, then regular
+squats. Arms has two rounds of front raises, side raises, standing reverse fly,
+kneeling curls, and triceps extensions. Glutes combines optional weighted
+two-foot bridges with unweighted knee drives and bird-dog crunches. Side Body
+combines kicks, circles, straight-leg crunches, triceps push-ups, side planks,
+and inner-thigh lifts and pulses. Both sides receive equal time.
+
+A five-minute warm-up and the established eight-minute cooldown bookend the
+circuits. Explicit rests cue setup, side changes, and putting down weights.
+Equipment is a mat and optional light hand weights; no other equipment is
+needed. Shared exercise records are reused with course-specific instructions.
+Like the Block + Weights source, this course uses text guidance because several
+of its arm guides are approximate. The class totals **57 minutes 10 seconds**
+across **100 timed steps**. Version 1 totaled 59:40; the version increment
+prevents restoring its different schedule into this revision.
+
+Version 3 replaces both bookends while retaining the five circuits. Warm-up is
+five minutes: March in place (60s), Side steps with arm sweeps (45s), Standing
+open the gate (45s), Standing heel raises (45s), Bodyweight hip hinge (45s), and
+Lateral weight shifts (60s). All are unweighted and progress through easy,
+controlled standing movement before the existing one-minute core setup.
+
+Cooldown is eight minutes: Open book and side-lying quadriceps stretch on the
+right (30s each), a 15s side switch, then both on the left (30s each). A 15s
+setup leads to Crescent low lunge (30s each side) and seated cross-body shoulder
+stretch (30s each side). After 15s to lie down, supine hamstring stretches last
+30s per side, followed by 135s of bent-knee constructive rest breathing.
+The class remains **57:10**, now with **99 timed steps**. Eleven new movements
+are shared catalog entries with local instructions and pending artwork.
+
+Technique references for version 3 (accessed October 24, 2026):
+
+- [Hartford HealthCare dynamic warm-up](https://rehab.hartfordhospital.org/services/sports-medicine/conditions-treatments/dynamic-stretch-warmup): open-the-gate mechanics, adapted to alternate in place.
+- [ACE hip hinge](https://www.acefitness.org/resources/everyone/exercise-library/33/hip-hinge/): hips-back pattern, adapted to hands on hips without a teaching bar.
+- [AAOS warm-up and stretching](https://www.orthoinfo.org/staying-healthy/warm-up-cool-down-and-be-flexible/): gradual warm-up, gentle holds, and cross-body shoulder stretch.
+- [NHS open-book exercise resource](https://www.cddft.nhs.uk/services/physiotherapy/services/backs-future): thoracic rotation movement reference.
+- [AzOPT side-lying quadriceps stretch](https://azopt.net/lying-quadriceps/): supported side-lying position and gentle stretch.
+- [Grady Health supine hamstring stretch](https://healthlibrary.gradyhealth.org/orthopedics/management/supine-hamstring-stretch): bent-knee supine setup, adapted to hands behind the thigh without a towel.
+
+Sequence, durations, standing variations, and closing breathing are authored for
+this class, rather than a prescribed routine from any one source. No external
+media or network connection is needed during playback.
+
+Version 4 adds weighted work across all five main circuits. Crunches and their
+pulses hold one light weight close to the chest. Alternating toe taps remain
+unweighted; a new ten-second pickup rest precedes a 40-second Dumbbell floor
+press, replacing double toe taps. The following rest cues putting down the pair.
+All bridge movements, including knee drives, knee-drive pulses, and the final
+two-foot bridges, now cue a light weight secured across the hips with both
+hands. Two-foot or unweighted options are explicit. The reset before knee
+drives checks load placement; the tabletop transition removes the weight.
+
+Each side-body pass begins standing with a 40-second Suitcase march and a
+20-second Suitcase hold, replacing kicks and circles. The side identifies the
+hand holding the weight. The ten-second floor transition moves before the
+straight-leg crunch, cues putting the weight down, and leads into the remaining
+unweighted floor sequence. The side switch returns to standing. Warm-up and
+cooldown retain their version 3 sequences. The revised total is **57:20** across
+**100 timed steps**. New strength movements have local instructions and pending
+artwork, and are included in the shared exercise library.
+
+The floor press follows [Mayo Clinic's dumbbell chest-press guidance](https://www.mayoclinic.org/healthy-lifestyle/fitness/multimedia/chest-press/vid-20084677),
+which includes the floor variation. Suitcase work uses the upright, one-sided
+load position from [ACE's suitcase carry](https://www.acefitness.org/resources/everyone/exercise-library/358/suitcase-carry/),
+adapted here to an in-place march and static hold. These class-specific timings
+and combinations are authored choices, not a source-prescribed workout.
+
+Version 5 makes every main-circuit exercise weighted mat-Pilates-style work.
+Abs is now weighted lifted-leg curls (40s), curl pulses (20s), alternating toe
+taps holding the weight close to the chest (40s), Hundred prep with very light
+hand weights (40s), Half roll back (40s), C-curve hold (40s), Oblique roll back
+left then right (40s each), and Roll ups (60s). Explicit ten-second resets
+separate the changes of position and grip. Floor presses are removed.
+
+The arm sequence is entirely kneeling. Glutes ends with weighted bridge heel
+raises and a weighted bridge hold instead of bird dogs. Side Body stays on the
+mat: leg lifts (40s), pulses (20s), forward/back kicks (40s), rest (10s),
+clamshell openers (30s), bent-leg clamshell lifts (30s), rest (10s), inner-thigh
+lifts (30s), and inner-thigh pulses (20s), then the other side. A light weight
+is held by the top hand against the moving thigh above the knee throughout
+each exercise; it is never balanced loose on a joint or ankle. Setup and
+side-switch rests cue putting it down before repositioning. Suitcase work is
+removed. Warm-up and cooldown retain their existing sequences. Total remains
+**57:20 across 100 timed steps**, with equal time on both sides.
+
+The rejected floor-press and suitcase catalog entries are replaced by six
+weighted Pilates variations. Every main-circuit exercise has a visible weight
+cue, checked in tests; every abs exercise is an abdominal curl, stabilization,
+or controlled roll-back/roll-up movement. The class is a contemporary Pilates
+adaptation with light load and an unweighted regression. Movement categories were checked against
+[Pilates Encyclopedia's mat exercises with hand weights](https://www.pilatesencyclopedia.com/blog/pilates-mat-exercises-with-hand-weights)
+and [Merrithew's Matwork exercise guide](https://www.costco.ca/wcsstore/CostcoCABCCatalogAssetStore/Attachment/MERRITHEWMatworkExerGuideENG.pdf).
+Specific loading placements, sequence, and durations are authored for this class.
+
+Version 6 improves position flow: standing warm-up, Circuit #1 Standing Legs,
+Circuit #2 Kneeling Arms, Circuit #3 Abs, Circuit #4 Weighted Bridges, Circuit
+#5 Side Body and Inner Thighs, then cooldown. Once participants come down to
+the mat after standing legs, no circuit asks them to stand again. Setup cues
+explain putting down the weights before changing position and where to hold
+them next. Every glute exercise explicitly specifies a weight held across the
+hips with both hands; removing it is a regression. Side Body stays side-lying
+for both passes and ends on the same side as the first cooldown movement.
+The nine glute exercises and fourteen side-body exercises are checked in both
+unit and browser tests. Duration remains **57:20**, with **100 timed steps**.
+See [the current instructor sequence](WEIGHTS_02.md) for the complete schedule
+and visible equipment cues.
+
 ### Pilates Ball Mat Pilates #1
 
 `mat-pilates-ball-01` version 1 follows `classes/Pilates ball class #1.pdf`:
@@ -473,3 +586,56 @@ movement. Total duration remains **58 minutes 40 seconds** across 93 timed steps
 Version 15 adds a 20-second side-switch rest immediately after Tabletop leg
 lift pulse up and down (R), before the left-side tabletop sequence. The class
 totals **59 minutes** across 94 timed steps.
+
+### Weights #2 bent-knee glute revision
+
+`mat-pilates-weights-02` version 7 replaces Circuit #4's weighted bridges with
+an eight-minute bent-knee glute circuit. After a 60-second setup, each side
+runs Donkey kick (40s), Donkey kick pulses (20s), reset rest (15s), Fire hydrant
+(40s), Fire hydrant pulses (20s), Bent-knee crossover (40s), and Donkey kick hold
+(20s). A 30-second rest allows removing the weight and changing sides. All
+exercises keep a light weight behind the bent working knee, with an unweighted
+option. The side-body setup now removes that weight before lying on the side.
+The class remains **57:20** across **102 timed steps**. The original
+`mat-pilates-weights` class remains unchanged.
+
+Weights #2 version 8 replaces Triceps extensions in both kneeling arm rounds
+with Serve the platter (out and to the side), retaining 40 seconds each. Total
+duration and step count remain **57:20** and **102 timed steps**.
+
+Weights #2 version 9 replaces Abs with: Single arm toe reach holding a weight
+in the right hand (40s), Leg lowers (20s), toe reach with the left hand (40s),
+Leg lowers (20s), Sit up twist right (40s), Leg lowers (20s), Sit up twist left
+(40s), Leg lowers (20s), Crunch to sit up (20s), Leg lowers (20s), Russian
+twists (40s), and Leg lowers (20s). The 60-second setup remains; exercises
+flow directly without intervening rests. Total is **56:10** across **100 timed
+steps**. The glute setup now transitions from supine leg lowers.
+
+Weights #2 version 10 extends Crunch to sit up to 40 seconds and replaces
+the final 20-second Leg lowers after Russian twists with 30-second Seated ab
+rows holding a weight. Abs now lasts 7:10, including setup. The five-minute
+warm-up runs March (60s), Overhead side body stretch right then left (30s each),
+Back bend with hands behind ears (30s), Standing forward fold (30s), slowly
+rise into Standing open the gate (30s), Standing heel raises (30s), Yogi squat
+(30s), and Squat Twist & reach (30s). Setup cues now rise from the squat and
+transition from seated ab rows into glutes. Total: **56:40**, **103 timed steps**.
+
+Weights #2 version 11 cooldown runs Side-lying open book, Side-lying quadriceps
+stretch, Reclining tree pose, and Figure four stretch on the right, a 15-second
+side-switch rest, then the same sequence on the left. Windshield wipers and
+Reclined butterfly follow, then Shavasana. Stretches last 30 seconds each; the
+existing 135-second final rest is retained as Shavasana. Cooldown is 7:30 and
+the class totals **56:10** across **101 timed steps**.
+
+Weights #2 version 12 replaces each 20-second donkey-kick hold with Crunch knee
+in, keeping the weight behind the bent working knee throughout. Abs ends with
+Russian twists, Seated ab rows right (40s), Seated ab rows left (40s), then
+Leg lowers (20s). Rows use a light weight in the indicated hand; the shared
+row exercise is version 2 with left/right support. Glute setup now transitions
+from supine leg lowers. Class total: **57:20**, **103 timed steps**.
+
+Weights #2 version 13 replaces the final 20-second Leg lowers with a 20-second
+Seated ab row with both arms, following the right and left 40-second rows.
+Each bent-knee glute crunch now lasts 40 seconds. The glute setup returns
+from seated rows to hands and knees. Glutes total 8:40, and the full class
+totals **58:00** across **103 timed steps**.

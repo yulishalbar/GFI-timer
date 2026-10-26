@@ -10,6 +10,19 @@ leg lifts, and regular squat pulses await accurate guides; the artwork audit lis
 
 ## The pose rig
 
+Weights #2 retains text guidance. Its new mobility records await accurate guides:
+March in place, Side steps with arm sweeps, Standing open the gate, Standing heel
+raises, Bodyweight hip hinge, Lateral weight shifts, Side-lying open book,
+Side-lying quadriceps stretch, Seated cross-body shoulder stretch, Supine
+hamstring stretch, and Constructive rest breathing. The artwork audit names
+these explicitly; each has local instructions and is available in the library.
+
+Weights #2 version 5 uses text-guided Hundred prep with hand weights, Half roll
+back with weight, C-curve hold with weight, Oblique roll back with weight,
+Bridge heel raises with weight, and Bridge hold with weight. These replace the
+abandoned floor-press and suitcase records in the shared library and pending
+artwork audit.
+
 Exercise guides are **pose data**, not images. One rigged figure lives in
 `src/rig`, and an exercise is described as two to eight poses plus a tempo. The
 renderer interpolates between them.
@@ -458,3 +471,23 @@ Weight use is cued in text; the shared rig draws the kneeling movement.
 
 Weighted-course cooldown uses individual stretches, including a static Butterfly
 guide. Cross-body cat+cows is text-only pending clarified movement technique.
+
+Weights #2 bent-knee glute variations (weighted donkey pulses and hold, fire
+hydrants and pulses, and crossovers) use text instructions pending accurate
+guides. The course retains its text-only presentation.
+
+Weights #2 single-arm weighted toe reach and weighted crunch-to-sit-up use
+text instructions pending accurate guides.
+
+Weights #2 overhead side-body stretch, hands-behind-ears back bend, standing
+forward fold, yogi squat, Squat Twist & reach, and seated weighted ab rows use
+text instructions pending accurate guides.
+
+Weights #2 standalone Figure four stretch uses text instructions pending an
+accurate guide; it does not include the pooled figure-four-and-twist sequence.
+
+Weights #2 knee-in crunches with the weight behind the bent knee use text
+instructions pending an accurate guide. Seated ab rows now cue one arm at a time.
+
+Weights #2 final seated ab row with both arms is text-guided pending an accurate
+guide; its instructions distinguish it from the preceding single-arm rows.
