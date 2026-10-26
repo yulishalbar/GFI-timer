@@ -35,6 +35,7 @@ const NOT_A_MOVEMENT = ["Class introduction", "INTRODUCTION"];
 const BAND_PENDING = ["Palm in with band"];
 const WEIGHTED_COOLDOWN_PENDING = ["Cross-body cat+cows"];
 const WEIGHTS_STRENGTH_PENDING = [
+  "Slow squats",
   "Seated ab row with both arms",
   "Crunch knee in with weight behind knee",
   "Seated ab rows with weight",

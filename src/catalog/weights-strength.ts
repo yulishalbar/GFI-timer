@@ -83,6 +83,12 @@ export const weightsStrengthExercises: ExerciseDefinition[] = ([
     shortDescription: "Hold one light weight in both hands. Lean back slightly, reach both arms forward, then row both elbows toward the ribs.",
     longDescription: "Sit with knees bent and feet planted, holding one light weight in both hands. Keep the chest lifted and lean back slightly until the abdominals engage. Reach both arms forward with soft elbows, then draw both elbows toward the ribs in a controlled row. Keep the torso steady and avoid twisting or swinging the weight. Use no weight if needed."
   }
+,
+  {
+    id: "weighted-slow-squats", name: "Slow squats", sideSupport: "none", tags: ["standing", "legs"],
+    shortDescription: "Hold light weights beside the hips. Lower slowly into a squat and rise slowly with control.",
+    longDescription: "Stand with feet comfortably apart and hold a light weight in each hand beside the hips. Slowly send the hips back and bend the knees in line with the toes, keeping the chest lifted. Press through both feet and return to standing slowly. Use a comfortable depth and avoid bouncing; use no weights if needed."
+  }
 
 ] satisfies Omit<ExerciseDefinition, "schemaVersion" | "version">[]).map((exercise) => ({
   ...exercise, schemaVersion: 1, version: exercise.id === "weighted-seated-ab-rows" ? 2 : 1, tags: ["mat-pilates", "mat", "weights", ...exercise.tags]

@@ -29,7 +29,7 @@ function legSide(side: ExerciseSide): CourseItem[] {
   return [
     move(`lunge-${side}`, "Reverse lunge", 40, back, `Hold light weights beside the hips. Step the ${back} foot back; the ${side} leg supports you. Return to standing with control.`),
     move(`lunge-pulse-${side}`, "Reverse-lunge pulse", 20, back, `Keep the ${back} foot behind and make small lunge pulses. Weights stay beside the hips.`),
-    rest(`b-stance-setup-${side}`, 30, `Bring the ${back} toes closer for a staggered squat. Keep most of your weight through the ${side} foot.`),
+    rest(`b-stance-setup-${side}`, 20, `Bring the ${back} toes closer for a staggered squat. Keep most of your weight through the ${side} foot.`),
     move(`b-stance-${side}`, "B-Stance Squats", 40, side, `Keep the ${side} foot planted and the ${back} heel lifted. Hold weights beside the hips, sit back into a squat, then stand.`),
     move(`b-stance-pulse-${side}`, "B-Stance Squats pulse", 20, side, "Keep the staggered stance and make small squat pulses with weights beside the hips."),
     move(`b-stance-curls-${side}`, "B-Stance Squats hold + biceps curls", 40, side, "Hold the staggered squat. Keep elbows close to the ribs as you curl and lower the light weights.")
@@ -84,9 +84,9 @@ function familiarPhase(id: string): CoursePhaseDefinition {
 const course: CourseDefinition = {
   schemaVersion: 2,
   id: "mat-pilates-weights-02",
-  version: 13,
+  version: 16,
   title: "Mat Pilates with Weights #2",
-  description: "Mat Pilates with light hand weights in every main-circuit exercise. Flow from standing legs to kneeling arms, then abdominal work on the mat, bent-knee glute work with a weight behind the working knee, and side-lying leg work. Move slowly with controlled breathing. Removing the weights is always an option.",
+  description: "Mat Pilates with light hand weights in every main-circuit exercise. Flow from standing legs to kneeling arms, then bent-knee glute work with a weight behind the working knee, abdominal work on the mat, and side-lying leg work. Move slowly with controlled breathing. Removing the weights is always an option.",
   tags: ["mat-pilates", "mat", "weights", "full-body"],
   phases: [
     familiarPhase("introduction"),
@@ -99,20 +99,27 @@ const course: CourseDefinition = {
       move("hip-openers", "Standing open the gate", 30, undefined, "Bend the knees and rise slowly from the forward fold. Once upright, lift a bent knee, open it gently outward, and place the foot down. Alternate sides without weights."),
       move("heel-raises", "Standing heel raises", 30),
       move("yogi-squat", "Yogi squat", 30),
-      move("squat-twist-reach", "Squat Twist & reach", 30)
+      move("squat-twist-reach", "Squat Twist & reach", 30),
+      rest("before-standing-circuit", 60, "Rise slowly from the warm-up squat and rest before Standing Legs. Prepare light weights for the opening slow squats.")
     ] },
     { id: "standing-lower-body", name: "Circuit #1: Standing Legs", items: [
-      rest("standing-setup", 60, "Rise slowly from the squat, then pick up a light weight in each hand. Prepare for reverse lunges and staggered squats, left supporting leg first."),
-      ...legSide("left"), rest("leg-side-switch", 30, "Switch to the right supporting leg."), ...legSide("right"),
-      move("regular-squats", "Regular squats", 40, undefined, "Bring feet parallel and hip-width apart. Hold weights beside the hips; sit back into a squat and stand."),
-      move("squat-pulses", "Regular squat pulses", 20, undefined, "Hold the weights beside the hips. Stay low and make small controlled pulses, keeping the chest lifted.")
+      move("slow-squats", "Slow squats", 30, undefined, "Pick up light weights and hold them beside the hips as you lower and rise slowly through each squat."),
+      move("regular-squats", "Regular squats", 30, undefined, "Hold light weights beside the hips. Keep feet parallel and hip-width apart; squat and stand at a regular controlled pace."),
+      rest("standing-setup", 20, "Rest after the squats. Keep light weights beside the hips or set them down briefly, then pick them up for reverse lunges and staggered squats, left supporting leg first."),
+      ...legSide("left"), rest("leg-side-switch", 30, "Switch to the right supporting leg."), ...legSide("right")
     ] },
     { id: "upper-body-back", name: "Circuit #2: Kneeling Arms", items: [
       rest("arm-setup", 60, "Set weights beside the mat, lower one knee and then the other, and come to tall kneeling. Pick up the light weights for the arm sequence. Keep ribs over hips; sit comfortably if kneeling is uncomfortable."),
       ...armRound(1), rest("arm-round-switch", 30, "Rest the weights beside the mat and reset tall kneeling for round two."), ...armRound(2)
     ] },
-    { id: "core-circuit", name: "Circuit #3: Abs", items: [
-      rest("core-setup", 60, "Set weights beside the mat, sit down from kneeling, and lower onto your back. Pick up one light weight in the right hand for the first toe reach. Keep it close to the chest in both hands during leg lowers; use no weight if needed."),
+    { id: "glutes-circuit", name: "Circuit #3: Bent-Knee Glutes", items: [
+      rest("glute-setup", 60, "Finish the kneeling arm series and set the weights beside the mat. Come onto hands and knees. Place a light weight behind the bent left knee. Keep the knee bent throughout; use no weight if it cannot be held securely."),
+      ...gluteSide("left"),
+      rest("glute-side-switch", 30, "Lower both knees to the mat. Remove the weight before switching sides, then place it behind the bent right knee."),
+      ...gluteSide("right")
+    ] },
+    { id: "core-circuit", name: "Circuit #4: Abs", items: [
+      rest("core-setup", 60, "Lower both knees to the mat and remove the weight from behind the working knee. Set it beside the mat, sit down, and lower onto your back. Pick up one light weight in the right hand for the first toe reach. Keep it close to the chest in both hands during leg lowers; use no weight if needed."),
       move("toe-reach-right", "Single arm toe reach with weight", 40, "right", "Hold a light weight in the right hand. Reach toward the raised toes, then lower with control."),
       move("leg-lowers-1", "Leg lowers", 20, undefined, "Hold one light weight close to the chest with both hands. Rest the head down and lower and lift the legs with control; bend the knees or reduce the range as needed."),
       move("toe-reach-left", "Single arm toe reach with weight", 40, "left", "Hold a light weight in the left hand. Reach toward the raised toes, then lower with control."),
@@ -128,14 +135,8 @@ const course: CourseDefinition = {
       move("seated-ab-rows-left", "Seated ab rows with weight", 40, "left", "Hold a light weight in the left hand. Lean back slightly, reach forward and row the left elbow toward the ribs, keeping the torso steady."),
       move("seated-ab-rows-both", "Seated ab row with both arms", 20)
     ] },
-    { id: "glutes-circuit", name: "Circuit #4: Bent-Knee Glutes", items: [
-      rest("glute-setup", 60, "Finish the seated ab rows, set the weight down, and come onto hands and knees. Place a light weight behind the bent left knee. Keep the knee bent throughout; use no weight if it cannot be held securely."),
-      ...gluteSide("left"),
-      rest("glute-side-switch", 30, "Lower both knees to the mat. Remove the weight before switching sides, then place it behind the bent right knee."),
-      ...gluteSide("right")
-    ] },
     { id: "side-body-circuit", name: "Circuit #5: Side Body and Inner Thighs", items: [
-      rest("side-body-setup", 60, "Lower both knees to the mat, remove the weight from behind the knee, and lie on your right side, left leg on top. Grip one light weight against the upper outer thigh with the top hand; keep it away from the knee and ankle."),
+      rest("side-body-setup", 60, "Finish the seated ab rows, set the weight beside the mat, and lie on your right side, left leg on top. Grip one light weight against the upper outer thigh with the top hand; keep it away from the knee and ankle."),
       ...sideBody("left"), rest("side-body-switch", 30, "Set the weight beside the mat before rolling onto the left side. Hold it against the outer right thigh with the top hand for the second side."), ...sideBody("right")
     ] },
     { id: "cooldown", name: "Cooldown", items: [

@@ -491,3 +491,6 @@ instructions pending an accurate guide. Seated ab rows now cue one arm at a time
 
 Weights #2 final seated ab row with both arms is text-guided pending an accurate
 guide; its instructions distinguish it from the preceding single-arm rows.
+
+Weights #2 Slow squats use text instructions that specify the slower tempo,
+pending an accurate guide.

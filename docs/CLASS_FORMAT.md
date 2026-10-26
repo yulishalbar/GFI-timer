@@ -639,3 +639,22 @@ Seated ab row with both arms, following the right and left 40-second rows.
 Each bent-knee glute crunch now lasts 40 seconds. The glute setup returns
 from seated rows to hands and knees. Glutes total 8:40, and the full class
 totals **58:00** across **103 timed steps**.
+
+Weights #2 version 14 starts Circuit #2 with Slow squats (30s), Regular squats
+(30s), then the existing 60-second kneeling-arm setup rest. The former final
+Regular squats (40s) and Regular squat pulses (20s) are removed from Circuit #1.
+The final three circuits now run #3 Bent-Knee Glutes, #4 Abs, #5 Side Body and
+Inner Thighs. Setup cues match the new positions and weight removal. Total
+remains **58:00** across **103 timed steps**.
+
+Weights #2 version 15 corrects the squat placement: Circuit #1 Standing Legs
+starts Slow squats (30s), Regular squats (30s), then its existing setup rest
+(60s). Circuit #2 starts with its kneeling-arm setup rest again. Squats are not
+repeated at the end of Standing Legs. Circuit order, total **58:00**, and
+**103 timed steps** remain unchanged.
+
+Weights #2 version 16 adds a 60-second rest at the end of warm-up, immediately
+before Standing Legs. The rest after the opening squats becomes 20 seconds,
+and the two Reverse-lunge pulse to B-Stance Squats setup rests become 20 seconds
+each. The side-switch rest remains 30 seconds. Total stays **58:00**, now across
+**104 timed steps**.

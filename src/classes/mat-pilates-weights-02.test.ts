@@ -10,14 +10,14 @@ it("registers the second weights class with explicit transitions and the intende
   expect(availableClasses.some((item) => item.definition.id === matPilatesWeights02.id)).toBe(true);
   expect(courseTagsById[matPilatesWeights02.id]).toContain("weights");
   expect(compiled.totalDurationMs).toBe(3_480_000);
-  expect(compiled.steps).toHaveLength(103);
+  expect(compiled.steps).toHaveLength(104);
   expect(matPilatesWeights02Catalog.course.phases.map((phase) => phase.id)).toEqual([
     "introduction", "warmup", "standing-lower-body", "upper-body-back",
-    "core-circuit", "glutes-circuit", "side-body-circuit", "cooldown"
+    "glutes-circuit", "core-circuit", "side-body-circuit", "cooldown"
   ]);
   const standing = compiled.steps.filter((step) => step.phase.id === "standing-lower-body");
-  expect(standing[0]?.kind).toBe("rest");
-  expect(standing[0]?.durationMs).toBe(60_000);
+  expect(standing[0]?.sourceId).toBe("slow-squats");
+  expect(standing[2]).toMatchObject({ kind: "rest", durationMs: 20_000 });
   expect(compiled.steps.map((step) => `${step.name} ${step.shortDescription ?? ""} ${step.longDescription ?? ""}`).join(" ")).not.toMatch(/\b(band|slider|block|ring)\b|pilates ball/i);
 });
 
@@ -32,14 +32,14 @@ it("changes the movements, rather than merely reordering the original weighted c
     "Front arm raises", "Fire hydrant with weight behind knee", "Crunch knee in with weight behind knee", "Bottom leg lifts"
   ]));
   expect(original.totalDurationMs).toBe(3_520_000);
-  expect(matPilatesWeights02.version).toBe(13);
+  expect(matPilatesWeights02.version).toBe(16);
 });
 
 it("keeps the glute load explicit throughout and side body on the mat", () => {
   const { steps, phases } = compileClass(matPilatesWeights02);
   expect(phases.filter((phase) => phase.name.startsWith("Circuit")).map((phase) => phase.name)).toEqual([
-    "Circuit #1: Standing Legs", "Circuit #2: Kneeling Arms", "Circuit #3: Abs",
-    "Circuit #4: Bent-Knee Glutes", "Circuit #5: Side Body and Inner Thighs"
+    "Circuit #1: Standing Legs", "Circuit #2: Kneeling Arms", "Circuit #3: Bent-Knee Glutes",
+    "Circuit #4: Abs", "Circuit #5: Side Body and Inner Thighs"
   ]);
   const glutes = steps.filter((step) => step.phase.id === "glutes-circuit" && step.kind === "exercise");
   expect(glutes).toHaveLength(12);
@@ -59,12 +59,12 @@ it("adds new warm-up and cooldown movements to the shared library with complete 
   const { steps } = compileClass(matPilatesWeights02);
   const warmup = steps.filter((step) => step.phase.id === "warmup");
   const cooldown = steps.filter((step) => step.phase.id === "cooldown");
-  expect(warmup.reduce((total, step) => total + step.durationMs, 0)).toBe(300_000);
+  expect(warmup.reduce((total, step) => total + step.durationMs, 0)).toBe(360_000);
   expect(cooldown.reduce((total, step) => total + step.durationMs, 0)).toBe(450_000);
   expect(warmup.map((step) => step.name)).toEqual([
     "March in place", "Overhead side body stretch", "Overhead side body stretch",
     "Back bend (hands behind ears)", "Standing forward fold", "Standing open the gate",
-    "Standing heel raises", "Yogi squat", "Squat Twist & reach"
+    "Standing heel raises", "Yogi squat", "Squat Twist & reach", "REST"
   ]);
   expect(cooldown.at(-1)?.name).toBe("Shavasana");
   for (const exercise of weightsMobilityExercises) {
@@ -127,7 +127,7 @@ it("runs matching bent-knee glute sequences with explicit equipment transitions"
   }
   expect(steps.find((step) => step.sourceId === "glute-side-switch")).toMatchObject({ kind: "rest", durationMs: 30_000 });
   expect(steps.find((step) => step.sourceId === "glute-side-switch")?.shortDescription).toContain("Remove the weight before switching sides");
-  expect(steps.find((step) => step.sourceId === "side-body-setup")?.shortDescription).toContain("remove the weight from behind the knee");
+  expect(steps.find((step) => step.sourceId === "core-setup")?.shortDescription).toContain("remove the weight from behind the working knee");
 });
 
 it("serves the platter in both kneeling arm rounds instead of triceps extensions", () => {
@@ -157,10 +157,10 @@ it("follows the revised warm-up order with thirty seconds per stretch and moveme
   expect(steps.filter((step) => step.phase.id === "warmup").map((step) => [step.sourceId, step.durationMs, step.exerciseReference?.side])).toEqual([
     ["march", 60_000, undefined], ["side-stretch-right", 30_000, "right"], ["side-stretch-left", 30_000, "left"],
     ["back-bend", 30_000, undefined], ["forward-fold", 30_000, undefined], ["hip-openers", 30_000, undefined],
-    ["heel-raises", 30_000, undefined], ["yogi-squat", 30_000, undefined], ["squat-twist-reach", 30_000, undefined]
+    ["heel-raises", 30_000, undefined], ["yogi-squat", 30_000, undefined], ["squat-twist-reach", 30_000, undefined], ["before-standing-circuit", 60_000, undefined]
   ]);
   expect(steps.find((step) => step.sourceId === "hip-openers")?.shortDescription).toContain("rise slowly from the forward fold");
-  expect(steps.find((step) => step.sourceId === "glute-setup")?.shortDescription).toContain("Finish the seated ab rows");
+  expect(steps.find((step) => step.sourceId === "glute-setup")?.shortDescription).toContain("Finish the kneeling arm series");
 });
 
 it("flows through the requested cooldown on each side before the final supine stretches", () => {
@@ -191,4 +191,29 @@ it("ends abs with a twenty-second row using both arms instead of leg lowers", ()
   expect(abs.at(-1)).toMatchObject({ sourceId: "seated-ab-rows-both", name: "Seated ab row with both arms", durationMs: 20_000 });
   expect(abs.at(-1)?.shortDescription).toContain("both hands");
   expect(abs.some((step) => step.sourceId === "leg-lowers-finish")).toBe(false);
+});
+
+it("starts standing legs with slow and regular squats before resting", () => {
+  const { steps } = compileClass(matPilatesWeights02);
+  const arms = steps.filter((step) => step.phase.id === "upper-body-back");
+  const standing = steps.filter((step) => step.phase.id === "standing-lower-body");
+  expect(arms[0]).toMatchObject({ sourceId: "arm-setup", kind: "rest", durationMs: 60_000 });
+  expect(standing.slice(0, 3).map((step) => [step.sourceId, step.durationMs])).toEqual([
+    ["slow-squats", 30_000], ["regular-squats", 30_000], ["standing-setup", 20_000]
+  ]);
+  expect(steps.filter((step) => step.phase.id === "standing-lower-body").at(-1)?.sourceId).toBe("b-stance-curls-right");
+  expect(steps.some((step) => step.sourceId === "squat-pulses")).toBe(false);
+  expect(steps.find((step) => step.sourceId === "side-body-setup")?.shortDescription).toContain("Finish the seated ab rows");
+});
+
+it("rests one minute before Standing Legs and twenty seconds within its squat and lunge transitions", () => {
+  const { steps } = compileClass(matPilatesWeights02);
+  const firstSquat = steps.findIndex((step) => step.sourceId === "slow-squats");
+  expect(steps[firstSquat - 1]).toMatchObject({ sourceId: "before-standing-circuit", kind: "rest", durationMs: 60_000 });
+  for (const side of ["left", "right"] as const) {
+    const pulse = steps.findIndex((step) => step.sourceId === `lunge-pulse-${side}`);
+    expect(steps[pulse + 1]).toMatchObject({ sourceId: `b-stance-setup-${side}`, kind: "rest", durationMs: 20_000 });
+    expect(steps[pulse + 2]?.sourceId).toBe(`b-stance-${side}`);
+  }
+  expect(steps.find((step) => step.sourceId === "leg-side-switch")?.durationMs).toBe(30_000);
 });

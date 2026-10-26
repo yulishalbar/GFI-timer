@@ -6,7 +6,7 @@ test("opens and starts the second weights class", async ({ page }) => {
     has: page.getByRole("heading", { name: "Mat Pilates with Weights #2", exact: true })
   });
   await card.getByRole("button", { name: "View class" }).click();
-  await expect(page.getByText("103 timed steps")).toBeVisible();
+  await expect(page.getByText("104 timed steps")).toBeVisible();
   await expect(page.getByText("58:00", { exact: true })).toBeVisible();
   await expect(page.locator(".step-row").filter({ hasText: /floor press|suitcase/i })).toHaveCount(0);
   await expect(page.locator(".step-row").filter({ hasText: "Single arm toe reach with weight" })).toHaveCount(2);
@@ -17,7 +17,7 @@ test("opens and starts the second weights class", async ({ page }) => {
   await expect(page.locator(".step-row").filter({ hasText: "Bottom leg lifts" })).toHaveCount(2);
   await expect(page.locator(".step-row").filter({ hasText: "Side-lying open book" })).toHaveCount(2);
   await expect(page.locator(".step-row").filter({ hasText: "Shavasana" })).toHaveCount(1);
-  await expect(page.getByRole("heading", { name: "Circuit #3: Abs", exact: true })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Circuit #4: Abs", exact: true })).toBeVisible();
   await expect(page.locator(".step-row--exercise").filter({ hasText: "Leg lowers" })).toHaveCount(5);
   await expect(page.locator(".step-row--exercise").filter({ hasText: "Seated ab rows with weight" })).toHaveCount(2);
   await expect(page.locator(".step-row--exercise").filter({ hasText: "Overhead side body stretch" })).toHaveCount(2);
@@ -25,7 +25,13 @@ test("opens and starts the second weights class", async ({ page }) => {
   await expect(page.locator(".step-row--exercise").filter({ hasText: "Reclining tree pose" })).toHaveCount(2);
   await expect(page.locator(".step-row--exercise").filter({ hasText: "Reclined butterfly" })).toHaveCount(1);
   await expect(page.locator(".step-row--exercise").filter({ hasText: "Seated ab row with both arms" })).toHaveCount(1);
-  const glutes = page.locator(".phase-section").filter({ has: page.getByRole("heading", { name: "Circuit #4: Bent-Knee Glutes", exact: true }) });
+  await expect(page.locator(".step-row--exercise").filter({ hasText: "Slow squats" })).toHaveCount(1);
+  const standing = page.locator(".phase-section").filter({ has: page.getByRole("heading", { name: "Circuit #1: Standing Legs", exact: true }) });
+  await expect(standing.locator(".step-row").nth(0)).toContainText("Slow squats");
+  await expect(standing.locator(".step-row").nth(1)).toContainText("Regular squats");
+  await expect(standing.locator(".step-row").nth(2)).toContainText("REST");
+  await expect(standing.locator(".step-row").nth(2)).toContainText("00:20");
+  const glutes = page.locator(".phase-section").filter({ has: page.getByRole("heading", { name: "Circuit #3: Bent-Knee Glutes", exact: true }) });
   const gluteExercises = glutes.locator(".step-row--exercise");
   await expect(gluteExercises).toHaveCount(12);
   for (const row of await gluteExercises.all()) {
