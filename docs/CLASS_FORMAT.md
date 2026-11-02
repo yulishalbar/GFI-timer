@@ -695,3 +695,7 @@ body/core circuits use 30-second exercises, except the existing 20-second glute
 bridge pulses. The first three side-plank exercises now last 30 seconds on
 each side; the remaining side-lying exercises retain 40 seconds.
 
+Sliders class #2 version 8 swaps circuits 2 and 3: Upper Body and Core now
+runs as Circuit #2, followed by Upper Body and Core Pyramid as Circuit #3.
+Exercises, rests, and durations are unchanged.
+

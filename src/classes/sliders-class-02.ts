@@ -97,15 +97,18 @@ function updateBridgeSeries(items: CourseItem[]): CourseItem[] {
 const course: CourseDefinition = {
   ...structuredClone(hiitPilatesSlidersCatalog.course),
   id: "sliders-class-02",
-  version: 7,
+  version: 8,
   title: "sliders class #2",
-  phases: structuredClone(hiitPilatesSlidersCatalog.course.phases).map((phase) => {
+  phases: structuredClone(hiitPilatesSlidersCatalog.course.phases).map<CourseDefinition["phases"][number]>((phase) => {
     if (phase.id === "abs-circuit") return { ...phase, items: [...coreSide("right"), ...coreSide("left"), { type: "rest", id: "after-circuit-one", name: "REST", durationSeconds: 60, shortDescription: "Rest and prepare for Circuit #2." }] };
     if (phase.id === "hiit-legs") return { ...phase, items: replaceRunnerLunge(phase.items) };
     if (phase.id === "side-body") return { ...phase, items: [...sideBody("right"), { type: "rest", id: "side-body-switch", name: "REST", durationSeconds: 30, shortDescription: "Switch sides and prepare for side plank." }, ...sideBody("left")] };
-    if (phase.id === "upper-core-one") return { ...phase, items: updateBridgeSeries(phase.items) };
-    if (phase.id === "plank-pyramid") return { ...phase, items: thirtySecondExercises(phase.items) };
+    if (phase.id === "upper-core-one") return { ...phase, name: "Circuit #2: Upper Body and Core", items: updateBridgeSeries(phase.items) };
+    if (phase.id === "plank-pyramid") return { ...phase, name: "Circuit #3: Upper Body and Core Pyramid", items: thirtySecondExercises(phase.items) };
     return phase;
+  }).sort((a, b) => {
+    const order = ["introduction", "warmup", "abs-circuit", "upper-core-one", "plank-pyramid", "hiit-legs", "side-body", "cooldown"];
+    return order.indexOf(a.id) - order.indexOf(b.id);
   })
 };
 

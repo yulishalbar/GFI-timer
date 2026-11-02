@@ -3,6 +3,17 @@ import { compileClass } from "../domain/compile-class";
 import { hiitPilatesSliders } from "./hiit-pilates-sliders";
 import { slidersClass02 } from "./sliders-class-02";
 
+it("swaps circuits two and three and numbers them in playback order", () => {
+  const compiled = compileClass(slidersClass02);
+  expect(slidersClass02.version).toBe(8);
+  expect(compiled.phases.map((phase) => phase.id)).toEqual([
+    "introduction", "warmup", "abs-circuit", "upper-core-one", "plank-pyramid", "hiit-legs", "side-body", "cooldown"
+  ]);
+  expect(compiled.phases.slice(3, 5).map((phase) => phase.name)).toEqual([
+    "Circuit #2: Upper Body and Core", "Circuit #3: Upper Body and Core Pyramid"
+  ]);
+});
+
 it("runs the revised core sequence right then left with explicit mat transitions", () => {
   const compiled = compileClass(slidersClass02);
   const core = compiled.steps.filter((step) => step.phase.id === "abs-circuit");
