@@ -688,3 +688,10 @@ removes the ten-second rest between Side lunge sliding out and Isometric hold
 squat with side lunge on both sides, replaces Glute bridge curl with Glute
 bridge single leg extensions (40s), and shortens the following Glute bridge
 pulse to 20 seconds. The existing ten-second bridge reset remains.
+
+Sliders class #2 version 7 removes Leg + arm extension from both core passes
+and adds 60-second Roll-ups after each Supine cross-body crunch. Both upper
+body/core circuits use 30-second exercises, except the existing 20-second glute
+bridge pulses. The first three side-plank exercises now last 30 seconds on
+each side; the remaining side-lying exercises retain 40 seconds.
+

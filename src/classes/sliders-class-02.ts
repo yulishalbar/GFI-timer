@@ -44,31 +44,33 @@ function move(exerciseId: string, side: ExerciseSide, durationSeconds = 40): Cou
 }
 
 function coreSide(side: ExerciseSide): CourseItem[] {
+  const rollUp = catalog.exercises.find((exercise) => exercise.name === "Roll-ups");
+  if (!rollUp) throw new Error("Missing pooled Roll-ups");
   return [
     move("opposite-arm-slides", side),
     move("opposite-arm-slides-leg-crunch", side),
-    move("slider-leg-arm-extension", side),
     { type: "rest", id: `roll-onto-mat-${side}`, name: "REST", durationSeconds: 10, shortDescription: "Roll onto the mat." },
     move("single-leg-bicycle-crunch", side),
     move("single-arm-toe-reach", side),
-    move("supine-cross-body-crunch", side)
+    move("supine-cross-body-crunch", side),
+    move(rollUp.id, side, 60)
   ];
 }
 
 function sideBody(side: ExerciseSide): CourseItem[] {
   const bottom = side === "right" ? "left" : "right";
   return [
-    move("side-plank-top-leg-slide", side),
-    move("side-plank-hip-lowers", side),
-    move("side-plank-to-teaser", side),
+    move("side-plank-top-leg-slide", side, 30),
+    move("side-plank-hip-lowers", side, 30),
+    move("side-plank-to-teaser", side, 30),
     { type: "rest", id: `lower-to-mat-${side}`, name: "REST", durationSeconds: 10, shortDescription: "Lower onto the mat for the side-lying leg series." },
     ...pooledSideExercises.map((exercise) => move(exercise.id, exercise.name.startsWith("Bottom leg") ? bottom : side))
   ];
 }
 
-function fortySecondExercises(items: CourseItem[]): CourseItem[] {
-  return items.map((item) => item.type === "exercise" ? { ...item, durationSeconds: 40 }
-    : item.type === "circuit" ? { ...item, items: item.items.map((child) => child.type === "exercise" ? { ...child, durationSeconds: 40 } : child) }
+function thirtySecondExercises(items: CourseItem[]): CourseItem[] {
+  return items.map((item) => item.type === "exercise" ? { ...item, durationSeconds: 30 }
+    : item.type === "circuit" ? { ...item, items: item.items.map((child) => child.type === "exercise" ? { ...child, durationSeconds: 30 } : child) }
       : item);
 }
 
@@ -83,7 +85,7 @@ function replaceRunnerLunge(items: CourseItem[]): CourseItem[] {
 }
 
 function updateBridgeSeries(items: CourseItem[]): CourseItem[] {
-  return fortySecondExercises(items).map((item) => {
+  return thirtySecondExercises(items).map((item) => {
     if (item.type !== "exercise") return item;
     const exercise = catalog.exercises.find((entry) => entry.id === item.exerciseId);
     if (exercise?.name === "Glute bridge curl") return { ...item, exerciseId: "glute-bridge-single-leg-extensions", exerciseVersion: 1 };
@@ -95,14 +97,14 @@ function updateBridgeSeries(items: CourseItem[]): CourseItem[] {
 const course: CourseDefinition = {
   ...structuredClone(hiitPilatesSlidersCatalog.course),
   id: "sliders-class-02",
-  version: 6,
+  version: 7,
   title: "sliders class #2",
   phases: structuredClone(hiitPilatesSlidersCatalog.course.phases).map((phase) => {
     if (phase.id === "abs-circuit") return { ...phase, items: [...coreSide("right"), ...coreSide("left"), { type: "rest", id: "after-circuit-one", name: "REST", durationSeconds: 60, shortDescription: "Rest and prepare for Circuit #2." }] };
     if (phase.id === "hiit-legs") return { ...phase, items: replaceRunnerLunge(phase.items) };
     if (phase.id === "side-body") return { ...phase, items: [...sideBody("right"), { type: "rest", id: "side-body-switch", name: "REST", durationSeconds: 30, shortDescription: "Switch sides and prepare for side plank." }, ...sideBody("left")] };
     if (phase.id === "upper-core-one") return { ...phase, items: updateBridgeSeries(phase.items) };
-    if (phase.id === "plank-pyramid") return { ...phase, items: fortySecondExercises(phase.items) };
+    if (phase.id === "plank-pyramid") return { ...phase, items: thirtySecondExercises(phase.items) };
     return phase;
   })
 };
