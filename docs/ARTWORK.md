@@ -494,3 +494,18 @@ guide; its instructions distinguish it from the preceding single-arm rows.
 
 Weights #2 Slow squats use text instructions that specify the slower tempo,
 pending an accurate guide.
+
+Sliders class #2 version 2 introduces six movements awaiting accurate guides:
+Opposite arm slides, Opposite arm slides + leg crunch, Leg + arm extension,
+Single-leg bicycle, Single-arm toe reach, and Supine cross-body crunch.
+These use text instructions until dedicated guides are authored.
+
+Sliders class #2 version 4 adds three movements awaiting guides: Side plank
+top leg slide knee to elbow, Side plank hip lowers, and Side plank to teaser.
+The side-lying series reuses pooled exercises and their existing guides.
+
+Good morning + leg extension (Sliders class #2 version 5) awaits an accurate
+guide and currently uses text instructions.
+
+Glute bridge single leg extensions (Sliders class #2 version 6) uses text
+instructions pending a dedicated guide.

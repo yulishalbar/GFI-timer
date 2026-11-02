@@ -22,6 +22,11 @@ const migrated = exercises.filter((exercise) => exercise.rig !== undefined);
 // New source movements and conflicting warm-up rows awaiting accurate guides.
 // Keep this explicit: unrelated missing artwork must still fail. See ARTWORK.md.
 const UPDATED_SLIDERS_PENDING = [
+  "Glute bridge single leg extensions",
+  "Good morning + leg extension",
+  "Side plank top leg slide knee to elbow", "Side plank hip lowers", "Side plank to teaser",
+  "Opposite arm slides", "Opposite arm slides + leg crunch", "Leg + arm extension",
+  "Single-leg bicycle", "Single-arm toe reach", "Supine cross-body crunch",
   "High runner's lunge leg in-and-out", "Straight leg lift",
   "Happy Baby", "Seated side stretch", "Seated Cow Pose Variation Arms Crossed On Knees",
   "Reclined butterfly", "Breathing with overhead arm sweeps", "Donkey kick pulses", "Bent-knee leg lift", "Breathing work", "Cross overs", "Double Leg Stretch",

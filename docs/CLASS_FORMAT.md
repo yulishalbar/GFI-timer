@@ -2,6 +2,10 @@
 
 ## Goals
 
+`sliders-class-02` ("sliders class #2"), version 1, starts as an unchanged
+copy of the current sliders course (version 10). Its course structure lives in
+`src/classes/sliders-class-02.ts` and reuses the shared sliders exercise catalog.
+
 Class definitions should be:
 
 - Readable and easy to generate or edit with AI assistance.
@@ -658,3 +662,29 @@ before Standing Legs. The rest after the opening squats becomes 20 seconds,
 and the two Reverse-lunge pulse to B-Stance Squats setup rests become 20 seconds
 each. The side-switch rest remains 30 seconds. Total stays **58:00**, now across
 **104 timed steps**.
+
+Sliders class #2 version 2 replaces Abs with Opposite arm slides, Opposite arm
+slides + leg crunch, Leg + arm extension, a 10-second roll onto the mat,
+Single-leg bicycle, Single-arm toe reach, Supine cross-body crunch, and Roll-ups.
+Run right then left. Exercises last 40 seconds except Roll-ups (60 seconds per
+pass). Both Upper Body and Core sections use 40-second exercises and retain
+their rests. Parenthetical source instructions are descriptions.
+
+Sliders class #2 version 3 removes Roll-ups from the end of both core passes.
+Each side now ends with Supine cross-body crunch.
+
+Sliders class #2 version 4 replaces Side Body with Side plank top leg slide
+knee to elbow, Side plank hip lowers, Side plank to teaser (optional crunch),
+a 10-second lower-to-mat transition, Leg lift, Big leg circles, Small leg circles,
+Straight leg crunches, Tricep side push-up, Bottom leg lifts, and Bottom leg
+pulses. Exercises last 40 seconds. Run right then left with the existing
+30-second side switch. Bottom-leg placements identify the opposite leg.
+
+Sliders class #2 version 5 replaces High runner's lunge leg in-and-out with
+Good morning + leg extension on both sides, retaining 30 seconds per placement.
+
+Sliders class #2 version 6 adds an explicit 60-second break after Circuit #1,
+removes the ten-second rest between Side lunge sliding out and Isometric hold
+squat with side lunge on both sides, replaces Glute bridge curl with Glute
+bridge single leg extensions (40s), and shortens the following Glute bridge
+pulse to 20 seconds. The existing ten-second bridge reset remains.
