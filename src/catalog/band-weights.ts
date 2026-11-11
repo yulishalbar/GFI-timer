@@ -21,6 +21,10 @@ export const weightedArmMovements = [
   ["book-opens", "Book opens", "Stand tall with a light weight in each hand. Bend elbows to 90 degrees at shoulder height, forearms upright. Open the arms to the sides, then bring them together in front without dropping the elbows or arching the back."],
   ["hinged-shoulder-press-sides", "Hinged shoulder press to sides", "Hold light weights and hinge forward from the hips with soft knees and a long spine. Bend elbows beside the torso, then press the arms out to the sides in line with the torso. Bend elbows to return, keeping shoulders away from ears."],
   ["around-the-worlds", "Around the worlds", "Stand tall with light weights beside the hips and palms facing forward. Sweep both arms out to the sides and overhead in a comfortable arc, then lower along the same path. Keep elbows soft and ribs stacked over hips."],
+  ["side-extended-biceps-curl", "Arms extended to sides biceps curl", "Stand tall holding light weights with arms extended out to the sides at shoulder height and palms up. Keep upper arms steady as you bend elbows to curl the weights toward the shoulders, then extend the arms back out with control."],
+  ["standing-biceps-curl", "Standing biceps curl", "Stand tall holding light weights with elbows beside the ribs and palms forward. Curl the weights toward the shoulders, then lower slowly without swinging or moving the upper arms."],
+  ["overhead-triceps-extensions", "Overhead triceps extensions", "Stand tall with soft knees, holding one light weight in both hands overhead. Keep upper arms steady beside the head as you bend elbows to lower the weight behind the head, then straighten the elbows with control. Keep ribs stacked over hips."],
+  ["standing-shoulder-press", "Standing shoulder press", "Stand tall with soft knees and a light weight in each hand at shoulder height, elbows bent. Press the weights overhead through a comfortable range, then lower to shoulder height with control. Keep ribs down and avoid arching the back."],
   ["bicep-curl-front-press", "Bicep curl → front press (palms towards chest)", "Stand tall holding light weights with elbows beside the ribs. Curl the weights toward the chest, keeping palms facing towards the chest, then press forward at chest height. Draw the weights back in and lower with control."],
   ["serve-platter", "Serve the platter", "Start with elbows by ribs and palms facing the ceiling; extend arms up to chest height."],
   ["front-raise-around-world", "Front raise + around the world", "Hold light weights in front of the thighs. Raise both arms forward to shoulder height, open them wide, then sweep through a comfortable overhead arc and lower to the sides. Reset with control before the next front raise; avoid lifting the ribs."],
@@ -35,6 +39,30 @@ export const bandWeightsExercises: ExerciseDefinition[] = [
     longDescription: "From tabletop, lift the indicated bent leg into a donkey kick without arching the back. Lower and draw that knee toward the chest as you round gently through the spine for a regular crunch, then return to tabletop and repeat. Keep the supporting knee grounded throughout; do not lift into downward dog.",
     tags: ["mat-pilates", "mat", "band", "glutes", "core", "quadruped"]
   },
+  ...([
+    ["bent-knee-crunch", "Bent-knee crunches", "Lie on your back with knees bent and feet on the mat. Exhale to curl the head and shoulders up, then lower with control. Keep the neck long and gentle outward tension on the band."],
+    ["single-leg-extension-crunch", "Single-leg extension crunch", "Lie on your back with knees bent. Curl the head and shoulders up while extending the indicated leg, then bend that knee and lower with control. Keep the other foot on the mat and the pelvis steady; repeat on this side."],
+    ["deadbug-arm-circles", "Deadbug with arm circles", "Lie on your back with hips and knees bent to tabletop and arms reaching toward the ceiling. Hold the legs steady with gentle outward tension on the band as you circle both arms slowly. Keep the ribs down and lower back steady; make the circles smaller if needed."],
+    ["leg-lowers", "Leg lowers", "Lie on your back with both legs reaching toward the ceiling and the band on lower thighs above knees. Keep gentle outward tension on the band as you lower both legs only as far as you can keep the pelvis and lower back steady, then lift them back up. Bend knees to reduce the range if needed."],
+    ["toe-reaches", "Toe reaches", "Lie on your back with legs reaching toward the ceiling and the band on lower thighs above knees. Reach both hands toward the toes as you curl the head and shoulders off the mat, then lower with control. Keep the neck long and the legs steady; soften knees if needed."],
+    ["russian-twist", "Russian twist", "Sit with knees bent and feet on the mat. Lean back slightly with a long spine and hands together in front of the chest. Rotate the torso from side to side with control, keeping the hips and knees steady."]
+  ] as const).map(([id, name, longDescription]): ExerciseDefinition => ({
+    schemaVersion: 1, id: `band-weights-${id}`, version: 1, name,
+    shortDescription: "Band on lower thighs, above knees; leave hand weights down.",
+    ...(id === "leg-lowers" ? { rig: "leg-lowers" } : {}),
+    longDescription, sideSupport: id === "single-leg-extension-crunch" ? "left-right" : "none",
+    tags: ["mat-pilates", "mat", "band", "core"]
+  })),
+  ...([
+    ["high-plank-leg-lifts", "High plank with alternating leg lifts", "Start in high plank with hands under shoulders and legs long. Lift one straight leg a small distance, lower it, then switch legs. Keep the pelvis level and avoid arching the lower back."],
+    ["high-plank-leg-crunch", "High plank alternating leg crunch", "From high plank, draw one knee toward the chest as you gently round through the trunk. Extend that leg back to plank, then alternate sides with control. Keep shoulders over wrists."],
+    ["bear-hold-rotations", "Bear hold rotations", "Start on hands and knees with hands under shoulders and knees under hips. Tuck toes and hover knees just above the mat. Rotate the bent knees and hips a small distance to one side, return to center, then alternate sides while keeping both hands grounded."]
+  ] as const).map(([id, name, longDescription]): ExerciseDefinition => ({
+    schemaVersion: 1, id: `band-weights-${id}`, version: 1, name,
+    shortDescription: "Band around thighs above knees. Leave hand weights down and keep both hands on the mat.",
+    longDescription, sideSupport: "none",
+    tags: ["mat-pilates", "mat", "band", "glutes", "core", "quadruped"]
+  })),
   ...seatedBandCoreExercises,
   ...weightedArmMovements.filter(([id]) => id !== "serve-platter").map(([id, name, longDescription]): ExerciseDefinition => ({
     schemaVersion: 1, id: `band-weights-${id}`, version: 1, name,

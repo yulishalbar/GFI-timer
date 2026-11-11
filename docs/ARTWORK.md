@@ -1,5 +1,21 @@
 # Exercise artwork
 
+Band and Weights Toe reaches uses written instructions pending an accurate
+guide. Leg lowers reuses the shared leg-lowers rig with course equipment cues.
+
+Band and Weights version 13 adds Arms extended to sides biceps curl, Standing
+biceps curl, Overhead triceps extensions, and Standing shoulder press. These
+standing weighted movements use written instructions pending accurate guides.
+
+Band and Weights version 11 adds High plank with alternating leg lifts, High
+plank alternating leg crunch, and Bear hold rotations with the band above knees.
+These use written instructions pending accurate movement and equipment guides.
+
+Band and Weights version 10 adds Bent-knee crunches, Single-leg extension
+crunch, Deadbug with arm circles, and Russian twist with the band on lower
+thighs above knees. These use written guidance pending accurate band-placement
+and movement guides.
+
 Band and Weights Donkey kick + regular crunch uses written instructions pending
 an accurate guide that keeps the supporting knee grounded throughout.
 

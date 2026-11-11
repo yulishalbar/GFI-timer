@@ -62,6 +62,44 @@ the supporting knee grounded. The added 30-second cooldown transition is
 removed; equipment removal is cued in the first stretch. The supplied cooldown
 times and three-minute Shavasana remain. Total class duration is **59:50**.
 
+Version 10 replaces core with Bent-knee crunches, Single-leg extension crunch
+left then right, Deadbug with arm circles, 1/2 roll up, Alternating arm rows,
+Alternating arm rows + opposite knee drive, Russian twist, and Boat hold.
+The band stays on lower thighs above knees and hand weights stay down. Keep
+40 seconds per movement and 20 seconds for Boat hold, with the 60-second setup
+and no internal rests. Upper body now runs the seven movements once, retaining
+the setup and two 10-second rests. Total class duration is **52:20**.
+
+Version 11 starts the glutes circuit after its existing setup with High plank
+with alternating leg lifts (40s), High plank alternating leg crunch (40s), and
+Bear hold rotations (40s), followed by an explicit 20-second rest to reset in
+tabletop. The band stays around thighs above knees and hand weights stay down.
+The existing donkey-kick series then runs unchanged on both sides. Total class
+duration is **54:40**.
+
+Version 12 shortens the three opening glutes movements (alternating high-plank
+leg lifts, alternating high-plank leg crunches, and bear hold rotations) to
+30 seconds each. The 20-second rest and remaining sequence stay unchanged.
+Total class duration is **54:10**.
+
+Version 13 runs upper body once: Book opens, Hinged shoulder press to sides,
+Around the worlds, Arms extended to sides biceps curl, REST (20s), Standing
+biceps curl, Serve the platter, REST (20s), Overhead triceps extensions, and
+Standing shoulder press. All eight exercises last 40 seconds and use light
+hand weights with the band set aside. The 60-second setup remains. This replaces
+the previous arm-circuit tail and its two 10-second rests. Total class duration
+is **55:10**.
+
+Version 14 adds an explicit 20-second rest after Book opens, before Hinged
+shoulder press to sides. All other movements and rests remain unchanged.
+Total class duration is **55:30**.
+
+Version 15 extends the alternating-side Thread the needle warm-up entry to
+120 seconds total. Core now adds Leg lowers (40s), then Toe reaches (40s)
+immediately after Deadbug with arm circles and before 1/2 roll up. Both retain
+the band on lower thighs above knees with hand weights down. The rest of the
+sequence is unchanged. Total class duration is **57:50**.
+
 `sliders-class-02` ("sliders class #2"), version 1, starts as an unchanged
 copy of the current sliders course (version 10). Its course structure lives in
 `src/classes/sliders-class-02.ts` and reuses the shared sliders exercise catalog.
@@ -758,4 +796,3 @@ each side; the remaining side-lying exercises retain 40 seconds.
 Sliders class #2 version 8 swaps circuits 2 and 3: Upper Body and Core now
 runs as Circuit #2, followed by Upper Body and Core Pyramid as Circuit #3.
 Exercises, rests, and durations are unchanged.
-
