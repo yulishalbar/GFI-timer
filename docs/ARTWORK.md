@@ -1,5 +1,13 @@
 # Exercise artwork
 
+Band and Weights Donkey kick + regular crunch uses written instructions pending
+an accurate guide that keeps the supporting knee grounded throughout.
+
+Band and Weights seated core additions awaiting guides: 1/2 roll up,
+Alternating arm rows, Alternating arm rows + opposite knee drive, Single-leg
+knee drive, Hold leg sweeps to the side, Pulse legs up and down, and Teaser to
+row arms. These use written instructions; Boat hold reuses its existing rig.
+
 Every catalog exercise must eventually have a visual that explains the exercise
 without relying on its written instructions.
 
@@ -509,3 +517,10 @@ guide and currently uses text instructions.
 
 Glute bridge single leg extensions (Sliders class #2 version 6) uses text
 instructions pending a dedicated guide.
+# Band and weights additions
+
+Pending accurate guides: Clamshell to teaser, Book opens, Hinged shoulder press
+to sides, Around the worlds, Bicep curl → front press (palms towards chest),
+Front raise + around the world, and Wide offering with rotation. These entries
+currently use written instructions without substitute artwork.
+

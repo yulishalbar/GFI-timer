@@ -2,6 +2,66 @@
 
 ## Goals
 
+`mat-pilates-band-weights` ("Mat Pilates with Band and Weights") version 1 reuses the
+band course's exercises, phase order, durations, sides, and explicit rests.
+Course placement descriptions add hand-weight options for core, standing legs,
+and arms, optional fitted ankle weights for floor leg work, and a held hip
+weight for bridges. Setup rests include equipment changes. Warm-up and cooldown
+exercises remain unweighted. The original band course is unchanged; the new
+course uses the shared band exercise catalog without duplicating movements.
+
+Version 2 adds a 10-second setup and 40-second Clamshell to teaser after each
+side's clamshell sequence. Its upper-body circuit replaces the band arm work
+with Book opens, Hinged shoulder press to sides, Around the worlds,
+Bicep curl → front press (palms towards chest), Front raise + around the world,
+and Wide offering with rotation. Run two rounds in that order, 40 seconds per
+exercise, with 10-second rests after movements two and four and a 30-second
+round reset. The 60-second setup puts the band down for weights-only arm work.
+Other phases retain their prior schedule. New movements live in the shared
+catalog in `src/catalog/band-weights.ts`.
+
+Version 3 adds 40-second Serve the platter immediately after Bicep curl → front
+press in both arm rounds, reusing the shared exercise with a weights cue.
+Upper body is now Circuit #4 directly after standing legs; side body is Circuit
+#5, the final circuit before cooldown. Setup cues follow the new order, including
+rising from the mat for cooldown. Other exercise durations and rests stay the same.
+
+Version 4 removes all rests between side-body movements, including the two
+teaser setup rests. The 60-second setup before the circuit remains. All eleven
+exercises retain their order and 40-second durations; total class time decreases
+by 100 seconds.
+
+Version 5 replaces core with seated bent-knee work, band above knees throughout:
+1/2 roll up, Alternating arm rows, Alternating arm rows + opposite knee drive;
+then Single-leg knee drive (hands forward), Hold leg sweeps to the side, and
+Pulse legs up and down on the left, followed by those three on the right.
+Finish with three 40-second Teaser to row arms sets and a 20-second Boat hold.
+All other exercises are 40 seconds. Retain the 60-second seated setup and run
+without internal rests. Hand weights stay down; feet start on the mat and the
+working leg lifts as described. Boat hold reuses the shared catalog movement.
+
+Version 6 shortens both core Pulse legs up and down placements to 20 seconds
+per side. All other durations remain unchanged; total class time drops by
+40 seconds.
+
+Version 7 places the band around the arches of both feet for all three
+Teaser to row arms sets. The setup previews this change; Boat hold cues moving
+the band back above knees afterward. Exercise order and durations are unchanged.
+
+Version 8 replaces cooldown with the shared reclining sequence: Single leg hug
+knees to chest (90s), Reclining tree pose (30s), Reclining twist (30s) on the
+left; Windshield wipers (90s); then the same three stretches on the right.
+A 10-second REST cues "Extend legs straight out." before Shavasana (180s).
+The existing 30-second cooldown transition now removes equipment and prepares
+participants to lie on their backs. Movements reuse the ring course catalog.
+
+Version 9 moves right Clamshell to teaser directly after right Side-body
+crunches. On each glute side, the 20-second rest, Leg extensions, Leg pulses,
+and Rainbow are replaced by 40-second Donkey kick + regular crunch, keeping
+the supporting knee grounded. The added 30-second cooldown transition is
+removed; equipment removal is cued in the first stretch. The supplied cooldown
+times and three-minute Shavasana remain. Total class duration is **59:50**.
+
 `sliders-class-02` ("sliders class #2"), version 1, starts as an unchanged
 copy of the current sliders course (version 10). Its course structure lives in
 `src/classes/sliders-class-02.ts` and reuses the shared sliders exercise catalog.

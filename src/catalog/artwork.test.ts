@@ -37,9 +37,10 @@ const UPDATED_SLIDERS_PENDING = [
 ];
 
 const NOT_A_MOVEMENT = ["Class introduction", "INTRODUCTION"];
-const BAND_PENDING = ["Palm in with band"];
+const BAND_PENDING = ["Palm in with band", "Clamshell to teaser", "Book opens", "Hinged shoulder press to sides", "Around the worlds", "Bicep curl → front press (palms towards chest)", "Front raise + around the world", "Wide offering with rotation", "1/2 roll up", "Alternating arm rows", "Alternating arm rows + opposite knee drive", "Single-leg knee drive", "Hold leg sweeps to the side", "Pulse legs up and down", "Teaser to row arms"];
 const WEIGHTED_COOLDOWN_PENDING = ["Cross-body cat+cows"];
 const WEIGHTS_STRENGTH_PENDING = [
+  "Donkey kick + regular crunch",
   "Slow squats",
   "Seated ab row with both arms",
   "Crunch knee in with weight behind knee",
