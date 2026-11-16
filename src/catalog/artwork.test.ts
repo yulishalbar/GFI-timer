@@ -37,6 +37,7 @@ const UPDATED_SLIDERS_PENDING = [
 ];
 
 const NOT_A_MOVEMENT = ["Class introduction", "INTRODUCTION"];
+const NO_EQUIPMENT_PENDING = ["Suitcase crunch", "Single-leg knee push-up to pike", "Low plank alternating leg lifts", "Static leg hold", "Single-leg downward facing dog with hip circles", "Crescent Low Lunge → half split"];
 const BAND_PENDING = ["Toe reaches", "Arms extended to sides biceps curl", "Standing biceps curl", "Overhead triceps extensions", "Standing shoulder press", "High plank with alternating leg lifts", "High plank alternating leg crunch", "Bear hold rotations", "Bent-knee crunches", "Single-leg extension crunch", "Deadbug with arm circles", "Russian twist", "Palm in with band", "Clamshell to teaser", "Book opens", "Hinged shoulder press to sides", "Around the worlds", "Bicep curl → front press (palms towards chest)", "Front raise + around the world", "Wide offering with rotation", "1/2 roll up", "Alternating arm rows", "Alternating arm rows + opposite knee drive", "Single-leg knee drive", "Hold leg sweeps to the side", "Pulse legs up and down", "Teaser to row arms"];
 const WEIGHTED_COOLDOWN_PENDING = ["Cross-body cat+cows"];
 const WEIGHTS_STRENGTH_PENDING = [
@@ -205,7 +206,7 @@ describe("exercise artwork", () => {
     const withoutMedia = exercises.filter(
       (exercise) => !exercise.rig && !exercise.illustration && !exercise.motionIllustrations
     );
-    expect(distinctNames(withoutMedia)).toEqual([...NOT_A_MOVEMENT, ...UPDATED_SLIDERS_PENDING, ...BLOCK_PLANK_PENDING, ...BAND_PENDING, ...WEIGHTED_COOLDOWN_PENDING, ...WEIGHTS_MOBILITY_PENDING, ...WEIGHTS_STRENGTH_PENDING].sort());
+    expect(distinctNames(withoutMedia)).toEqual([...NOT_A_MOVEMENT, ...NO_EQUIPMENT_PENDING, ...UPDATED_SLIDERS_PENDING, ...BLOCK_PLANK_PENDING, ...BAND_PENDING, ...WEIGHTED_COOLDOWN_PENDING, ...WEIGHTS_MOBILITY_PENDING, ...WEIGHTS_STRENGTH_PENDING].sort());
   });
 
   it("keeps a picture only where it was chosen over the rig", () => {

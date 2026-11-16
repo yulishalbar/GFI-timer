@@ -540,3 +540,13 @@ to sides, Around the worlds, Bicep curl → front press (palms towards chest),
 Front raise + around the world, and Wide offering with rotation. These entries
 currently use written instructions without substitute artwork.
 
+
+No Equipment Mat Pilates: Suitcase crunch uses written instructions pending an accurate equipment-free movement guide.
+
+No Equipment Mat Pilates: Single-leg knee push-up to pike uses side-specific written instructions pending an accurate single-leg guide.
+
+No Equipment Mat Pilates: Low plank alternating leg lifts uses written instructions pending an accurate forearm-plank leg-lift guide.
+
+No Equipment Mat Pilates: Static leg hold uses written instructions pending an accurate side-lying hold guide.
+
+No Equipment Mat Pilates: Single-leg downward facing dog with hip circles and Crescent Low Lunge ? half split have side-specific written guidance pending accurate movement guides.

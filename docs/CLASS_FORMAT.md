@@ -1,5 +1,35 @@
 # Class format
 
+`no-equipment-mat-pilates` ("No Equipment Mat Pilates") version 12 uses July 24's
+course with its first core circuit replaced by July 31's two core rounds,
+with a single 20-second rest after the first round's Scissors, before the second
+round's alternating toe taps. All other rests in that phase are removed
+and both Alternating bird dogs placements replaced by Dead Bug. Each round adds
+a 40-second equipment-free Suitcase crunch immediately after Toe taps both legs.
+The posterior circuit shortens Superman hold with flutter arms to 20 seconds.
+Each side's Bird-dog extension and crunch leads directly into a 40-second
+Single-leg knee push-up to pike on the same side, right then left. These replace
+the original bilateral knee push-up to pike. Circuit 3 has only one rest:
+20 seconds after the right single-leg push-up to pike, before switching left.
+All other rests in Circuit 3, including its setup rest, are removed.
+Low plank alternating leg lifts replaces Low-plank opening to the sides for
+40 seconds, immediately before the final low-plank hold.
+It retains July 24's circuit numbering. Side Body starts lying on the right:
+left leg lifts (40s), big circles (40s), small circle pulses (20s, 10s each
+direction), static leg hold (20s), bottom-leg lifts (30s), bottom-leg pulses
+(30s), tricep side push-up (30s), straight leg
+crunches (40s), and right forearm side plank (30s). A single 30-second rest
+switches sides. The same sequence repeats lying on the left, working the right
+leg and ending with left forearm side plank. A regular forearm plank (30s)
+finishes the circuit. Bottom-leg work uses the supporting side: right first,
+then left.
+Other side-body rests and forward/back kicks are removed.
+It reuses the existing exercise catalogs and
+requires no equipment beyond a mat. Both dated courses retain their stable IDs.
+After cat–cow, the warmup replaces hovering tabletop to downward dog with
+single-leg downward facing dog with hip circles (10s) and Crescent Low Lunge
+→ half split (60s), left then right. Other warmup entries remain in order.
+
 ## Goals
 
 `mat-pilates-band-weights` ("Mat Pilates with Band and Weights") version 1 reuses the
