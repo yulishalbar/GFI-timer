@@ -1,6 +1,6 @@
 # Class format
 
-`no-equipment-mat-pilates` ("No Equipment Mat Pilates") version 12 uses July 24's
+`no-equipment-mat-pilates` ("No Equipment Mat Pilates") version 14 uses July 24's
 course with its first core circuit replaced by July 31's two core rounds,
 with a single 20-second rest after the first round's Scissors, before the second
 round's alternating toe taps. All other rests in that phase are removed
@@ -27,8 +27,20 @@ Other side-body rests and forward/back kicks are removed.
 It reuses the existing exercise catalogs and
 requires no equipment beyond a mat. Both dated courses retain their stable IDs.
 After cat–cow, the warmup replaces hovering tabletop to downward dog with
-single-leg downward facing dog with hip circles (10s) and Crescent Low Lunge
-→ half split (60s), left then right. Other warmup entries remain in order.
+single-leg downward facing dog with hip circles (30s) and Crescent Low Lunge
+→ half split (60s), left then right. Both thread-the-needle steps are removed.
+Cobra (30s) finishes the warmup movements before the existing core setup rest.
+
+The replacement cooldown follows the supplied **Yogalates SOP**, pages 11–19:
+backbend, counterpose/forward fold, bilateral spinal twists, and final relaxation.
+It adapts the upper-body Sphinx entry to follow the final forearm plank, then
+uses the full-body figure-four → eagle supine twist → Happy Baby ending.
+The sequence is Sphinx (60s), Child's pose (60s), seated forward fold (60s),
+roll down (30s), right figure four (60s), right eagle supine twist (60s), left
+figure four (60s), left eagle supine twist (60s), Happy Baby (30s), and Shavasana
+(180s). The total stays exactly 11 minutes, including transitions. Shavasana is
+the final class step, with no return to Child's pose afterward. Durations and
+transition cues are course adaptations; the SOP is a reference for this cooldown.
 
 ## Goals
 

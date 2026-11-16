@@ -3,6 +3,8 @@ import { resolveCourseDefinition } from "../domain/resolve-course";
 import { matPilates0724Catalog } from "./mat-pilates-07-24";
 import { matPilates0731Catalog } from "./mat-pilates-07-31";
 import { hiitPilatesSlidersCatalog } from "./hiit-pilates-sliders";
+import { matPilatesBall01Catalog } from "./mat-pilates-ball-01";
+import { noEquipmentCooldown, noEquipmentCooldownCatalog } from "./no-equipment-cooldown";
 import type { CourseItem, CourseExerciseItem, ExerciseDefinition, ExerciseSide } from "../domain/catalog-definition";
 
 const suitcaseCrunch: ExerciseDefinition = {
@@ -176,33 +178,39 @@ const crescentHalfSplit: ExerciseDefinition = {
   tags: ["mat-pilates", "mat"]
 };
 const warmup = matPilates0724Catalog.course.phases.find((phase) => phase.id === "warmup");
-if (!warmup) throw new Error("Warmup is missing");
+const cobra = matPilatesBall01Catalog.catalog.exercises.find((exercise) => exercise.name === "Cobra");
+if (!warmup || !cobra) throw new Error("Warmup or Cobra exercise is missing");
 const warmupItems = warmup.items.flatMap((item): CourseItem[] => {
-  if (item.id === "hover-to-down-dog") return [];
+  if (["hover-to-down-dog", "thread-needle-right", "thread-needle-left"].includes(item.id)) return [];
+  if (item.id === "rest-after-warmup") return [
+    { type: "exercise", id: "warmup-cobra", exerciseId: cobra.id, exerciseVersion: cobra.version, durationSeconds: 30, shortDescription: "Lower onto your stomach, hands beneath shoulders. Gently lift the chest, keeping elbows soft and shoulders down; avoid forcing the lower back. Then lower and prepare for core." },
+    item
+  ];
   if (item.id !== "cat-cow") return [item];
   return [item, ...(["left", "right"] as const).flatMap((side): CourseItem[] => [
-    { type: "exercise", id: `down-dog-hip-circles-${side}`, exerciseId: dogHipCircles.id, exerciseVersion: 1, side, durationSeconds: 10 },
+    { type: "exercise", id: `down-dog-hip-circles-${side}`, exerciseId: dogHipCircles.id, exerciseVersion: 1, side, durationSeconds: 30 },
     { type: "exercise", id: `crescent-half-split-${side}`, exerciseId: crescentHalfSplit.id, exerciseVersion: 1, side, durationSeconds: 60 }
   ])];
 });
 
 export const noEquipmentMatPilatesCatalog = {
-  catalog: mergeExerciseCatalogs(matPilates0724Catalog.catalog, matPilates0731Catalog.catalog, hiitPilatesSlidersCatalog.catalog, {
+  catalog: mergeExerciseCatalogs(matPilates0724Catalog.catalog, matPilates0731Catalog.catalog, hiitPilatesSlidersCatalog.catalog, noEquipmentCooldownCatalog, {
     schemaVersion: 1,
     tags: matPilates0724Catalog.catalog.tags,
-    exercises: [suitcaseCrunch, singleLegPushUpPike, lowPlankLegLifts, staticLegHold, shortCircles, dogHipCircles, crescentHalfSplit]
+    exercises: [suitcaseCrunch, singleLegPushUpPike, lowPlankLegLifts, staticLegHold, shortCircles, dogHipCircles, crescentHalfSplit, cobra]
   }),
   course: {
     ...matPilates0724Catalog.course,
     id: "no-equipment-mat-pilates",
-    version: 12,
+    version: 14,
     title: "No Equipment Mat Pilates",
     description: "July 24's full-body mat class with the July 31 core circuit, dead bugs, suitcase crunches, and a 20-second rest between core rounds. No equipment beyond a mat required.",
     phases: matPilates0724Catalog.course.phases.map((phase) =>
       phase.id === "core-circuit" ? { ...core, name: phase.name, items: coreItems }
         : phase.id === "side-body-circuit" ? { ...phase, items: sideBodyItems }
           : phase.id === "posterior-core-circuit" ? { ...phase, items: posteriorItems }
-            : phase.id === "warmup" ? { ...phase, items: warmupItems } : phase
+            : phase.id === "warmup" ? { ...phase, items: warmupItems }
+              : phase.id === "cooldown" ? noEquipmentCooldown : phase
     )
   }
 };

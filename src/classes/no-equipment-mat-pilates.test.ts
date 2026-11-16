@@ -1,4 +1,5 @@
 import { expect, it } from "vitest";
+import { compileClass } from "../domain/compile-class";
 import { availableClasses } from "./index";
 import { matPilates0724 } from "./mat-pilates-07-24";
 import { matPilates0731 } from "./mat-pilates-07-31";
@@ -32,7 +33,7 @@ it("registers the July 24 class with the adapted July 31 core and a rest between
       expect(moves?.some((item) => item.name === "Alternating bird dogs")).toBe(false);
       expect(originalMoves?.map((item) => item.name)).toEqual(source?.map((item) => item.name === "Alternating bird dogs" ? "Dead Bug" : item.name));
       expect(actual?.name).toBe(phase.name);
-    } else if (!["side-body-circuit", "posterior-core-circuit", "warmup"].includes(phase.id)) {
+    } else if (!["side-body-circuit", "posterior-core-circuit", "warmup", "cooldown"].includes(phase.id)) {
       expect(actual).toEqual(phase);
     }
   }
@@ -93,9 +94,27 @@ it("warms up each side with downward dog hip circles and crescent lunge to half 
   const catIndex = items.findIndex((item) => item.id === "cat-cow");
   expect(catIndex).toBeGreaterThanOrEqual(0);
   expect(items.slice(catIndex + 1, catIndex + 5).map((item) => [item.id, item.type === "exercise" ? item.durationSeconds : 0, item.type === "exercise" ? item.exerciseReference?.side : undefined])).toEqual([
-    ["down-dog-hip-circles-left", 10, "left"], ["crescent-half-split-left", 60, "left"],
-    ["down-dog-hip-circles-right", 10, "right"], ["crescent-half-split-right", 60, "right"]
+    ["down-dog-hip-circles-left", 30, "left"], ["crescent-half-split-left", 60, "left"],
+    ["down-dog-hip-circles-right", 30, "right"], ["crescent-half-split-right", 60, "right"]
   ]);
   expect(items.some((item) => item.id === "hover-to-down-dog")).toBe(false);
-  expect(items[catIndex + 5]?.id).toBe("thread-needle-right");
+  expect(items.some((item) => item.id.startsWith("thread-needle-"))).toBe(false);
+  expect(items[catIndex + 5]).toMatchObject({ id: "warmup-cobra", name: "Cobra", durationSeconds: 30 });
+  expect(items.at(-1)).toMatchObject({ id: "rest-after-warmup", type: "rest" });
+});
+
+it("flows through an eleven-minute SOP-based cooldown ending in shavasana", () => {
+  const compiled = compileClass(noEquipmentMatPilates);
+  const steps = compiled.steps.filter((step) => step.phase.id === "cooldown");
+  const original = compileClass(matPilates0724).steps.filter((step) => step.phase.id === "cooldown");
+  expect(steps.reduce((total, step) => total + step.durationMs, 0)).toBe(660_000);
+  expect(steps.reduce((total, step) => total + step.durationMs, 0)).toBe(original.reduce((total, step) => total + step.durationMs, 0));
+  expect(steps.map((step) => step.sourceId)).toEqual([
+    "cooldown-sphinx", "cooldown-childs-pose", "cooldown-forward-fold", "cooldown-roll-down",
+    "cooldown-figure-four-right", "cooldown-twist-right", "cooldown-figure-four-left", "cooldown-twist-left",
+    "cooldown-happy-baby", "shavasana"
+  ]);
+  expect(compiled.steps.at(-1)).toMatchObject({ name: "Shavasana", durationMs: 180_000 });
+  expect(steps.filter((step) => step.exerciseReference?.side === "right").map((step) => step.durationMs))
+    .toEqual(steps.filter((step) => step.exerciseReference?.side === "left").map((step) => step.durationMs));
 });

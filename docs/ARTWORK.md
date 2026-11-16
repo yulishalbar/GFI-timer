@@ -550,3 +550,7 @@ No Equipment Mat Pilates: Low plank alternating leg lifts uses written instructi
 No Equipment Mat Pilates: Static leg hold uses written instructions pending an accurate side-lying hold guide.
 
 No Equipment Mat Pilates: Single-leg downward facing dog with hip circles and Crescent Low Lunge ? half split have side-specific written guidance pending accurate movement guides.
+
+No Equipment Mat Pilates: Cobra uses written warmup instructions pending an accurate guide.
+
+No Equipment Mat Pilates SOP cooldown: Sphinx pose and Eagle supine twist use written instructions pending accurate guides.
